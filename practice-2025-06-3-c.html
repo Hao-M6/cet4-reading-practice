@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级仔细阅读 · Section C 练习｜2025年6月第三套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; padding-bottom:92px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+  }
+  .timer.warn{background:#3a1d1f; color:#ffb4ab}
+  .timer.over{animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 462px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .stack{display:grid; gap:22px}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{margin:0 0 14px; padding-left:34px; position:relative; transition:background .25s}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:11.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{display:block; color:var(--muted); font-size:12.5px; margin-top:5px}
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:#6b5416; color:#ffe9a8}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 96px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:12px}
+  .grp{
+    font-size:13px; font-weight:700; color:#a9c1ff; margin:16px 0 2px;
+    padding-bottom:4px; border-bottom:1px dashed #33405a;
+  }
+  .grp:first-child{margin-top:4px}
+  .q{padding:14px 0; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none; padding-top:4px}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px}
+  .q .stem{font-size:14px; line-height:1.6}
+  .opts{display:grid; gap:6px; margin-top:9px}
+  .opts button{
+    display:flex; gap:8px; align-items:baseline; text-align:left;
+    border:1px solid var(--line); background:#171c23; border-radius:8px;
+    padding:7px 10px; cursor:pointer; color:#c3cad6; font-size:13.5px;
+    line-height:1.55; font-family:inherit; transition:.12s;
+  }
+  .opts button:hover{border-color:var(--accent); color:#dbe3ef; background:#1b2634}
+  .opts button .lb{
+    flex:none; width:20px; height:20px; border-radius:5px; background:#1c2740;
+    color:#a9c1ff; font-family:ui-monospace,Consolas,monospace; font-weight:700;
+    font-size:12px; display:inline-grid; place-items:center; position:relative; top:2px;
+  }
+  .opts button.sel{border-color:var(--accent); background:#1b2634; color:#fff}
+  .opts button.sel .lb{background:var(--accent); color:#08101c}
+  .opts button.right{border-color:#3a7a4e; background:#14261a; color:#a8f0c2}
+  .opts button.right .lb{background:#2f7d45; color:#08101c}
+  .opts button.wrong{border-color:#8b3a3a; background:#2a1719; color:#ffb4ab}
+  .opts button.wrong .lb{background:#8b3a3a; color:#1c0b0b}
+  .opts button.answer{outline:2px dashed #51b06a; outline-offset:1px}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .fb .why b{color:#a9c1ff}
+  /* ---------- 操作 ---------- */
+  .btn{
+    border:none; border-radius:9px; padding:9px 16px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#08101c}
+  .btn.primary:hover{background:#3f7fe8}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  /* ---------- 定位表 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+  details.fp td:first-child{width:42px; font-family:ui-monospace,Consolas,monospace; color:#a9c1ff}
+  details.fp td:nth-child(2){width:40px}
+  /* ---------- 底部固定条 ---------- */
+  .bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(18,22,28,.96); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line); padding:9px 20px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  }
+  .bar .stat{font-size:13px; color:#c3cad6}
+  .bar .stat b{color:#7cc4e8; font-size:17px; font-variant-numeric:tabular-nums}
+  .bar .grow{flex:1}
+  /* ---------- 来源 ---------- */
+  .src{margin-top:16px; padding-top:12px; border-top:1px solid var(--line); font-size:12px; color:var(--muted)}
+  .src a{color:#7fb2ff; text-decoration:none}
+  .src a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 6 月 · 第三套 · Section C 仔细阅读
+    <small>Passage One 46–50（7 段）· Passage Two 51–55（7 段）· 目标 20 分钟</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：两篇原文 ================= -->
+  <div class="stack">
+
+    <section class="card passage" id="passage1">
+      <h2>Passage One</h2>
+      <div class="meta">Questions 46 to 50 are based on the following passage. 原卷无标题。共 7 段。</div>
+
+      <p class="para" id="p1-1"><span class="tag">P1</span>Our society <mark>places a high value on physical beauty</mark>. Americans spend an average of over $722 each year on their appearance. One in ten Americans has tried to look like a star.<span class="cn">46 题定位：社会高度重视外貌 → B</span></p>
+
+      <p class="para" id="p1-2"><span class="tag">P2</span>There's nothing wrong with trying to look our best, but excessive focus on physical appearance misses the soulful aspects of what it means to be beautiful. Trying to look like the magazine pictures can take us on a long ride away from what beauty is really about.</p>
+
+      <p class="para" id="p1-3"><span class="tag">P3</span>Many of us spend far too much time, energy, and money trying to polish an image of what we think will bring attention, love, and connection. In the process, <mark>we may fail to attend to ourselves in a way that would move us toward deeper intimacy, fulfillment, and meaning</mark>.<span class="cn">47 题定位：只顾打磨形象，反而疏于内在 → C</span></p>
+
+      <p class="para" id="p1-4"><span class="tag">P4</span>It may sound trite(老生常谈的), but beauty is only skin deep; it's not what brings love toward us. Just read about the latest Hollywood starlets whose seeming love turns into resentment and bitter court battles.</p>
+
+      <p class="para" id="p1-5"><span class="tag">P5</span><mark>Outer beauty can be as much of a curse as a blessing</mark>. We may develop a habit of being so focused on maintaining a perfect appearance that we never cultivate the inner qualities necessary to sustain and deepen intimacy and connection. As I describe in my book, The Authentic Heart, it is the courage to be authentic that connects us in a deeper way.<span class="cn">48 题定位：外在美可能是诅咒也可能是祝福 → D</span></p>
+
+      <p class="para" id="p1-6"><span class="tag">P6</span>While our initial attraction may be based, in part, on physical chemistry, <mark>it is the meeting of our inner worlds that creates the lasting intimacy and spiritual connection</mark> for which we long. If we redirect our attention toward cultivating inner qualities, we might find a magnetic attraction that moves us from something superficial to something that connects us to our depths.<span class="cn">49 题定位：内心世界的相遇才创造精神联结 → A</span></p>
+
+      <p class="para" id="p1-7"><span class="tag">P7</span>The path toward cultivating inner beauty is really simple. But what is simple is not always easy. Not everyone will see us and appreciate us as we take the courageous risk to allow ourselves to be seen as we really are. But if they don't, it is their loss, not ours. <mark>Eventually we'll find those compatible souls who appreciate us as we are</mark>.<span class="cn">50 题定位：最终会遇到欣赏真实自我的人 → C</span></p>
+    </section>
+
+    <section class="card passage" id="passage2">
+      <h2>Passage Two</h2>
+      <div class="meta">Questions 51 to 55 are based on the following passage. 原卷无标题。共 7 段。</div>
+
+      <p class="para" id="p2-1"><span class="tag">P1</span>Plant-based meats are coming soon to a dinner table near you, but do they deserve a spot on your plate? If you tried a vegetable burger years ago and dismissed it as rubbery and flavorless, it's a good time to give meatless meat another chance. Newer varieties imitate the look, flavor, and texture of meat. Analysts don't expect the meat-free movement to slow anytime soon; a 2021 report <mark>predicts the market will skyrocket to $74 billion by 2030—a 957 percent surge</mark>.<span class="cn">51 题定位：市场将暴涨 957% → C</span></p>
+
+      <p class="para" id="p2-2"><span class="tag">P2</span>Plant-based meats are no longer just for vegetarians. Companies such as Impossible Foods and Beyond Meat—the current superstars of the alternative protein sector—are pursuing consumers who enjoy meat but want to reduce their meat consumption for animal rights, health, or environmental reasons. So far, it's a winning strategy: <mark>More than nine out of ten consumers who buy Beyond Burger and Impossible Foods products also eat meat</mark>.<span class="cn">52 题定位：十个买家里九个也吃肉 → A</span></p>
+
+      <p class="para" id="p2-3"><span class="tag">P3</span>Many vegetarians don't actually care for food that resembles meat. When reporter Joan Solsman, a longtime vegetarian, tried a dish from Impossible Foods, she felt so sick that she couldn't finish it. "Maybe <mark>the best sign that Impossible Foods has cracked the code to realistic fake meat</mark> is that I couldn't stand to take another bite," she wrote.<span class="cn">53 题定位：破解“逼真假肉”的密码 → B</span></p>
+
+      <p class="para" id="p2-4"><span class="tag">P4</span>Meatless meats are generally a healthier choice than beef because they are cholesterol-free, plus they're a good source of vitamins, minerals, protein, and fiber.</p>
+
+      <p class="para" id="p2-5"><span class="tag">P5</span>If meatless meat can help you stick to a plant-based diet, that in itself can lead to better health. <mark>Not only has red meat been linked to cancer, but studies show that people who ditch meat have lower blood pressure, lower average blood sugar, and lower cholesterol levels</mark>.<span class="cn">54 题定位：弃肉者血压、血糖、胆固醇更低 → D</span></p>
+
+      <p class="para" id="p2-6"><span class="tag">P6</span>However, just because it's plant-based doesn't mean it's health food. Most imitation meats are highly processed and contain high amounts of sodium(钠) compared to traditional beef.</p>
+
+      <p class="para" id="p2-7"><span class="tag">P7</span>These new generations of alternate meat get all the attention, but <mark>don't forget about whole grains and vegetables. Beans are an especially excellent protein substitute</mark>. They're nutritious, inexpensive, and far more sustainable than any of the processed meatless substitutes on the market today.<span class="cn">55 题定位：别忘了全谷物、蔬菜和豆类 → A</span></p>
+
+      <div class="src">
+        原文与逐题解析来源：<a href="https://english-exam.lazynote.cn/cet4/sections/2025-06-3/part3-section-c/" target="_blank" rel="noopener">懒笔记 · 第 1 篇（46–50）</a>
+        　·　<a href="https://english-exam.lazynote.cn/cet4/sections/2025-06-3/part3-section-c-2/" target="_blank" rel="noopener">懒笔记 · 第 2 篇（51–55）</a>
+        　|　答案交叉核对：<a href="https://mtoutiao.xdf.cn/www/1001/202506/14533365.html" target="_blank" rel="noopener">新东方 · 第三套阅读答案</a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>10 道真题（46–55）</h2>
+    <div class="hint">点选项 → 点底部「提交答案」。答完会判分、展开解析并高亮错题所在段。</div>
+
+    <div id="questions"></div>
+
+    <div class="score" id="score"></div>
+
+    <details class="fp">
+      <summary>题目定位表（题号 / 段落 / 定位关键词）</summary>
+      <table>
+        <tr><th>题</th><th>段</th><th>定位关键词</th></tr>
+        <tr><td>46</td><td>P1</td><td>places a high value on physical beauty</td></tr>
+        <tr><td>47</td><td>P3</td><td>fail to attend to ourselves</td></tr>
+        <tr><td>48</td><td>P5</td><td>as much of a curse as a blessing</td></tr>
+        <tr><td>49</td><td>P6</td><td>meeting of our inner worlds</td></tr>
+        <tr><td>50</td><td>P7</td><td>compatible souls who appreciate us as we are</td></tr>
+        <tr><td>51</td><td>P1</td><td>skyrocket / 957 percent surge</td></tr>
+        <tr><td>52</td><td>P2</td><td>nine out of ten ... also eat meat</td></tr>
+        <tr><td>53</td><td>P3</td><td>cracked the code to realistic fake meat</td></tr>
+        <tr><td>54</td><td>P5</td><td>lower blood pressure / blood sugar</td></tr>
+        <tr><td>55</td><td>P7</td><td>whole grains / vegetables / beans</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<div class="bar">
+  <span class="stat">已答 <b id="cnt">0</b> / 10</span>
+  <span class="stat">得分 <b id="scoreNum">--</b></span>
+  <span class="grow"></span>
+  <button class="btn primary" id="submit">提交答案</button>
+  <button class="btn ghost" id="reset">重新开始</button>
+</div>
+
+<script>
+const LETTERS = ["A","B","C","D"];
+
+const QUESTIONS = [
+  {
+    n: 46,
+    stem: "What do we learn about American society from the first paragraph?",
+    opts: [
+      "It sees lots of personal income wasted on beauty products.",
+      "It considers one's physical appearance very important.",
+      "It places a high value on the physical fitness of stars.",
+      "It expects every individual to look their very best."
+    ],
+    answer: "B",
+    para: "p1-1",
+    why: `<p><b>① 定位</b>：第 1 段第 1 句 “Our society places a high value on physical beauty.”</p>
+          <p><b>② 同义替换</b>：places a high value on ≈ considers … very important；physical beauty ≈ physical appearance。</p>
+          <p><b>③ 陷阱</b>：A 把“人均每年花 722 美元”改写成“大量收入被浪费”，原文没有这句评价（无中生有）；C 把“重视外貌”偷换成“重视明星的体能”；D 把“看重”拔高成“要求每个人都做到最好”（过度推断）。</p>`
+  },
+  {
+    n: 47,
+    stem: "What happens when people strive to look better?",
+    opts: [
+      "They have to get prepared for resentment and bitter court battles.",
+      "They are better able to gain attention, love, and personal connection.",
+      "They may neglect to cultivate the inner qualities that matter more.",
+      "They feel much of their precious time, energy and resources is wasted."
+    ],
+    answer: "C",
+    para: "p1-3",
+    why: `<p><b>① 定位</b>：第 3 段第 2 句 “In the process, we may fail to attend to ourselves in a way that would move us toward deeper intimacy, fulfillment, and meaning.”</p>
+          <p><b>② 同义替换</b>：fail to attend to ourselves ≈ neglect to cultivate …；deeper intimacy / fulfillment / meaning ≈ the inner qualities that matter more。</p>
+          <p><b>③ 陷阱</b>：A 把第 4 段影星的 court battles 张冠李戴过来，原文并没说追求外表要“做好准备”；B 把 “what we think will bring attention, love, and connection” 里的“自以为”包装成客观事实，方向与作者批评相反；D 把作者的客观描述换成“他们自己觉得浪费”，主体被偷换。</p>`
+  },
+  {
+    n: 48,
+    stem: "What does the author say about outer beauty?",
+    opts: [
+      "It may be inherited or cultivated.",
+      "It may lead to bad as well as good habits.",
+      "It may create connection or isolation.",
+      "It may do as much harm as good."
+    ],
+    answer: "D",
+    para: "p1-5",
+    why: `<p><b>① 定位</b>：第 5 段第 1 句 “Outer beauty can be as much of a curse as a blessing.”</p>
+          <p><b>② 同义替换</b>：as much of a curse as a blessing ≈ do as much harm as good（诅咒 = 害，祝福 = 利）。</p>
+          <p><b>③ 陷阱</b>：A 谈外貌的“来源”（遗传/培养），原文从未讨论；B 把“人生祸福”缩成“习惯的好坏”，原文说的只是“只关注外表的习惯”；C 与原文相反——P5、P6 都说 connection 来自 inner qualities / meeting of inner worlds。</p>`
+  },
+  {
+    n: 49,
+    stem: "What brings about spiritual connection?",
+    opts: [
+      "Meeting of minds.",
+      "Attraction at first sight.",
+      "Physical chemistry.",
+      "Frequent interaction."
+    ],
+    answer: "A",
+    para: "p1-6",
+    why: `<p><b>① 定位</b>：第 6 段第 1 句 “it is the meeting of our inner worlds that creates the lasting intimacy and spiritual connection for which we long.”</p>
+          <p><b>② 同义替换</b>：the meeting of our inner worlds ≈ meeting of minds（内心/思想的相遇）。</p>
+          <p><b>③ 陷阱</b>：B、C 抓的都是 initial attraction / physical chemistry 这两个原词，但原文用 While 让步句明确它们只解释“最初的吸引”，不是 spiritual connection 的来源；D“频繁互动”无中生有。</p>`
+  },
+  {
+    n: 50,
+    stem: "What happens when we take the path toward cultivating inner beauty?",
+    opts: [
+      "We may find a route toward other people's souls.",
+      "We may be appreciated more by people around us.",
+      "We will meet people who value us for who we are.",
+      "We will be discouraged from revealing our true selves."
+    ],
+    answer: "C",
+    para: "p1-7",
+    why: `<p><b>① 定位</b>：第 7 段末句 “Eventually we'll find those compatible souls who appreciate us as we are.”</p>
+          <p><b>② 同义替换</b>：compatible souls who appreciate us as we are ≈ people who value us for who we are。</p>
+          <p><b>③ 陷阱</b>：A 方向反了（是我们被看见，不是我们走向别人的灵魂）；B 以偏概全——上一句刚说 Not everyone will see us and appreciate us；D 与原文相反，原文说“他们不欣赏是他们的损失”，是鼓励继续展露真我。</p>`
+  },
+  {
+    n: 51,
+    stem: "What can we expect of plant-based meats?",
+    opts: [
+      "An increasing interest in their analyses.",
+      "An enormous effort in their promotion.",
+      "A huge boost in their consumption.",
+      "A noticeable surge in their varieties."
+    ],
+    answer: "C",
+    para: "p2-1",
+    why: `<p><b>① 定位</b>：第 1 段末句 “a 2021 report predicts the market will skyrocket to $74 billion by 2030—a 957 percent surge.”</p>
+          <p><b>② 同义替换</b>：the market will skyrocket / a 957 percent surge ≈ a huge boost in their consumption（市场规模暴涨 = 消费量大增）。</p>
+          <p><b>③ 陷阱</b>：A 把“分析师对市场的预期”偷换成“人们对其分析的兴趣”；B“投入巨大推广努力”无中生有；D 把 surge 的对象从“市场规模”换成“品种”，原文只说新品种模仿肉的外观、风味和质地。</p>`
+  },
+  {
+    n: 52,
+    stem: "What do we learn about consumers buying Beyond Burger and Impossible Foods products?",
+    opts: [
+      "They are mostly non-vegetarians.",
+      "They are mostly animal-rights advocates.",
+      "Most of them refrain from eating meat for health reasons.",
+      "Most of them eat meatless meat to protect the environment."
+    ],
+    answer: "A",
+    para: "p2-2",
+    why: `<p><b>① 定位</b>：第 2 段末句 “More than nine out of ten consumers who buy Beyond Burger and Impossible Foods products also eat meat.”</p>
+          <p><b>② 同义替换</b>：more than nine out of ten … also eat meat ≈ mostly non-vegetarians（十个里九个也吃肉 = 大多不是素食者）。</p>
+          <p><b>③ 陷阱</b>：B、C、D 都把并列三动机（animal rights / health / environmental）里的一个拎出来说成“大多数”，属以偏概全；C 还把 reduce their meat consumption 夸成 refrain from eating meat。</p>`
+  },
+  {
+    n: 53,
+    stem: "What can we conclude about Impossible Foods' products from Joan Solsman's remark?",
+    opts: [
+      "They more often appeal to meat-eaters.",
+      "They very much resemble animal meat.",
+      "Some have become its signature dishes.",
+      "Most of them are sold as true fake meat."
+    ],
+    answer: "B",
+    para: "p2-3",
+    why: `<p><b>① 定位</b>：第 3 段末句 “Maybe the best sign that Impossible Foods has cracked the code to realistic fake meat is that I couldn't stand to take another bite.”</p>
+          <p><b>② 同义替换</b>：cracked the code to realistic fake meat ≈ very much resemble animal meat——逼真到让长期素食者吃不下去。</p>
+          <p><b>③ 陷阱</b>：A 是第 52 题的方向（产品更受肉食者欢迎），答非所问；C“招牌菜”无中生有，原文只说她试了 a dish；D 把 realistic fake meat 改成 sold as true fake meat，销售行为和 true 都没有依据。</p>`
+  },
+  {
+    n: 54,
+    stem: "Why can the habit of eating a plant-based diet lead to better health?",
+    opts: [
+      "It frees people from any known link to cancer.",
+      "It provides all the nutrients for staying healthy.",
+      "It helps maintain normal blood pressure and blood sugar.",
+      "It reduces various health risks posed by meat consumption."
+    ],
+    answer: "D",
+    para: "p2-5",
+    why: `<p><b>① 定位</b>：第 5 段第 2 句 “Not only has red meat been linked to cancer, but studies show that people who ditch meat have lower blood pressure, lower average blood sugar, and lower cholesterol levels.”</p>
+          <p><b>② 同义替换</b>：lower blood pressure / blood sugar / cholesterol + linked to cancer ≈ reduces various health risks posed by meat consumption（用一个概括项覆盖全部四项）。</p>
+          <p><b>③ 陷阱</b>：A 的 any known link 绝对化，原文只说红肉 linked to cancer，并未说弃肉就斩断所有关联；B 的 all the nutrients 过度，第 4 段只列了维生素、矿物质、蛋白质、纤维四项；C 只提血压和血糖，漏掉癌症与胆固醇，且 maintain normal 比 lower 还弱。</p>`
+  },
+  {
+    n: 55,
+    stem: "What does the author recommend we eat at the end of the passage?",
+    opts: [
+      "Naturally produced foods.",
+      "Processed protein substitutes.",
+      "Red meats like traditional beef.",
+      "New generations of alternate meat."
+    ],
+    answer: "A",
+    para: "p2-7",
+    why: `<p><b>① 定位</b>：第 7 段 “but don't forget about whole grains and vegetables. Beans are an especially excellent protein substitute.”</p>
+          <p><b>② 同义替换</b>：whole grains / vegetables / beans ≈ naturally produced foods（与 processed 相对，三者的共同属性）。</p>
+          <p><b>③ 陷阱</b>：B、D 正是作者用 far more sustainable than any of the processed meatless substitutes 对比贬低的对象；C 红肉是全文劝退的对象；D 虽有原词复现，但被 but 转折否定。</p>`
+  }
+];
+
+const picked = {};
+const quizEl = document.getElementById("questions");
+
+/* ---------- 渲染 ---------- */
+function head(n){
+  if(n === 46) return `<div class="grp">Passage One · 46–50</div>`;
+  if(n === 51) return `<div class="grp">Passage Two · 51–55</div>`;
+  return "";
+}
+
+function render(){
+  quizEl.innerHTML = QUESTIONS.map(q => `
+    ${head(q.n)}
+    <div class="q" data-n="${q.n}">
+      <div class="stem"><span class="num">${q.n}.</span>${q.stem}</div>
+      <div class="opts" data-n="${q.n}">
+        ${q.opts.map((t, k) => {
+          const L = LETTERS[k];
+          return `<button type="button" id="b${q.n}${L}" data-l="${L}" data-n="${q.n}">` +
+                 `<span class="lb">${L}</span><span>${t}</span></button>`;
+        }).join("")}
+      </div>
+      <div class="fb" id="fb-${q.n}"></div>
+    </div>`).join("");
+  updateCount();
+}
+
+/* ---------- 选择 ---------- */
+quizEl.addEventListener("click", e => {
+  const btn = e.target.closest ? e.target.closest("button[data-l]") : null;
+  if(!btn || btn.disabled) return;
+  const n = btn.dataset.n;
+  const L = btn.dataset.l;
+  picked[n] = L;
+  LETTERS.forEach(x => {
+    const b = document.getElementById("b" + n + x);
+    if(b) b.classList.remove("sel");
+  });
+  btn.classList.add("sel");
+  updateCount();
+});
+
+function updateCount(){
+  document.getElementById("cnt").textContent = Object.keys(picked).length;
+}
+
+/* ---------- 判分 ---------- */
+function grade(){
+  let correct = 0;
+  let firstWrong = null;
+
+  QUESTIONS.forEach(q => {
+    const chosen = picked[q.n];
+    const isRight = (chosen === q.answer);
+    if(isRight) correct++;
+    else if(firstWrong === null) firstWrong = q;
+
+    LETTERS.forEach(L => {
+      const b = document.getElementById("b" + q.n + L);
+      if(!b) return;
+      b.disabled = true;
+      b.classList.remove("sel");
+      if(L === q.answer) b.classList.add("answer");
+      if(L === chosen && !isRight) b.classList.add("wrong");
+      if(L === q.answer && isRight) b.classList.add("right");
+    });
+
+    const fb = document.getElementById("fb-" + q.n);
+    if(fb){
+      fb.className = "fb " + (isRight ? "ok" : "no") + " show";
+      fb.innerHTML = `<span class="badge">${isRight ? "正确" : (chosen ? "错误" : "未作答")}</span>` +
+        `正确答案 ${q.answer}` + `<div class="why">${q.why}</div>`;
+    }
+
+    /* 错题所在段落标黄；全对时也标出定位段，便于复盘 */
+    const para = document.getElementById(q.para);
+    if(para && !isRight) para.classList.add("hit");
+  });
+
+  document.getElementById("scoreNum").textContent = correct;
+
+  const s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = `本轮得分：<b>${correct} / 10</b>　` +
+    (correct === 10 ? "全对！定位 + 同义替换这条链路已经完全走通。" :
+     correct >= 8  ? "稳定发挥，考场目标 8 题以上。重点复盘错题的“定位句”和偷换概念的选项。" :
+     correct >= 5  ? "及格水平。先用定位表把 10 题压回 10 个段落，再逐题核对同义替换。" :
+     "先别急着刷下一套：按“题干圈关键词 → 回文找同义替换 → 排绝对化/无中生有”三步重做。");
+
+  /* 提交后滚动到首个错题所在段落 */
+  let target = null;
+  if(firstWrong) target = document.getElementById(firstWrong.para);
+  else target = s;
+  if(target && target.scrollIntoView) target.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+/* ---------- 重开 ---------- */
+function reset(){
+  Object.keys(picked).forEach(k => { delete picked[k]; });
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+  render();
+  document.getElementById("score").className = "score";
+  document.getElementById("scoreNum").textContent = "--";
+  sec = 0;
+  timerEl.textContent = "00:00";
+  timerEl.className = "timer";
+}
+
+document.getElementById("submit").addEventListener("click", grade);
+document.getElementById("reset").addEventListener("click", reset);
+
+/* ---------- 计时器（目标 20:00） ---------- */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  timerEl.textContent = `${m}:${s}`;
+  if(sec >= 1200) timerEl.classList.add("over");
+  else if(sec >= 1020) timerEl.classList.add("warn");
+}, 1000);
+
+render();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:76px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#08101c;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.btn.primary{color:#08101c}
+.para.hit .tag{color:#ffe9a8}
+.opts button.right{color:#a8f0c2}
+</style>
+</body>
+</html>
