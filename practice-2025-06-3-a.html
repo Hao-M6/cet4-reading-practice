@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级选词填空 · Section A 练习｜2025年6月第三套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; padding-bottom:92px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+  }
+  .timer.warn{background:#3a1d1f; color:#ffb4ab}
+  .timer.over{animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 462px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .side{display:grid; gap:18px}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{margin:0 0 16px; padding-left:34px; position:relative; transition:background .25s}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{display:block; color:var(--muted); font-size:12.5px; margin-top:4px}
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:#6b5416; color:#ffe9a8}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  /* ---------- 空格 ---------- */
+  .blank{display:inline-flex; align-items:baseline; gap:5px; margin:0 3px}
+  .blank .bn{
+    font-family:ui-monospace,Consolas,monospace; font-size:11.5px; font-weight:700;
+    color:#a9c1ff; background:#1c2740; border:1px solid #33405a; border-radius:4px;
+    padding:0 4px; position:relative; top:-1px;
+  }
+  .blank .fill{
+    display:inline-block; min-width:96px; text-align:center;
+    border-bottom:1.5px solid #46536b; color:#dbe3ef; font-weight:600;
+    padding:0 4px; min-height:1.3em; line-height:1.35;
+  }
+  .blank .fill:empty:before{content:"\00a0"}
+  .blank.right .fill{color:#7ee2a8; border-bottom-color:#3a7a4e}
+  .blank.wrong .fill{color:#ffb4ab; border-bottom-color:#8b3a3a}
+  .blank .cor{
+    display:none; font-size:12px; color:#9ff0b8;
+    border:1px dashed #3a7a4e; border-radius:4px; padding:0 5px; margin-left:2px;
+  }
+  .blank.wrong .cor{display:inline-block}
+  /* ---------- 词库 ---------- */
+  .bank h2{font-size:16px; margin:0 0 2px}
+  .bank .hint{color:var(--muted); font-size:12.5px; margin-bottom:4px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+  .chip{
+    display:inline-flex; align-items:baseline; gap:6px; padding:5px 9px;
+    border:1px solid var(--line); border-radius:8px; background:#141922; font-size:13px;
+  }
+  .chip .l{font-family:ui-monospace,Consolas,monospace; font-weight:700; color:var(--accent)}
+  .chip .w{font-weight:600}
+  .chip .pos{color:#9fb0c8; font-size:11.5px; border:1px solid #33405a; border-radius:4px; padding:0 4px}
+  .chip .gloss{color:var(--muted); font-size:12px}
+  /* ---------- 作答区 ---------- */
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .aitem{border-top:1px solid var(--line); padding:8px 0}
+  .aitem:first-child{border-top:none}
+  .ansrow{display:flex; align-items:center; gap:10px}
+  .ansrow .no{
+    width:38px; text-align:right; font-family:ui-monospace,Consolas,monospace;
+    font-weight:700; color:var(--accent); font-size:13px;
+  }
+  .ansrow select{
+    flex:1; min-width:0; background:#141922; color:var(--ink);
+    border:1px solid var(--line); border-radius:7px; padding:7px 9px;
+    font-size:13.5px; font-family:inherit;
+  }
+  .ansrow select:focus{outline:none; border-color:var(--accent)}
+  .ansrow select.ok{border-color:#3a7a4e; background:#14261a; color:#8ff0b0}
+  .ansrow select.no{border-color:#8b3a3a; background:#2a1719; color:#ffb4ab}
+  .ansrow select option{background:#141922; color:var(--ink)}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .fb .why b{color:#a9c1ff}
+  /* ---------- 操作 ---------- */
+  .btn{
+    border:none; border-radius:9px; padding:9px 16px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#08101c}
+  .btn.primary:hover{background:#3f7fe8}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  /* ---------- 底部固定条 ---------- */
+  .bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(18,22,28,.96); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line); padding:9px 20px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  }
+  .bar .stat{font-size:13px; color:#c3cad6}
+  .bar .stat b{color:#7cc4e8; font-size:17px; font-variant-numeric:tabular-nums}
+  .bar .grow{flex:1}
+  /* ---------- 来源 ---------- */
+  .src{margin-top:16px; padding-top:12px; border-top:1px solid var(--line); font-size:12px; color:var(--muted)}
+  .src a{color:#7fb2ff; text-decoration:none}
+  .src a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 6 月 · 第三套 · Section A 选词填空
+    <small>大脑的可塑性与代偿 · 3 段 · 26–35 题（10 空 / 15 词）· 目标 8 分钟</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：原文 ================= -->
+  <section class="card passage" id="passage">
+    <h2>选词填空（26–35）</h2>
+    <div class="meta">
+      Directions: In this section, there is a passage with ten blanks. You are required to select one word
+      for each blank from a list of choices given in a word bank following the passage. Read the passage
+      through carefully before making your choices. Each choice in the bank is identified by a letter.
+      Please mark the corresponding letter for each item on Answer Sheet 2 with a single line through the
+      centre. You may not use any of the words in the bank more than once.
+    </div>
+
+    <p class="para" id="p-1"><span class="tag">1</span>The human brain has the ability to constantly form
+      new networks and connections between brain cells. This means the brain has an almost magical ability
+      to change. This characteristic is <span class="blank" id="bk26"><span class="bn">26</span><span class="fill" id="f26"></span><span class="cor" id="c26"></span></span>
+      apparent in a new study, focusing on people who underwent a hemispherectomy, a surgical procedure in
+      which half of the brain is removed to treat illness.</p>
+
+    <p class="para" id="p-2"><span class="tag">2</span>The findings showed that, despite missing half of this
+      critical <span class="blank" id="bk27"><span class="bn">27</span><span class="fill" id="f27"></span><span class="cor" id="c27"></span></span>,
+      participants could function well. This was because the <span class="blank" id="bk28"><span class="bn">28</span><span class="fill" id="f28"></span><span class="cor" id="c28"></span></span>
+      half of their brain strengthened. In fact, researchers found that connections and thus
+      communication—between parts of different brain networks are actually stronger in people who had
+      hemispherectomies than in people with intact brains. This <span class="blank" id="bk29"><span class="bn">29</span><span class="fill" id="f29"></span><span class="cor" id="c29"></span></span>
+      that the brain is able to compensate for loss of certain brain structure.</p>
+
+    <p class="para" id="p-3"><span class="tag">3</span>There are many other cases in the medical
+      <span class="blank" id="bk30"><span class="bn">30</span><span class="fill" id="f30"></span><span class="cor" id="c30"></span></span>
+      that document the brain's amazing ability to <span class="blank" id="bk31"><span class="bn">31</span><span class="fill" id="f31"></span><span class="cor" id="c31"></span></span>.
+      For example, a young boy had a significant portion of his brain removed for medical reasons, which
+      included the part of the brain <span class="blank" id="bk32"><span class="bn">32</span><span class="fill" id="f32"></span><span class="cor" id="c32"></span></span>
+      for sight. But a few years after his surgery, scientists found that he could <span class="blank" id="bk33"><span class="bn">33</span><span class="fill" id="f33"></span><span class="cor" id="c33"></span></span>
+      see. They determined that this was because other parts of his brain took over the missing part's
+      <span class="blank" id="bk34"><span class="bn">34</span><span class="fill" id="f34"></span><span class="cor" id="c34"></span></span>
+      tasks. Another study involved people who could smell, despite missing the region in the brain that
+      processes information about smells. Though they are not sure how these individuals <span class="blank" id="bk35"><span class="bn">35</span><span class="fill" id="f35"></span><span class="cor" id="c35"></span></span>
+      the ability to smell, scientists believe it is possible that another part of the brain took on that
+      task.</p>
+
+    <div class="src">
+      原文与逐空解析来源：<a href="https://english-exam.lazynote.cn/cet4/sections/2025-06-3/part3-section-a/" target="_blank" rel="noopener">懒笔记 · 2025年6月第3套 Section A</a>
+      　|　答案交叉核对：<a href="https://cet4-6.xdf.cn/202606/15227402.html" target="_blank" rel="noopener">新东方四六级 · 第三套选词填空答案</a>
+    </div>
+  </section>
+
+  <!-- ================= 右：词库 + 作答 ================= -->
+  <aside class="side">
+
+    <section class="card bank" id="bank">
+      <h2>词库 A–O（15 词选 10）</h2>
+      <div class="hint">每词最多用一次。点右下角 🙈 可隐藏词性与中文释义，做盲测。</div>
+      <div class="chips" id="chips"></div>
+    </section>
+
+    <section class="card quiz" id="quiz">
+      <h2>作答区（26–35）</h2>
+      <div class="hint">每行点开下拉，选一个字母；10 空都选完再点底部「提交答案」。</div>
+      <div id="answers">
+      <div class="aitem" data-n="26">
+        <div class="ansrow">
+          <span class="no">26.</span>
+          <select id="s26" data-n="26" aria-label="第 26 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-26"></div>
+      </div>
+      <div class="aitem" data-n="27">
+        <div class="ansrow">
+          <span class="no">27.</span>
+          <select id="s27" data-n="27" aria-label="第 27 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-27"></div>
+      </div>
+      <div class="aitem" data-n="28">
+        <div class="ansrow">
+          <span class="no">28.</span>
+          <select id="s28" data-n="28" aria-label="第 28 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-28"></div>
+      </div>
+      <div class="aitem" data-n="29">
+        <div class="ansrow">
+          <span class="no">29.</span>
+          <select id="s29" data-n="29" aria-label="第 29 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-29"></div>
+      </div>
+      <div class="aitem" data-n="30">
+        <div class="ansrow">
+          <span class="no">30.</span>
+          <select id="s30" data-n="30" aria-label="第 30 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-30"></div>
+      </div>
+      <div class="aitem" data-n="31">
+        <div class="ansrow">
+          <span class="no">31.</span>
+          <select id="s31" data-n="31" aria-label="第 31 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-31"></div>
+      </div>
+      <div class="aitem" data-n="32">
+        <div class="ansrow">
+          <span class="no">32.</span>
+          <select id="s32" data-n="32" aria-label="第 32 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-32"></div>
+      </div>
+      <div class="aitem" data-n="33">
+        <div class="ansrow">
+          <span class="no">33.</span>
+          <select id="s33" data-n="33" aria-label="第 33 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-33"></div>
+      </div>
+      <div class="aitem" data-n="34">
+        <div class="ansrow">
+          <span class="no">34.</span>
+          <select id="s34" data-n="34" aria-label="第 34 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-34"></div>
+      </div>
+      <div class="aitem" data-n="35">
+        <div class="ansrow">
+          <span class="no">35.</span>
+          <select id="s35" data-n="35" aria-label="第 35 空">
+            <option value="A">A. adapt</option>
+            <option value="B">B. hardly</option>
+            <option value="C">C. indicates</option>
+            <option value="D">D. insist</option>
+            <option value="E">E. literature</option>
+            <option value="F">F. organ</option>
+            <option value="G">G. particularly</option>
+            <option value="H">H. remaining</option>
+            <option value="I">I. responsible</option>
+            <option value="J">J. retained</option>
+            <option value="K">K. still</option>
+            <option value="L">L. strategy</option>
+            <option value="M">M. transformed</option>
+            <option value="N">N. underlines</option>
+            <option value="O">O. visual</option>
+          </select>
+        </div>
+        <div class="fb" id="fb-35"></div>
+      </div>
+      </div>
+      <div class="score" id="score"></div>
+    </section>
+
+  </aside>
+
+</div>
+
+<div class="bar">
+  <span class="stat">已答 <b id="cnt">0</b> / 10</span>
+  <span class="stat">得分 <b id="scoreNum">--</b></span>
+  <span class="grow"></span>
+  <button class="btn primary" id="submit">提交答案</button>
+  <button class="btn ghost" id="reset">重新开始</button>
+</div>
+
+<script>
+const WORDS = [
+  {L:"A", w:"adapt",        pos:"动词",     cn:"适应；改变以适应"},
+  {L:"B", w:"hardly",       pos:"副词",     cn:"几乎不"},
+  {L:"C", w:"indicates",    pos:"动词",     cn:"表明，暗示（三单形式）"},
+  {L:"D", w:"insist",       pos:"动词",     cn:"坚持，坚持认为"},
+  {L:"E", w:"literature",   pos:"名词",     cn:"文献；文学"},
+  {L:"F", w:"organ",        pos:"名词",     cn:"器官"},
+  {L:"G", w:"particularly", pos:"副词",     cn:"尤其，特别"},
+  {L:"H", w:"remaining",    pos:"形容词",   cn:"剩下的，余下的"},
+  {L:"I", w:"responsible",  pos:"形容词",   cn:"负责的；（be responsible for）负责……的"},
+  {L:"J", w:"retained",     pos:"动词",     cn:"保留，保持（过去式/过去分词）"},
+  {L:"K", w:"still",        pos:"副词/形容词", cn:"仍然；静止的"},
+  {L:"L", w:"strategy",     pos:"名词",     cn:"策略"},
+  {L:"M", w:"transformed",  pos:"动词/形容词", cn:"转变（过去式/过去分词）；被改造的"},
+  {L:"N", w:"underlines",   pos:"动词",     cn:"强调；在……下划线（三单形式）"},
+  {L:"O", w:"visual",       pos:"形容词",   cn:"视觉的"}
+];
+
+/* 26–35 答案（懒笔记 + 新东方双源一致） */
+const ANS = ["G","F","H","C","E","A","I","K","O","J"];
+const NUMS = [26,27,28,29,30,31,32,33,34,35];
+
+const BLANKS = NUMS.map((n,i) => ({n:n, a:ANS[i]}));
+
+const WHY = {
+  26: `<p><b>① 词性</b>：\`is ___ apparent\` 是“系动词 + 空格 + 形容词”的系表结构，空里只能填<b>副词</b>，修饰 apparent。</p>
+       <p><b>② 依据</b>：本句用一项新研究来例证大脑的可塑性，particularly apparent（尤为明显）是固定的强调搭配，语气与下文 hemispherectomy 这样的极端案例相配。</p>
+       <p><b>③ 干扰项</b>：B hardly 是半否定副词，hardly apparent 变成“几乎不明显”，一句话就把全篇“大脑可塑性惊人”的论点否掉；K still 语法可通但语气平淡，只剩“照旧明显”，而 still 在第 33 空 could ___ see 处有更强的搭配需求。</p>`,
+  27: `<p><b>① 词性</b>：\`this + 形容词 + ___\`，空是名词中心词，同时作 half of 的宾语，需要<b>名词</b>。</p>
+       <p><b>② 依据</b>：this 在语篇里回指上文的 brain，而 brain 正是 critical organ（关键器官），“缺失这个关键器官的一半”语义自洽。</p>
+       <p><b>③ 干扰项</b>：E literature 是抽象名词“文献”，不能被人切掉一半；L strategy 是“策略”，与 this 所回指的 brain 这一实体对不上，且 missing half of a strategy 不是地道说法。</p>`,
+  28: `<p><b>① 词性</b>：\`the ___ half of their brain\`，空是修饰 half 的<b>前置定语形容词</b>。</p>
+       <p><b>② 依据</b>：上一句刚说 missing half of this critical organ（缺了一半），那么能 strengthened 的自然是“剩下的”那一半，remaining 与“缺一半—剩一半”形成呼应。</p>
+       <p><b>③ 干扰项</b>：I responsible 的习惯用法是 be responsible for，几乎不直接前置修饰 half 这类量词；O visual 会把本段主旨从“整体半脑代偿”缩到“视觉”，而下文的视觉例子在第三段才出现。</p>`,
+  29: `<p><b>① 词性</b>：\`This ___ that + 从句\`，主语 this 之后缺<b>第三人称单数谓语动词</b>，且要能接 that 宾语从句。</p>
+       <p><b>② 依据</b>：上文摆出“连接反而更强”这一新证据，本句由证据推出“大脑能代偿”的结论，indicates that（表明）是“现象 → 结论”的标准表达。</p>
+       <p><b>③ 干扰项</b>：N underlines 也能接 that 从句，词性时态全过关，但它的语气是“强调一个早已被反复说过的结论”；本句是新发现支撑推论，要用 indicates。</p>`,
+  30: `<p><b>① 词性</b>：\`in the medical ___\`，介词 + 形容词之后缺<b>名词</b>。</p>
+       <p><b>② 依据</b>：medical literature（医学文献）是固定搭配，“文献里有许多案例记录大脑的惊人能力”才讲得通。</p>
+       <p><b>③ 干扰项</b>：L strategy（医疗策略）里不可能“记载案例”，cases that document 只能存在于文献/记录中；in the medical strategy 本身也不地道。</p>`,
+  31: `<p><b>① 词性</b>：\`ability to ___\`，不定式 to 后缺<b>动词原形</b>。</p>
+       <p><b>② 依据</b>：全篇主旨是“大脑能补偿缺失”，adapt（适应）与第二段 compensate for loss of certain brain structure 同向，又正好统摄下文视觉、嗅觉两个代偿案例。</p>
+       <p><b>③ 干扰项</b>：D insist 多用于人“坚持认为/坚持要求”，配无生命主语 brain 语义怪异，也与后面的例证方向无关。</p>`,
+  32: `<p><b>① 词性</b>：\`the part of the brain ___ for sight\`，空是<b>后置定语（形容词 + for）</b>。</p>
+       <p><b>② 依据</b>：看见 “___ for” 这个框架就该条件反射到 be responsible for，“负责视觉的那部分大脑”是讲脑区功能的标准说法。</p>
+       <p><b>③ 干扰项</b>：O visual 没有 visual for 的搭配，而且 visual 本身已含“视觉”，再加 for sight 就成了“视觉的为了视力”，既重复又不通。</p>`,
+  33: `<p><b>① 词性</b>：\`could ___ see\`，情态动词与原形动词之间缺<b>副词</b>。</p>
+       <p><b>② 依据</b>：前文说他切掉了负责视觉的脑区，紧接 But a few years after his surgery, scientists found… 是“竟然还能看见”的转折后肯定，still see 正合此意，也呼应“代偿”主旨。</p>
+       <p><b>③ 干扰项</b>：B hardly 是半否定副词，could hardly see 会把 But 引出的惊喜发现彻底反转。见到 But + scientists found 这种肯定发现，副词槽几乎必选肯定型（still / even），半否定几乎一律错。</p>`,
+  34: `<p><b>① 词性</b>：\`the missing part's ___ tasks\`，空是修饰 tasks 的<b>形容词</b>。</p>
+       <p><b>② 依据</b>：第 32 空已锁定 missing part 是 responsible for sight，那么被接管的自然是 visual tasks（视觉任务），前后闭环。</p>
+       <p><b>③ 干扰项</b>：H remaining 指“剩下的”，说成“剩余任务”答不出“哪一类任务”这个具体所指，且 remaining 已在第 28 空用掉（每词最多一次）；O visual 才是与前文 sight 对应的词。</p>`,
+  35: `<p><b>① 词性</b>：\`how these individuals ___ the ability to smell\`，从句缺<b>谓语动词</b>（过去式，与全文时态一致）。</p>
+       <p><b>② 依据</b>：despite missing the region in the brain… 与 retained the ability（仍保有这种能力）构成完美的让步对照：脑区没了，能力还留着。</p>
+       <p><b>③ 干扰项</b>：M transformed 常配 transform A into B，接 the ability to smell 会变成“改造嗅觉能力”，与“他们居然还闻得到”的语义相反。</p>`
+};
+
+const WORD_MAP = {};
+WORDS.forEach(w => { WORD_MAP[w.L] = w; });
+
+const picked = {};
+
+/* ---------- 词库渲染 ---------- */
+document.getElementById("chips").innerHTML = WORDS.map(w =>
+  `<span class="chip"><span class="l">${w.L}</span><span class="w">${w.w}</span>` +
+  `<span class="pos">${w.pos}</span><span class="gloss">${w.cn}</span></span>`
+).join("");
+
+/* ---------- 作答行：10 个原生 select 已在 HTML 中静态写死，这里只做绑定与复位 ---------- */
+function initRows(){
+  BLANKS.forEach(b => {
+    const sel = document.getElementById("s" + b.n);
+    if(!sel) return;
+    sel.selectedIndex = -1;          /* 初始不选中任何词，显示空白 */
+    sel.disabled = false;
+    sel.classList.remove("ok", "no");
+    if(!sel.dataset.bound){
+      sel.dataset.bound = "1";
+      sel.addEventListener("change", () => {
+        picked[b.n] = sel.value;
+        updateCount();
+      });
+    }
+  });
+  updateCount();
+}
+
+function updateCount(){
+  const answered = BLANKS.filter(b => {
+    const sel = document.getElementById("s" + b.n);
+    return sel && sel.value;
+  }).length;
+  document.getElementById("cnt").textContent = answered;
+}
+
+/* ---------- 判分 ---------- */
+function grade(){
+  let correct = 0;
+  let answered = 0;
+
+  BLANKS.forEach(b => {
+    const sel   = document.getElementById("s" + b.n);
+    const fb    = document.getElementById("fb-" + b.n);
+    const bk    = document.getElementById("bk" + b.n);
+    const fill  = document.getElementById("f" + b.n);
+    const cor   = document.getElementById("c" + b.n);
+    const v     = sel ? sel.value : "";
+    const right = (v === b.a);
+
+    if(v) answered++;
+    if(right) correct++;
+
+    if(fill) fill.textContent = v ? WORD_MAP[v].w : "未选";
+    if(cor)  cor.textContent  = b.a + ". " + WORD_MAP[b.a].w;
+    if(bk){
+      bk.classList.remove("right", "wrong");
+      bk.classList.add(right ? "right" : "wrong");
+    }
+    if(sel){
+      sel.classList.remove("ok", "no");
+      sel.classList.add(right ? "ok" : "no");
+      sel.disabled = true;
+    }
+    if(fb){
+      fb.className = "fb " + (right ? "ok" : "no") + " show";
+      fb.innerHTML = `<span class="badge">${right ? "正确" : (v ? "错误" : "未作答")}</span>` +
+        `答案 ${b.a}. ${WORD_MAP[b.a].w}` +
+        `<div class="why">${WHY[b.n]}</div>`;
+    }
+  });
+
+  document.getElementById("cnt").textContent = answered;
+  document.getElementById("scoreNum").textContent = correct;
+
+  const s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = `本轮得分：<b>${correct} / 10</b>　` +
+    (correct === 10 ? "全对！选词填空这一项的节奏已经稳了。" :
+     correct >= 8  ? "很稳，考场目标就是 8 个以上。回看错空的“词性槽”判断错在哪一步。" :
+     correct >= 5  ? "及格线附近。先把 10 个空按词性分类（名/动/形/副），再在同类里比语义。" :
+     "先别急着刷下一套：按“定词性 → 排同类 → 看搭配”三步重做一遍，15 个词里 5 个是干扰项。");
+  if(s.scrollIntoView) s.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+/* ---------- 重开 ---------- */
+function reset(){
+  BLANKS.forEach(b => {
+    delete picked[b.n];
+    const bk   = document.getElementById("bk" + b.n);
+    const fill = document.getElementById("f" + b.n);
+    const cor  = document.getElementById("c" + b.n);
+    if(bk) bk.classList.remove("right", "wrong");
+    if(fill) fill.textContent = "";
+    if(cor) cor.textContent = "";
+  });
+  initRows();
+  document.getElementById("score").className = "score";
+  document.getElementById("scoreNum").textContent = "--";
+  sec = 0;
+  timerEl.textContent = "00:00";
+  timerEl.className = "timer";
+}
+
+document.getElementById("submit").addEventListener("click", grade);
+document.getElementById("reset").addEventListener("click", reset);
+
+/* ---------- 计时器（目标 8:00） ---------- */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  timerEl.textContent = `${m}:${s}`;
+  if(sec >= 480) timerEl.classList.add("over");
+  else if(sec >= 400) timerEl.classList.add("warn");
+}, 1000);
+
+initRows();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}html.blind .chip .pos,html.blind .chip .gloss{display:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:76px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#08101c;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏词义提示</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示词义提示':'🙈 隐藏词义提示';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.btn.primary{color:#08101c}
+.para.hit .tag{color:#ffe9a8}
+</style>
+</body>
+</html>
