@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2025年12月第三套 · Section A 选词填空｜四级阅读练习</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a; --panel:#1c2740;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; padding-bottom:78px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.94); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:var(--panel); color:#a9c1ff;
+  }
+  .timer.warn{background:#3a2a12; color:#ffd48a}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:var(--panel); white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 470px; gap:22px; align-items:start;
+  }
+  @media (max-width:1040px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.18);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:18px; margin:0 0 4px; letter-spacing:.2px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px; line-height:1.65}
+  .para{margin:0 0 16px; padding-left:34px; position:relative}
+  .para .tag{
+    position:absolute; left:0; top:3px; width:24px; height:24px; border-radius:6px;
+    background:var(--panel); color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  /* ---------- 空格 ---------- */
+  .blank{display:inline-block; white-space:nowrap; margin:0 4px; vertical-align:baseline}
+  .blank b{
+    display:inline-block; min-width:28px; padding:0 5px; margin-right:3px;
+    border:1px solid #3a4353; border-radius:5px; background:var(--panel);
+    color:#a9c1ff; font-size:11.5px; font-weight:700; text-align:center;
+    font-family:ui-monospace,Consolas,monospace; line-height:18px;
+  }
+  .blank i{
+    display:inline-block; width:62px; height:16px; border-bottom:2px solid #46536b;
+    vertical-align:-3px; font-style:normal; text-align:center; font-size:12px; font-weight:700;
+  }
+  .blank.ok b{border-color:#2f6b40; background:#16301f; color:#7ee2a8}
+  .blank.ok i{color:#7ee2a8; border-bottom-color:var(--ok)}
+  .blank.bad b{border-color:#6b2f2f; background:#331a1c; color:#ffb4ab}
+  .blank.bad i{color:#ffb4ab; border-bottom-color:var(--bad)}
+  /* ---------- 右栏 ---------- */
+  .quiz{position:sticky; top:78px; max-height:calc(100vh - 108px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:12px}
+  /* ---------- 词库 ---------- */
+  .bank{display:flex; flex-wrap:wrap; gap:7px}
+  .bank .w{
+    border:1px solid var(--line); background:#10161d; border-radius:8px;
+    padding:5px 9px; font-size:12.5px; line-height:1.5; min-width:132px; flex:1 1 132px;
+  }
+  .bank .w b{color:var(--accent); font-family:ui-monospace,Consolas,monospace; margin-right:4px}
+  .bank .w em{font-style:normal; font-weight:700; color:#dfe5ee; letter-spacing:.2px}
+  .bank .w .pos{color:#8aa6c8; font-size:11.5px; margin-left:3px}
+  .bank .w .gloss{display:block; color:var(--muted); font-size:11.5px; line-height:1.45}
+  /* ---------- 作答 ---------- */
+  .rows{margin-top:8px}
+  .row{
+    display:grid; grid-template-columns:38px minmax(0,1fr) 128px; gap:8px;
+    align-items:center; padding:6px 0; border-top:1px solid var(--line);
+  }
+  .row:first-child{border-top:none}
+  .row .no{font-weight:700; color:var(--accent); font-family:ui-monospace,Consolas,monospace; font-size:13.5px}
+  select{
+    width:100%; background:#10161d; color:var(--ink); border:1px solid var(--line);
+    border-radius:8px; padding:7px 9px; font-size:13px; font-family:inherit; line-height:1.4;
+  }
+  select:focus{outline:2px solid #2d5aa0; outline-offset:1px}
+  select.right{border-color:var(--ok); background:#12261a; color:#9ff0bd}
+  select.wrong{border-color:var(--bad); background:#2a1416; color:#ffc0b8}
+  select:disabled{opacity:1; cursor:default}
+  .corr{font-size:12px; color:#7ee2a8; text-align:right; white-space:nowrap}
+  .corr:not(:empty){
+    border:1px dashed var(--ok); border-radius:6px; padding:1px 6px; background:#12261a;
+  }
+  .fb{margin:2px 0 8px; font-size:13px; display:none; padding:10px 12px; border-radius:9px}
+  .fb.show{display:block}
+  .fb.ok{background:#12251a; border:1px solid #26543a}
+  .fb.no{background:#2a1416; border:1px solid #5d2b2f}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#1c4a2c; color:#8ff0b6}
+  .fb.no .badge{background:#4a2226; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c8d0dc; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .fb .why b{color:#a9c1ff}
+  /* ---------- 按钮 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#08101c}
+  .btn.primary:hover{background:#79b0ff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  /* ---------- 底部得分条 ---------- */
+  .bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(18,22,28,.97); border-top:1px solid var(--line);
+    backdrop-filter:blur(8px);
+    padding:10px 20px; display:flex; gap:20px; align-items:center; flex-wrap:wrap;
+    font-size:13.5px;
+  }
+  .bar .bstat{color:var(--muted)}
+  .bar .bstat b{color:var(--ink); font-size:16px; font-variant-numeric:tabular-nums; margin-left:4px}
+  .bar .bstat b.hi{color:#7cc4e8}
+  .bar .bmsg{flex:1; color:#8fa3bb; font-size:12.5px; min-width:160px}
+  .bar .btn{padding:7px 14px; font-size:13px}
+  /* ---------- 页脚 ---------- */
+  .src{margin:22px 0 8px; font-size:12px; color:#7b8494; line-height:1.9}
+  .src a{color:#8fa8c6}
+  details.fp{margin-top:12px; border-top:1px solid var(--line); padding-top:10px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:8px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 12 月 · 第三套 · Section A 选词填空
+    <small>Earth Day · 4 段 · 15 词选 10 空（26–35）· 目标 8 分钟</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：原文 ================= -->
+  <section class="card passage" id="passage">
+    <h2>Earth Day</h2>
+    <div class="meta">
+      Directions: In this section, there is a passage with ten blanks. You are required to select one word
+      for each blank from a list of choices given in a word bank following the passage. Read the passage
+      through carefully before making your choices. Each choice in the bank is identified by a letter.
+      Please mark the corresponding letter for each item on <b>Answer Sheet 2</b> with a single line through
+      the centre. You may not use any of the words in the bank more than once.
+    </div>
+
+    <p class="para"><span class="tag">1</span>Earth Day is an annual celebration that honors the achievements of the environmental movement and raises awareness of the need to protect Earth's natural resources for future generations. Earth Day is celebrated on April 22 in the United States and on either April 22 or the day the spring equinox(春分) occurs throughout the <span class="blank" data-n="26"><b>26</b><i></i></span> of the world.</p>
+
+    <p class="para"><span class="tag">2</span>Environmental activism during the 1960s <span class="blank" data-n="27"><b>27</b><i></i></span> Wisconsin Senator Gaylord Nelson to create a <span class="blank" data-n="28"><b>28</b><i></i></span> celebration uniting the environmental movement. With the help of Denis Hayes, a graduate student at Harvard University, Nelson organized the first Earth Day on April 22, 1970, educating participants in the <span class="blank" data-n="29"><b>29</b><i></i></span> of environmental protection. Attended by 20 million people across the United States, the event <span class="blank" data-n="30"><b>30</b><i></i></span> support for legislation such as the Clean Air Act and the Endangered Species Act.</p>
+
+    <p class="para"><span class="tag">3</span>In 1990, Hayes organized a global Earth Day, with more than 200 million participants in 140 countries. Earth Day now brings <span class="blank" data-n="31"><b>31</b><i></i></span> citizens and activists from around the world to raise awareness and take action regarding such environmental <span class="blank" data-n="32"><b>32</b><i></i></span> as global warming and renewable energy.</p>
+
+    <p class="para"><span class="tag">4</span>Today, the Earth Day Network, which rallies more than 20,000 <span class="blank" data-n="33"><b>33</b><i></i></span> and organizations in 190 countries, supports the Earth Day mission year-round. This mission is founded on the proposition that all people, regardless of race, gender, income, or <span class="blank" data-n="34"><b>34</b><i></i></span> , have a moral right to a healthy, sustainable environment. The Earth Day Network <span class="blank" data-n="35"><b>35</b><i></i></span> this mission through education, public policy, and activism campaigns.</p>
+
+    <div class="src">
+      原文照录自懒笔站本篇卷面（4 段 · 约 240 词），未改写、未补句。
+    </div>
+  </section>
+
+  <!-- ================= 右：词库 + 作答 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>词库 A–O</h2>
+    <div class="hint">15 词选 10，每词最多用一次。释义为辅助，选词以语义与搭配为准。</div>
+
+    <div class="bank">
+      <div class="w"><b>A</b><em>concerns</em><span class="pos">n./v.</span><span class="gloss">关切的问题；使担忧、涉及</span></div>
+      <div class="w"><b>B</b><em>expansion</em><span class="pos">n.</span><span class="gloss">扩张、扩展</span></div>
+      <div class="w"><b>C</b><em>forth</em><span class="pos">adv.</span><span class="gloss">向前、向外</span></div>
+      <div class="w"><b>D</b><em>geography</em><span class="pos">n.</span><span class="gloss">地理、地理位置、地域</span></div>
+      <div class="w"><b>E</b><em>importance</em><span class="pos">n.</span><span class="gloss">重要性</span></div>
+      <div class="w"><b>F</b><em>imposed</em><span class="pos">v.</span><span class="gloss">强加、征收（impose 过去式）</span></div>
+      <div class="w"><b>G</b><em>inspired</em><span class="pos">v./adj.</span><span class="gloss">激励、启发；受到启发的</span></div>
+      <div class="w"><b>H</b><em>national</em><span class="pos">adj.</span><span class="gloss">全国的、国家的</span></div>
+      <div class="w"><b>I</b><em>partners</em><span class="pos">n.</span><span class="gloss">合作伙伴、搭档（复数）</span></div>
+      <div class="w"><b>J</b><em>potential</em><span class="pos">n./adj.</span><span class="gloss">潜力；潜在的</span></div>
+      <div class="w"><b>K</b><em>pursues</em><span class="pos">v.</span><span class="gloss">追求、推行、从事</span></div>
+      <div class="w"><b>L</b><em>rescues</em><span class="pos">n./v.</span><span class="gloss">营救（复数/三单）</span></div>
+      <div class="w"><b>M</b><em>rest</em><span class="pos">n./v.</span><span class="gloss">其余部分；休息</span></div>
+      <div class="w"><b>N</b><em>strengthened</em><span class="pos">v.</span><span class="gloss">加强、巩固</span></div>
+      <div class="w"><b>O</b><em>together</em><span class="pos">adv.</span><span class="gloss">一起、共同</span></div>
+    </div>
+
+    <h2 style="margin-top:20px">作答区（26–35）</h2>
+    <div class="hint">先读完全文，再逐空定词性、定语义。提交后可展开三段式解析。</div>
+
+    <div class="rows" id="rows">
+      <div class="row"><span class="no">26</span><select id="s26" aria-label="第26题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c26"></span></div>
+      <div class="fb" id="fb26"></div>
+
+      <div class="row"><span class="no">27</span><select id="s27" aria-label="第27题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c27"></span></div>
+      <div class="fb" id="fb27"></div>
+
+      <div class="row"><span class="no">28</span><select id="s28" aria-label="第28题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c28"></span></div>
+      <div class="fb" id="fb28"></div>
+
+      <div class="row"><span class="no">29</span><select id="s29" aria-label="第29题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c29"></span></div>
+      <div class="fb" id="fb29"></div>
+
+      <div class="row"><span class="no">30</span><select id="s30" aria-label="第30题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c30"></span></div>
+      <div class="fb" id="fb30"></div>
+
+      <div class="row"><span class="no">31</span><select id="s31" aria-label="第31题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c31"></span></div>
+      <div class="fb" id="fb31"></div>
+
+      <div class="row"><span class="no">32</span><select id="s32" aria-label="第32题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c32"></span></div>
+      <div class="fb" id="fb32"></div>
+
+      <div class="row"><span class="no">33</span><select id="s33" aria-label="第33题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c33"></span></div>
+      <div class="fb" id="fb33"></div>
+
+      <div class="row"><span class="no">34</span><select id="s34" aria-label="第34题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c34"></span></div>
+      <div class="fb" id="fb34"></div>
+
+      <div class="row"><span class="no">35</span><select id="s35" aria-label="第35题"><option value="A">A. concerns</option><option value="B">B. expansion</option><option value="C">C. forth</option><option value="D">D. geography</option><option value="E">E. importance</option><option value="F">F. imposed</option><option value="G">G. inspired</option><option value="H">H. national</option><option value="I">I. partners</option><option value="J">J. potential</option><option value="K">K. pursues</option><option value="L">L. rescues</option><option value="M">M. rest</option><option value="N">N. strengthened</option><option value="O">O. together</option></select><span class="corr" id="c35"></span></div>
+      <div class="fb" id="fb35"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+    </div>
+
+    <details class="fp">
+      <summary>卡住了？点开看「定词性三步法」</summary>
+      <table>
+        <tr><th>步骤</th><th>动作</th></tr>
+        <tr><td>1 定词性</td><td>看空前空后：冠词/介词后要名词，主语后缺谓语，名词前要形容词，动词后要副词</td></tr>
+        <tr><td>2 定形式</td><td>名词看单复数，动词看时态与主谓一致（-ed / -s）</td></tr>
+        <tr><td>3 定语义</td><td>代入后读整句，再用固定搭配与上下文因果链排除同词性干扰词</td></tr>
+      </table>
+    </details>
+
+    <div class="src">
+      数据来源：<a href="https://english-exam.lazynote.cn/cet4/sections/2025-12-3/part3-section-a/" target="_blank" rel="noopener">懒笔站 · 26–35 逐空解析</a> ·
+      <a href="https://m.koolearn.com/cet4/20251213/930096.html" target="_blank" rel="noopener">新东方在线 · 第三套答案</a><br>
+      答案经两源核对一致（26–30 MGHEN / 31–35 OAIDK）。
+    </div>
+  </section>
+
+</div>
+
+<div class="bar" id="bar">
+  <span class="bstat">已答 <b id="done">0</b>/10</span>
+  <span class="bstat">得分 <b id="pts">—</b>/10</span>
+  <span class="bmsg" id="msg">目标 8 分钟：先通读，再逐空定词性。</span>
+  <button class="btn ghost" id="reset">重新开始</button>
+</div>
+
+<script>
+const DATA = [
+  {
+    n: 26, ans: "M", word: "rest",
+    why: '<p><b>① 词性与形式</b>：the ___ of the world 是「定冠词 + 名词 + of」，必须是名词，且此处指整体中的「其余部分」，用单数。</p>' +
+         '<p><b>② 语义与搭配</b>：the rest of the world 为固定搭配，意为「世界其余地方」。本句正是 the United States 与「世界其他地方」的二分对照，throughout the rest of the world 才通。</p>' +
+         '<p><b>③ 干扰项</b>：B expansion 的 the expansion of the world（世界的扩张）与 throughout 的地点范围语义冲突；D geography 指「地理/地形」，不含「其余」义；E importance、J potential 是抽象属性，无法承担地点范围。</p>'
+  },
+  {
+    n: 27, ans: "G", word: "inspired",
+    why: '<p><b>① 词性与形式</b>：主语 Environmental activism during the 1960s 之后缺谓语，需及物动词；叙述 1960 年代往事，用过去式。</p>' +
+         '<p><b>② 语义与搭配</b>：inspire sb to do sth「激励某人做某事」，与空后 Wisconsin Senator ... to create 的结构严丝合缝，也与 1970 年首个地球日的时间线一致。</p>' +
+         '<p><b>③ 干扰项</b>：F imposed 时态对但结构错——impose 的典型结构是 impose sth on sb，不能接 sb to do，且语义偏「强加」，与正面叙述色彩相反；K pursues 为第三人称单数现在时，时态不合，且 pursue 不接 sb to do。</p>'
+  },
+  {
+    n: 28, ans: "H", word: "national",
+    why: '<p><b>① 词性与形式</b>：a ___ celebration 是「冠词 + 形容词 + 名词」，定语位需形容词。</p>' +
+         '<p><b>② 语义与搭配</b>：下文 Attended by 20 million people across the United States 明示活动覆盖全美，a national celebration「一场全国性庆典」与之呼应，也对应「把环保运动联合起来」的目标。</p>' +
+         '<p><b>③ 干扰项</b>：G inspired 修饰 celebration 不自然（多修饰人或想法）；J potential 与 create 自相矛盾——已经创立出来的庆典就不再是「潜在的」。</p>'
+  },
+  {
+    n: 29, ans: "E", word: "importance",
+    why: '<p><b>① 词性与形式</b>：in the ___ of 是固定名词框架，需名词。</p>' +
+         '<p><b>② 语义与搭配</b>：educate sb in the importance of sth「教育某人认识某事的重要性」是高频搭配；下文「加强了对《清洁空气法》等立法的支持」正需要「先认识到重要性」这条因果链。</p>' +
+         '<p><b>③ 干扰项</b>：J potential 也能构成 the potential of，但「环保的潜力」接不上下文推动立法；A concerns 为复数，与 the ... of 的单数框架不顺，且语义偏「具体关切事项」。</p>'
+  },
+  {
+    n: 30, ans: "N", word: "strengthened",
+    why: '<p><b>① 词性与形式</b>：the event ___ support 中主语后缺谓语，需过去式及物动词。</p>' +
+         '<p><b>② 语义与搭配</b>：strengthen support for legislation「增强对立法的支持」，与 2000 万人参与的规模、以及后文列举的两部环保法案完全吻合。</p>' +
+         '<p><b>③ 干扰项</b>：F imposed 的 imposed support（强加支持）搭配不成立；impose 多接 obligation / tax / sanction 等，语义色彩也与公众自发推动立法的正面语境相反。</p>'
+  },
+  {
+    n: 31, ans: "O", word: "together",
+    why: '<p><b>① 词性与形式</b>：brings ___ citizens 中 bring 后接副词，构成「动词 + 副词」短语。</p>' +
+         '<p><b>② 语义与搭配</b>：bring together「把……聚到一起」，与 from around the world（来自世界各地）的「汇聚」语义完美衔接。</p>' +
+         '<p><b>③ 干扰项</b>：C forth 同为副词，bring forth 也真实存在，但意为「产生、提出」，宾语多为想法/结果/产物，后接「人」不自然。</p>'
+  },
+  {
+    n: 32, ans: "A", word: "concerns",
+    why: '<p><b>① 词性与形式</b>：such environmental ___ as ... 是 such + 形容词 + 复数名词 + as 结构，需复数名词。</p>' +
+         '<p><b>② 语义与搭配</b>：environmental concerns「环境议题/环境关切」是高频搭配，与所举的 global warming（问题）与 renewable energy（方向）两类例子都吻合。</p>' +
+         '<p><b>③ 干扰项</b>：B expansion（扩张）与 D geography（地理）都不是「议题」；L rescues（救援）在全篇无任何依据。</p>'
+  },
+  {
+    n: 33, ans: "I", word: "partners",
+    why: '<p><b>① 词性与形式</b>：20,000 ___ and organizations 是「数量词 + 名词 + and + 名词」，并列名词位，需复数。</p>' +
+         '<p><b>② 语义与搭配</b>：partners and organizations「合作伙伴与组织机构」是描述全球性网络成员的标准表达，与 rally（团结、聚集）的宾语类型相符。</p>' +
+         '<p><b>③ 干扰项</b>：L rescues 形式能塞进去，但「救援行动」是事件名词，不能与 organizations（主体）并列作 rally 的宾语——并列同类律一卡即倒。</p>'
+  },
+  {
+    n: 34, ans: "D", word: "geography",
+    why: '<p><b>① 词性与形式</b>：race, gender, income, or ___ 是并列名词序列的末项，需名词。</p>' +
+         '<p><b>② 语义与搭配</b>：geography 在此指「地域/地区出身」，与种族、性别、收入同属「人的归属属性」，构成「不论出身」的价值宣言。</p>' +
+         '<p><b>③ 干扰项</b>：B expansion（扩张）不是人的属性；J potential（潜力）是个体能力描述，「不论潜力如何」在本句不合常理。</p>'
+  },
+  {
+    n: 35, ans: "K", word: "pursues",
+    why: '<p><b>① 词性与形式</b>：The Earth Day Network ___ this mission 中主语后缺谓语；主语为单数机构名，用第三人称单数现在时。</p>' +
+         '<p><b>② 语义与搭配</b>：pursue a mission「推行/践行使命」，与 through education, public policy, and activism campaigns 的方式状语自然衔接。</p>' +
+         '<p><b>③ 干扰项</b>：F imposed 时态与语义均不合；G inspired 为过去式，且 inspire 后需接宾语补足语 to do，本句没有该结构。</p>'
+  }
+];
+
+const selEls = {};
+DATA.forEach(d => { selEls[d.n] = document.getElementById("s" + d.n); selEls[d.n].selectedIndex = -1; });
+
+function doneCount(){
+  return DATA.filter(d => selEls[d.n].value).length;
+}
+
+function updateBar(){
+  document.getElementById("done").textContent = doneCount();
+}
+
+function setScore(v){
+  const el = document.getElementById("pts");
+  el.textContent = (v === null) ? "—" : v;
+  el.classList.toggle("hi", v !== null);
+}
+
+function setMsg(t){
+  document.getElementById("msg").textContent = t;
+}
+
+DATA.forEach(d => {
+  selEls[d.n].addEventListener("change", updateBar);
+});
+
+document.getElementById("submit").addEventListener("click", () => {
+  let score = 0;
+  let firstWrong = null;
+
+  DATA.forEach(d => {
+    const s = selEls[d.n];
+    const v = s.value;
+    const ok = (v === d.ans);
+    if (ok) score++; else if (firstWrong === null) firstWrong = d.n;
+
+    s.classList.remove("right", "wrong");
+    s.classList.add(ok ? "right" : "wrong");
+    s.disabled = true;
+
+    const corr = document.getElementById("c" + d.n);
+    if (ok){
+      corr.textContent = "✓ " + d.ans + ". " + d.word;
+    } else {
+      corr.textContent = "答案 " + d.ans + ". " + d.word;
+    }
+
+    const fb = document.getElementById("fb" + d.n);
+    fb.className = "fb show " + (ok ? "ok" : "no");
+    fb.innerHTML = '<span class="badge">' + (ok ? "正确" : (v ? "错误" : "未作答")) + "</span>"
+                 + "第 " + d.n + " 空 · " + d.ans + ") " + d.word
+                 + '<div class="why">' + d.why + "</div>";
+
+    const blank = document.querySelector('.blank[data-n="' + d.n + '"]');
+    blank.classList.remove("ok", "bad");
+    blank.classList.add(ok ? "ok" : "bad");
+    blank.querySelector("i").textContent = v || "—";
+  });
+
+  setScore(score);
+  updateBar();
+
+  if (score === 10){
+    setMsg("全对。8 分钟内在考场上可以稳定拿到这 10 分。");
+  } else if (firstWrong !== null){
+    const target = document.querySelector('.blank[data-n="' + firstWrong + '"]');
+    if (target) target.scrollIntoView({behavior:"smooth", block:"center"});
+    setMsg("首个错题在第 " + firstWrong + " 空，已定位到原文；对完解析再重做一遍。");
+  }
+  document.getElementById("bar").scrollIntoView({behavior:"smooth", block:"end"});
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  DATA.forEach(d => {
+    const s = selEls[d.n];
+    s.value = "";
+    s.disabled = false;
+    s.classList.remove("right", "wrong");
+    document.getElementById("c" + d.n).textContent = "";
+    const fb = document.getElementById("fb" + d.n);
+    fb.className = "fb";
+    fb.innerHTML = "";
+    const blank = document.querySelector('.blank[data-n="' + d.n + '"]');
+    blank.classList.remove("ok", "bad");
+    blank.querySelector("i").textContent = "";
+  });
+  setScore(null);
+  updateBar();
+  setMsg("已重置，计时继续。目标 8 分钟。");
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+/* ---------- 计时器：目标 8 分钟 ---------- */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  timerEl.textContent = m + ":" + s;
+  if (sec >= 480) timerEl.classList.add("over");
+  else if (sec >= 360) timerEl.classList.add("warn");
+}, 1000);
+
+updateBar();
+</script>
+<style id="blind-css">html.blind .bank .gloss{display:none!important}html.blind .blank i{border-bottom-color:#3a4353!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:18px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#08101c;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏词义</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示词义':'🙈 隐藏词义';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.btn.primary,.bank .w b{color:#08101c}
+select{color-scheme:dark}
+select option{background:#10161d;color:#e3e7ee}
+</style>
+</body>
+</html>
