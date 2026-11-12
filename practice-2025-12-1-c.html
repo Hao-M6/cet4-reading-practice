@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级仔细阅读 · 2025年12月第一套 · 46–55 题</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; padding-bottom:70px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+  }
+  .timer.warn{background:#3a1d1f; color:#ffb4ab}
+  .timer.over{animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 470px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  .col{display:flex; flex-direction:column; gap:22px}
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{margin:0 0 14px; padding-left:34px; position:relative; transition:background .25s}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{display:block; color:var(--muted); font-size:12.5px; margin-top:5px; border-left:2px solid #333c4b; padding-left:8px}
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:var(--markline); color:#ffe9a8}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 92px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz h3{font-size:13.5px; margin:16px 0 2px; color:#a9c1ff; font-weight:600}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .q{padding:14px 0; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none; padding-top:8px}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px}
+  .q .stem{font-size:14px; line-height:1.6}
+  .opts{display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:9px}
+  @media (max-width:560px){ .opts{grid-template-columns:1fr} }
+  .opts button{
+    text-align:left; border:1px solid var(--line); background:#1a1f27; border-radius:8px;
+    cursor:pointer; font-size:13px; line-height:1.5; color:#c3cad6; padding:7px 9px;
+    font-family:inherit; transition:.12s;
+  }
+  .opts button b{color:#a9c1ff; font-family:ui-monospace,Consolas,monospace; margin-right:5px}
+  .opts button:hover{border-color:var(--accent); background:#1b2634}
+  .opts button.sel{background:#22304d; border-color:var(--accent); color:#dbe7ff}
+  .opts button.right{background:#1d5c34; border-color:#3fb950; color:#d7ffe6}
+  .opts button.right b{color:#d7ffe6}
+  .opts button.wrong{background:#5e1f1c; border-color:#f85149; color:#ffd9d6}
+  .opts button.wrong b{color:#ffd9d6}
+  .opts button.answer{outline:2px dashed #3fb950; outline-offset:1px}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .fb .why em{color:#dbe7ff; font-style:normal; background:#1b2331; padding:0 2px; border-radius:3px}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#08101c}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  /* ---------- 指纹表 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+  /* ---------- 固定得分条 ---------- */
+  .dock{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(16,20,26,.97); border-top:1px solid var(--line);
+    padding:9px 20px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+    font-size:13.5px;
+  }
+  .dock .lab{color:var(--muted)}
+  .dock b{color:#a9c1ff; font-variant-numeric:tabular-nums}
+  .dock .big{font-size:17px; color:#7cc4e8}
+  .dock .sp{flex:1}
+  .dock button{
+    border:1px solid var(--line); background:#232a35; color:#c3cad6;
+    border-radius:8px; padding:6px 14px; font-size:13px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .dock button:hover{background:#2b3240}
+  .src{margin:18px auto 0; max-width:1240px; padding:0 20px 20px; color:#7e8798; font-size:12px; line-height:1.7}
+  .src a{color:#7fa8e8; text-decoration:none; border-bottom:1px dotted #3f5b85}
+  .src .flag{color:#e0b062}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 12 月 · 第一套 · Section C 仔细阅读
+    <small>Passage One 46–50 ／ Passage Two 51–55 · 13 段 · 目标 20 分钟</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：两篇文章 ================= -->
+  <div class="col" id="articles">
+
+    <section class="card passage" id="passage-one">
+      <h2>Passage One</h2>
+      <div class="meta">
+        Questions 46 to 50 are based on the following passage.（6 段 · 345 词）<br>
+        选文出处：theconversation.com，Tobias Eckle《Timing matters for medications – your circadian rhythm influences
+        how well treatments work and how much they might harm you》（原卷未印标题）。
+      </div>
+
+      <p class="para" id="c1p1"><span class="tag">P1</span>All living organisms on Earth are exposed to a 24-hour
+        day-night cycle. This cycle is the reason why people rest at night and are active during the day.
+        Consequently, all human body functions also follow this daily rhythm, and <mark>the timing of behaviors like
+        exercise or food intake can significantly influence your health</mark>. For example, eating at night can lead
+        to weight gain over time because food intake at night leads to increased fat storage.<span class="cn">行为时机（如运动、进食）会显著影响健康——46 题定位句。</span></p>
+
+      <p class="para" id="c1p2"><span class="tag">P2</span>Many drug targets in the body follow a 24-hour cycle, too.
+        This means that <mark>the specific proteins a drug is designed to modify can react differently to the medicine
+        over the course of a 24-hour time period</mark>. Because how the body responds to a drug can differ depending
+        on the time it is taken, it logically follows that taking medicines at specific times could help increase
+        their effectiveness and reduce unwanted side effects.<span class="cn">蛋白质对药物的反应会随 24 小时周期而变——47 题定位句。</span></p>
+
+      <p class="para" id="c1p3"><span class="tag">P3</span>When doctors prescribe medicine for people,
+        <mark>they rarely consider the best time to take it</mark>. There are two main reasons for that oversight.
+        First, many physicians are not aware that some drugs work better during a specific time of the day. And
+        second, most drugs have not been studied for possible different effects during a 24-hour cycle. Therefore,
+        <mark>patients are directed to take most drugs during the morning or evening primarily to ensure
+        compliance</mark>.<span class="cn">医生很少考虑最佳服药时间（48）；让病人早晚服药只是为了“确保依从”（49）。</span></p>
+
+      <p class="para" id="c1p4"><span class="tag">P4</span>Over 50 years ago, researchers found that the cholesterol
+        drug simvastatin is more effective at lowering cholesterol levels when taken at night rather than during the
+        day. This is because the liver enzyme(酶) these drugs target is more active at night.<span class="cn">他汀类药夜间服更有效的例证：药效确实与服药时间有关（非定位句，属背景论据）。</span></p>
+
+      <p class="para" id="c1p5"><span class="tag">P5</span>Taking medicine at the wrong time can even cause harm. My
+        colleagues and I wondered whether midazolam, the most common sedative(镇静剂) used in surgical procedures
+        worldwide, might interfere with the internal clock that protects the heart at night. Currently, there are no
+        guidelines regarding when midazolam should be administered.<span class="cn">服药时间错了甚至有害；咪达唑仑目前没有给药时间指南（背景论据）。</span></p>
+
+      <p class="para" id="c1p6"><span class="tag">P6</span><mark>More research is needed to determine the best times to
+        administer treatments for different diseases.</mark> <mark>I believe taking drug timing into account could
+        help make treatments more effective and help more people worldwide.</mark><span class="cn">末段两句：一句呼吁“更多研究”（C 的依据），一句总括“把服药时机纳入考虑”（A 的依据）。本题两源答案不一致，见页脚存疑说明。</span></p>
+    </section>
+
+    <section class="card passage" id="passage-two">
+      <h2>Passage Two</h2>
+      <div class="meta">
+        Questions 51 to 55 are based on the following passage.（7 段 · 353 词）<br>
+        选文出处：qz.com（Quartz），《The number of Americans working in their 70s is skyrocketing》（原卷未印标题）。
+      </div>
+
+      <p class="para" id="c2p1"><span class="tag">P1</span>Katharine Abraham, an economics professor, was chatting
+        with her hairdresser(理发师) about retirement plans. <mark>The economist said she plans to continue working
+        because she wants to. The hairdresser agreed but for a different reason: She needs the money.</mark><span class="cn">教授“想继续干”，理发师“需要钱”——继续工作的理由不同（51）。</span></p>
+
+      <p class="para" id="c2p2"><span class="tag">P2</span>Both scenarios(情况) are contributing to a big increase in
+        the number of people in the U.S. working into their 70s. Over the past 20 years, the share of Americans
+        working in their 70s has risen from less than 10% to nearly 15%.<span class="cn">两种情形共同推高“70 多岁仍在工作”的比例：不到 10% → 近 15%（背景数据）。</span></p>
+
+      <p class="para" id="c2p3"><span class="tag">P3</span>In addition to people being healthier and living much
+        longer, economists say that <mark>a combination of financial considerations such as years of slow rise in real
+        wages and a shift away from traditional pensions in the private sector</mark> are some of the reasons people
+        delay retirement. The decline of manufacturing and the increase in the number of people working in less
+        labor-intensive occupations also has contributed to the trend, says Abraham, who researches work and
+        retirement decisions of older Americans.<span class="cn">推迟退休的原因：实际工资多年涨得慢 + 私企远离传统养老金（52）。</span></p>
+
+      <p class="para" id="c2p4"><span class="tag">P4</span>"Which matters more depends on what your history up until
+        that point has been in the type of work you're doing," Abraham says.<span class="cn">哪个因素更重要，取决于你此前从事的工作类型（过渡段）。</span></p>
+
+      <p class="para" id="c2p5"><span class="tag">P5</span><mark>The overall trend is hitting Americans of all
+        different levels of educational attainment, although the percentages vary by category.</mark> The share of
+        Americans with bachelor's degrees who were working into their 70s reached nearly 20% in 2018. For those with
+        a high school degree or less, the proportion of those working in their 70s had risen to around 10%, while
+        those with some college education were in the middle at around 15%.<span class="cn">学历越高，70 多岁仍在工作的比例越高：20% ＞ 15% ＞ 10%（53）。</span></p>
+
+      <p class="para" id="c2p6"><span class="tag">P6</span>Martin Neil Baily, an economist who is leading a research
+        project on retirement security, notes that quitting a career can lead to feelings of isolation and
+        loneliness, particularly for men. <mark>He suggests that many college-educated workers are choosing to stay
+        in the labor force more for social benefits than for financial reasons.</mark> They're also more likely to be
+        in professional occupations where they tend to enjoy their work more.<span class="cn">大学学历者更多是为“社交好处”而非钱留在职场（54）。</span></p>
+
+      <p class="para" id="c2p7"><span class="tag">P7</span><mark>Workers in more physical jobs, meanwhile, may be more
+        likely to look forward to retiring</mark>, Baily says, suggesting those who stay on are more likely doing so
+        for financial reasons.<span class="cn">体力工作者更期待退休（55）。</span></p>
+    </section>
+
+  </div>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>10 道真题（46–55）</h2>
+    <div class="hint">点选项 → 点「提交答案」。判分后正确项标绿、错项标红并加虚线框，自动滚动高亮首个错题所在段。</div>
+
+    <h3>Passage One · 46–50</h3>
+    <div id="group-one"></div>
+
+    <h3>Passage Two · 51–55</h3>
+    <div id="group-two"></div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+      <button class="btn ghost" id="reset">重新开始</button>
+    </div>
+
+    <div class="score" id="score"></div>
+
+    <details class="fp">
+      <summary>可折叠 · 题目定位表（题号 | 段落 | 定位关键词）</summary>
+      <table>
+        <tr><th>题</th><th>段</th><th>定位关键词</th></tr>
+        <tr><td>46</td><td>P1</td><td>timing of behaviors / influence your health</td></tr>
+        <tr><td>47</td><td>P2</td><td>proteins / react differently / 24-hour</td></tr>
+        <tr><td>48</td><td>P3</td><td>rarely consider the best time</td></tr>
+        <tr><td>49</td><td>P3</td><td>primarily to ensure compliance</td></tr>
+        <tr><td>50</td><td>P6</td><td>taking drug timing into account</td></tr>
+        <tr><td>51</td><td>P1</td><td>different reason / needs the money</td></tr>
+        <tr><td>52</td><td>P3</td><td>slow rise in real wages / traditional pensions</td></tr>
+        <tr><td>53</td><td>P5</td><td>educational attainment / 20% / 15% / 10%</td></tr>
+        <tr><td>54</td><td>P6</td><td>social benefits / financial reasons</td></tr>
+        <tr><td>55</td><td>P7</td><td>physical jobs / look forward to retiring</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<div class="dock">
+  <span class="lab">已答</span><b id="dAns">0</b><span class="lab">/ 10</span>
+  <span class="lab">得分</span><span class="big" id="dScore">—</span>
+  <span class="sp"></span>
+  <span class="lab">目标 20 分钟</span>
+  <button id="dockReset" type="button">重新开始</button>
+</div>
+
+<div class="src">
+  数据来源：<a href="https://english-exam.lazynote.cn/cet4/paper/2025-12-1/part3-section-c-1/" target="_blank" rel="noopener">懒笔站 · Section C(1) 卷面</a>、
+  <a href="https://english-exam.lazynote.cn/cet4/paper/2025-12-1/part3-section-c-2/" target="_blank" rel="noopener">Section C(2) 卷面</a>；
+  答案交叉核对：<a href="https://cet4-6.xdf.cn/202512/15047563.html" target="_blank" rel="noopener">新东方网 · 2025年12月四级阅读试题及答案（第一套）</a>、
+  <a href="https://mtoutiao.xdf.cn/www/94/202512/15066008.html" target="_blank" rel="noopener">新东方 · 仔细阅读试题及答案</a>、
+  <a href="https://cet4.koolearn.com/20251213/930093.html" target="_blank" rel="noopener">新东方在线 · 真题及答案完整版（第一套）</a>。<br>
+  <span class="flag">存疑（第 50 题）</span>：新东方系三处答案均为 <b>A</b>（Considering drug-taking timing when prescribing
+  drugs for patients）；懒笔站逐题解析为 <b>C</b>（Conducting more studies to find out the best timing for treating
+  different diseases）。末段两句话分别支撑两种理解，本页判分取 A，请自行留意。其余 9 题两源一致（46–50 ACA·A｜51–55 ACDBD）。
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    n: 46, para: ["c1p1"], answer: "A",
+    stem: "What do we learn from the passage about the timing of our behaviors?",
+    opts: {
+      A: "It has a considerable impact on our health.",
+      B: "It confines us to a 24-hour day-night cycle.",
+      C: "It requires us to follow a particular rhythm.",
+      D: "It holds the key to all human body functions."
+    },
+    why: '<p><b>① 定位</b>：P1 末句 —— <em>the timing of behaviors like exercise or food intake can significantly influence your health</em>。</p>' +
+         '<p><b>② 同义替换</b>：can significantly influence ≈ has a considerable impact on；your health 原词复现。</p>' +
+         '<p><b>③ 陷阱</b>：B 因果倒置（是昼夜周期让行为有节律，不是行为时机把人限制在 24 小时里）；C 张冠李戴（follow this daily rhythm 的主语是 body functions）；D 绝对化（all / holds the key 夸大）。</p>'
+  },
+  {
+    n: 47, para: ["c1p2"], answer: "C",
+    stem: "What does the author say about the proteins in our body?",
+    opts: {
+      A: "They can modify the effects of medicines in different ways.",
+      B: "They can reduce unwanted side effects of certain medicines.",
+      C: "Their reaction to medicines changes during the day-night cycle.",
+      D: "Their design determines how differently they react to medicines."
+    },
+    why: '<p><b>① 定位</b>：P2 第 2 句 —— <em>the specific proteins a drug is designed to modify can react differently to the medicine over the course of a 24-hour time period</em>。</p>' +
+         '<p><b>② 同义替换</b>：react differently ... over a 24-hour time period ≈ reaction changes during the day-night cycle。</p>' +
+         '<p><b>③ 陷阱</b>：A 施受颠倒（是药物 modify 蛋白质，不是蛋白质改变药效）；B 张冠李戴（减少副作用的是“按时服药”这一做法）；D 无中生有（原文没谈蛋白质的 design）。</p>'
+  },
+  {
+    n: 48, para: ["c1p3"], answer: "A",
+    stem: "What do doctors do when prescribing medicine for people?",
+    opts: {
+      A: "They give little thought to the time of taking it for maximum effect.",
+      B: "They rarely consider which medicine works better for which patient.",
+      C: "They tell patients its possible side effects during a period of 24 hours.",
+      D: "They tell patients to comply with the directions of drug manufacturers."
+    },
+    why: '<p><b>① 定位</b>：P3 首句 —— <em>When doctors prescribe medicine for people, they rarely consider the best time to take it.</em></p>' +
+         '<p><b>② 同义替换</b>：rarely consider the best time ≈ give little thought to the time；for maximum effect 是对“最佳时间”的释义。</p>' +
+         '<p><b>③ 陷阱</b>：B 偷换对象（原文疏忽的是“时间”，不是“哪种药对哪个病人”）；C 偷换（未做研究 ≠ 医生告知副作用）；D 无中生有（drug manufacturers 全文未出现）。</p>'
+  },
+  {
+    n: 49, para: ["c1p3"], answer: "B",
+    stem: "Why do doctors advise patients to take most drugs in the morning or in the evening?",
+    opts: {
+      A: "To discourage them from making complaints.",
+      B: "To ensure they take the drugs as instructed.",
+      C: "To comply with new research findings strictly.",
+      D: "To guarantee the maximum effect of the drugs."
+    },
+    why: '<p><b>① 定位</b>：P3 末句 —— <em>patients are directed to take most drugs during the morning or evening primarily to ensure compliance</em>。</p>' +
+         '<p><b>② 同义替换</b>：ensure compliance ≈ ensure they take the drugs as instructed（compliance = 遵医嘱）。</p>' +
+         '<p><b>③ 陷阱</b>：A 无中生有（complaints）；C 与原文相反（多数药恰恰没做过昼夜研究）；D 与原文相反（医生并未以“药效最大”为目的）。</p>'
+  },
+  {
+    n: 50, para: ["c1p6"], answer: "A",
+    stem: "What does the author suggest near the end of the passage?",
+    opts: {
+      A: "Considering drug-taking timing when prescribing drugs for patients.",
+      B: "Making treatments less complex by taking drug timing into account.",
+      C: "Conducting more studies to find out the best timing for treating different diseases.",
+      D: "Finding out the most effective drugs for treating diseases through further research."
+    },
+    why: '<p><b>① 定位</b>：P6 —— <em>I believe taking drug timing into account could help make treatments more effective</em>；同段首句另有 <em>More research is needed to determine the best times...</em>。</p>' +
+         '<p><b>② 同义替换</b>：taking drug timing into account ≈ considering drug-taking timing。</p>' +
+         '<p><b>③ 陷阱 / 存疑</b>：C 是末段首句“需要更多研究”的改写，也讲得通；新东方系三处答案均为 A，懒笔站解析为 C。<b>本页判分取 A</b>，两说并存在页脚标注。D 偷换（研究“最有效的药”而非时机）；B 无中生有（less complex）。</p>'
+  },
+  {
+    n: 51, para: ["c2p1"], answer: "A",
+    stem: "What do we learn from the passage about the economics professor and her hairdresser?",
+    opts: {
+      A: "They differ in their reasons for continuing to work.",
+      B: "They are both committed to working into their 70s.",
+      C: "They are happy about their current financial situation.",
+      D: "They hold different views about postponing retirement."
+    },
+    why: '<p><b>① 定位</b>：P1 末两句 —— <em>The economist said she plans to continue working because she wants to. The hairdresser agreed but for a different reason: She needs the money.</em></p>' +
+         '<p><b>② 同义替换</b>：for a different reason ≈ differ in their reasons for continuing to work。</p>' +
+         '<p><b>③ 陷阱</b>：B 答非所问（问的是“不同点”，且文中没说两人承诺工作到 70 多岁）；C 无中生有（理发师 needs the money，谈不上满意）；D 偷换（分歧在“理由”，不在“是否推迟退休”的观点）。</p>'
+  },
+  {
+    n: 52, para: ["c2p3"], answer: "C",
+    stem: "What is one of the reasons for people to delay retirement?",
+    opts: {
+      A: "More and more people have switched to less intellectually challenging jobs.",
+      B: "The number of jobs suitable for older people has increased in the private sector.",
+      C: "The rate of wage increase in terms of purchasing power has slowed down for years.",
+      D: "More and more people in the workplace find it hard to rely on traditional pensions."
+    },
+    why: '<p><b>① 定位</b>：P3 首句 —— <em>a combination of financial considerations such as years of slow rise in real wages and a shift away from traditional pensions in the private sector</em>。</p>' +
+         '<p><b>② 同义替换</b>：slow rise in real wages ≈ the rate of wage increase ... has slowed down；real wages（实际工资）≈ in terms of purchasing power（按购买力计）。</p>' +
+         '<p><b>③ 陷阱</b>：A 偷换（less labor-intensive 是“体力密集度低”，不是 less intellectually challenging）；B 无中生有（private sector 说的是养老金制度，不是岗位数量）；D 偷换（制度层面的 shift away ≠ 个人觉得难以依赖）。</p>'
+  },
+  {
+    n: 53, para: ["c2p5"], answer: "D",
+    stem: "What is the general trend in people delaying retirement?",
+    opts: {
+      A: "The higher their earnings, the more likely they are tempted to delay retirement.",
+      B: "Those who have more job satisfaction tend to retire later than those who have less.",
+      C: "More men than women are likely to stay in the labor force until their late seventies.",
+      D: "The higher their educational level, the more likely they are to delay retirement."
+    },
+    why: '<p><b>① 定位</b>：P5 —— <em>The overall trend is hitting Americans of all different levels of educational attainment</em>，随后给出 20% / 15% / 10% 的学历梯度。</p>' +
+         '<p><b>② 同义替换</b>：本科近 20% ＞ 部分大学约 15% ＞ 高中及以下约 10% ≈ the higher their educational level, the more likely they are to delay retirement。</p>' +
+         '<p><b>③ 陷阱</b>：A 无中生有（earnings 全文没有分层数据）；B 张冠李戴（job satisfaction 在 P6，且不是 general trend）；C 张冠李戴（性别只在 P6 讲孤独感时出现）。</p>'
+  },
+  {
+    n: 54, para: ["c2p6"], answer: "B",
+    stem: "What is the chief reason for college-educated workers delaying retirement according to an economist?",
+    opts: {
+      A: "Enjoying financial security.",
+      B: "Staying connected socially.",
+      C: "Contributing more professionally.",
+      D: "Increasing social security payments."
+    },
+    why: '<p><b>① 定位</b>：P6 第 2 句 —— <em>many college-educated workers are choosing to stay in the labor force more for social benefits than for financial reasons</em>。</p>' +
+         '<p><b>② 同义替换</b>：social benefits ≈ staying connected socially。</p>' +
+         '<p><b>③ 陷阱</b>：A 与原文相反（financial 正是被否定的原因）；C 过度推断（in professional occupations 只说“更享受工作”，没说要“贡献更多”）；D 无中生有（social security payments 是拿 social 硬凑）。</p>'
+  },
+  {
+    n: 55, para: ["c2p7"], answer: "D",
+    stem: "What does the passage say about people doing manual work?",
+    opts: {
+      A: "They are eager to enjoy life after retiring.",
+      B: "They are likely to have financial troubles.",
+      C: "They generally don't enjoy doing it.",
+      D: "They tend to anticipate retirement."
+    },
+    why: '<p><b>① 定位</b>：P7 —— <em>Workers in more physical jobs, meanwhile, may be more likely to look forward to retiring</em>。</p>' +
+         '<p><b>② 同义替换</b>：look forward to retiring ≈ anticipate retirement。</p>' +
+         '<p><b>③ 陷阱</b>：A 过度推断（只提“期待退休”，未提退休后生活）；B 过度推断（for financial reasons ≠ financial troubles）；C 无中生有（没评价是否喜欢这份工作）。</p>'
+  }
+];
+
+const picked = {};
+
+function renderQuestions(){
+  ["group-one","group-two"].forEach(function(gid){
+    document.getElementById(gid).innerHTML = "";
+  });
+  QUESTIONS.forEach(function(q){
+    var gid = q.n < 51 ? "group-one" : "group-two";
+    var box = document.createElement("div");
+    box.className = "q";
+    box.id = "q" + q.n;
+    box.setAttribute("data-n", q.n);
+    var html = '<div class="stem"><span class="num">' + q.n + '.</span>' + q.stem + '</div>' +
+      '<div class="opts" data-n="' + q.n + '">';
+    ["A","B","C","D"].forEach(function(L){
+      html += '<button type="button" data-l="' + L + '" data-n="' + q.n + '"><b>' + L + '</b>' + q.opts[L] + '</button>';
+    });
+    html += '</div><div class="fb" id="fb' + q.n + '"></div>';
+    box.innerHTML = html;
+    document.getElementById(gid).appendChild(box);
+  });
+}
+
+function answeredCount(){
+  return Object.keys(picked).length;
+}
+
+function refreshDock(){
+  document.getElementById("dAns").textContent = answeredCount();
+}
+
+document.getElementById("quiz").addEventListener("click", function(e){
+  var btn = e.target.closest("button[data-l]");
+  if(!btn || btn.disabled) return;
+  var n = btn.dataset.n;
+  var L = btn.dataset.l;
+  picked[n] = L;
+  var area = document.querySelector('.opts[data-n="' + n + '"]');
+  Array.prototype.forEach.call(area.querySelectorAll("button"), function(b){
+    b.classList.remove("sel");
+  });
+  btn.classList.add("sel");
+  refreshDock();
+});
+
+document.getElementById("submit").addEventListener("click", function(){
+  var score = 0;
+  var firstWrongPara = null;
+
+  document.querySelectorAll(".para.hit").forEach(function(p){ p.classList.remove("hit"); });
+
+  QUESTIONS.forEach(function(q){
+    var area = document.querySelector('.opts[data-n="' + q.n + '"]');
+    var fb = document.getElementById("fb" + q.n);
+    var chosen = picked[q.n];
+    var right = chosen === q.answer;
+
+    Array.prototype.forEach.call(area.querySelectorAll("button"), function(b){
+      b.disabled = true;
+      b.classList.remove("sel");
+      var L = b.dataset.l;
+      if(L === q.answer) b.classList.add("answer");
+      if(L === chosen && !right) b.classList.add("wrong");
+      if(L === q.answer && right) b.classList.add("right");
+    });
+
+    if(right){
+      score++;
+      fb.className = "fb ok show";
+      fb.innerHTML = '<span class="badge">正确</span>答案 ' + q.answer + q.why;
+    }else{
+      fb.className = "fb no show";
+      fb.innerHTML = '<span class="badge">' + (chosen ? "错误" : "未作答") + '</span>正确答案 ' + q.answer + q.why;
+      if(!firstWrongPara){
+        firstWrongPara = q.para[0];
+      }
+    }
+    if(!right){
+      q.para.forEach(function(pid){
+        document.getElementById(pid).classList.add("hit");
+      });
+    }
+  });
+
+  document.getElementById("dScore").textContent = score + " / 10";
+  refreshDock();
+
+  var s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = "本轮得分：<b>" + score + " / 10</b>　" +
+    (score === 10 ? "全对！定位 → 同义替换 → 排陷阱，三步已经跑通。" :
+     score >= 8 ? "稳定发挥，8 分以上就是考场目标。重点回看错题的定位句。" :
+     score >= 5 ? "及格水平：先做带数字/专名的题，再做抽象题，最后用排除法收尾。" :
+     "先别刷题：每题先用题干关键词回原文找一句话，再比对选项，不要凭印象。");
+
+  if(firstWrongPara){
+    document.getElementById(firstWrongPara).scrollIntoView({behavior:"smooth", block:"center"});
+  }else{
+    s.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+});
+
+function resetAll(){
+  Object.keys(picked).forEach(function(k){ delete picked[k]; });
+  document.querySelectorAll(".para.hit").forEach(function(p){ p.classList.remove("hit"); });
+  renderQuestions();
+  document.getElementById("score").className = "score";
+  document.getElementById("dScore").textContent = "—";
+  refreshDock();
+}
+
+document.getElementById("reset").addEventListener("click", resetAll);
+document.getElementById("dockReset").addEventListener("click", resetAll);
+
+/* ---------- 计时器：目标 20 分钟 ---------- */
+var sec = 0;
+var timerEl = document.getElementById("timer");
+setInterval(function(){
+  sec++;
+  var m = String(Math.floor(sec/60)).padStart(2,"0");
+  var s = String(sec%60).padStart(2,"0");
+  timerEl.textContent = m + ":" + s;
+  if(sec >= 1200) timerEl.classList.add("over");
+  else if(sec >= 1080) timerEl.classList.add("warn");
+}, 1000);
+
+renderQuestions();
+refreshDock();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}html.blind .cn{visibility:hidden}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:74px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.btn.primary{color:#08101c}
+.opts button.right{color:#d7ffe6}
+.opts button.wrong{color:#ffd9d6}
+</style>
+</body>
+</html>
