@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级长篇阅读 · 信息匹配练习｜2025年6月第二套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .back{
+    font-size:13px; font-weight:600; color:var(--accent); text-decoration:none;
+    white-space:nowrap; padding:4px 9px; border-radius:7px; background:#1c2740;
+  }
+  .back:hover{background:#25324d}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+    transition:.3s;
+  }
+  .timer.warn{background:#3a2f14; color:#f0b95a}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.4}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 460px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px; line-height:1.65}
+  .para{
+    margin:0 0 14px; padding-left:34px; position:relative;
+    transition:background .25s; scroll-margin-top:84px;
+  }
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{display:block; color:var(--muted); font-size:12.5px; margin-top:4px}
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:var(--markline); color:#ffe9a8}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 90px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .q{padding:14px 0; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none; padding-top:4px}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px}
+  .q .stem{font-size:14px; line-height:1.6}
+  .letters{display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-top:9px}
+  .letters button{
+    height:31px; border:1px solid var(--line); background:#171c23; border-radius:7px;
+    cursor:pointer; font-weight:600; font-size:13px; font-family:ui-monospace,Consolas,monospace;
+    color:#c3cad6; transition:.12s;
+  }
+  .letters button:hover{border-color:var(--accent); color:var(--accent); background:#1b2634}
+  .letters button.sel{background:var(--accent); border-color:var(--accent); color:#fff}
+  .letters button.right{background:var(--ok); border-color:var(--ok); color:#fff}
+  .letters button.wrong{background:var(--bad); border-color:var(--bad); color:#fff}
+  .letters button.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  .letters button:disabled{cursor:default}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb p{margin:5px 0; color:#c3cad6; line-height:1.7}
+  .fb b{color:#e3e7ee}
+  .fb .jump{
+    color:var(--accent); font-size:12px; text-decoration:none; font-weight:600;
+    margin-left:6px; border-bottom:1px dashed var(--accent);
+  }
+  .fb .jump:hover{background:#1c2740}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  /* ---------- 指纹表 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+  details.fp td:first-child{font-family:ui-monospace,Consolas,monospace; font-weight:700; color:#a9c1ff; width:34px; text-align:center}
+  /* ---------- 来源 ---------- */
+  footer.src{
+    max-width:1240px; margin:0 auto 30px; padding:0 20px;
+    color:var(--muted); font-size:12.5px; line-height:1.8;
+  }
+  footer.src a{color:var(--accent); text-decoration:none; border-bottom:1px dashed #33507e}
+  footer.src a:hover{border-bottom-style:solid}
+  footer.src p{margin:4px 0}
+  /* ---------- 底部得分条 ---------- */
+  .scorebar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:10px 20px; background:rgba(255,255,255,.97);
+    border-top:1px solid var(--line);
+    box-shadow:0 -2px 12px rgba(0,0,0,.07);
+    transform:translateY(115%); transition:transform .3s ease;
+  }
+  .scorebar.show{transform:none}
+  body.hasbar{padding-bottom:88px}
+  .sb-score{font-size:14px; color:#c3cad6}
+  .sb-score b{font-size:18px; color:var(--accent); font-variant-numeric:tabular-nums}
+  .sb-dots{display:flex; gap:4px; flex-wrap:wrap}
+  .sb-dots .dot{
+    width:24px; height:24px; border-radius:6px; display:grid; place-items:center;
+    font-size:11px; font-family:ui-monospace,Consolas,monospace; font-weight:700;
+  }
+  .sb-dots .dot.ok{background:#16301f; color:#7ee2a8}
+  .sb-dots .dot.bad{background:#3a1d1f; color:#ffb4ab}
+  .sb-dots .dot.skip{background:#232a35; color:#8f9aab}
+  .sb-msg{font-size:13px; color:var(--muted); flex:1; min-width:180px}
+  .scorebar .btn{padding:8px 14px; font-size:13px}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    四级 Part III Section B · 信息匹配
+    <small>2025 年 6 月 · 第二套 · Is juicing actually good for you?（11 段 A–K）</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：文章 ================= -->
+  <section class="card passage" id="passage">
+    <h2>Is juicing actually good for you?</h2>
+    <div class="meta">
+      <b>Directions:</b> In this section, you are going to read a passage with ten statements attached to it.
+      Each statement contains information given in one of the paragraphs. Identify the paragraph from which
+      the information is derived. You may choose a paragraph more than once. Each paragraph is marked with a letter.
+      Answer the questions by marking the corresponding letter on <b>Answer Sheet 2</b>.　
+      <span style="color:#7b8494">（黄底为题目定位句）</span>
+    </div>
+
+    <p class="para" id="p-A"><span class="tag">A</span>Freshly juiced fruit has become a basic dietary item—especially for busy, health-conscious consumers who can save time on making (and perhaps even chewing) their food without missing out on nutrients. <mark>Fruit juice also has been linked to claims that it can help you both lose weight and stay healthy.</mark> All of which, of course, has <mark>made it highly profitable</mark>. The global fruit and vegetable juices market was valued at $154 billion in 2016 and is expected to grow.<span class="cn">果汁已成日常消费品，全球市场 1540 亿美元，健康宣称让它利润极高。</span></p>
+
+    <p class="para" id="p-B"><span class="tag">B</span>But is juicing really as healthy as we think? Most foods containing fructose—a naturally occurring sugar found in all fruits and fruit juices—don't seem to have harmful effects as long as they're not contributing to excess daily calories. This is because the fibre found in whole fruits is intact, and the sugar is contained within the fruit's cells. <mark>It takes our digestive system a while to break these cells down and for fructose to enter the bloodstream.</mark><span class="cn">整果的纤维完好、糖被锁在细胞里，消化吸收要花一段时间，所以无害。</span></p>
+
+    <p class="para" id="p-C"><span class="tag">C</span>But this is not the case with fruit juice. <mark>Unlike whole fruit, fruit juice has most of the fibre removed.</mark> This is why the fructose in fruit juices counts as 'free sugars'—which also include honey and the sugars added to foods. It's recommended by the World Health Organisation that adults have no more than 30g of added sugar, the equivalent of 150ml of fruit juice, per day. The problem is that, with the fibre removed, fruit juice's fructose is absorbed more quickly. Sudden increases in blood sugar cause the release of insulin(胰岛素) to bring it back down to a stable level. Over time, this mechanism can wear out, increasing the risk of developing type 2 diabetes. In 2013, researchers analysed the health data of 100,000 people collected between 1986 and 2009 and found that fruit juice consumption was linked with increased risk of type 2 diabetes. Another study found a relationship between fruit juice and type 2 diabetes after following the diets and diabetes status of more than 70,000 nurses over 18 years. The researchers explain that the possible reason for this may partly have been the lack of the other components found in whole fruit, like fibre.<span class="cn">果汁去掉大部分纤维 → 果糖成"游离糖"、吸收更快 → 2 型糖尿病风险升高。</span></p>
+
+    <p class="para" id="p-D"><span class="tag">D</span>Juices containing vegetables can provide more nutrients and less sugar than juices made up of just fruit—but they still lack valuable fibre. <mark>Diets high in fibre have been linked to a lower risk of developing heart disease, stroke, high blood pressure and diabetes</mark>, and it's recommended adults consume 30g per day.<span class="cn">蔬果汁营养多、糖少，但仍缺纤维；高纤维饮食可降低心脏病、中风、高血压、糖尿病风险。</span></p>
+
+    <p class="para" id="p-E"><span class="tag">E</span><mark>Aside from the link to type 2 diabetes, many studies agree that fruit juice is harmful if it contributes to an excess in calories.</mark> In an analysis of 155 studies, John Sievenpiper, associate professor at the University of Toronto's Department of Nutritional Sciences, set out to understand if the associations between sugary soft drinks and health—including risk of diabetes and heart disease—were applicable to the food and drink we generally consume as part of a healthy diet. He compared studies looking into the effects of fructose-containing sugars with control diets free from or lower in these sugars. His aim? To isolate the effects of consuming too many calories from the effects of foods containing different sugars.<span class="cn">除糖尿病关联外，多项研究一致认为：果汁若造成热量过剩就是有害的。</span></p>
+
+    <p class="para" id="p-F"><span class="tag">F</span>He found negative effects on blood sugar and insulin levels when food provided excess calories from sugars, including fruit juice. However, when the calories weren't in excess overall, there were some advantages to consuming whole fruit—and even fruit juice. <mark>Sievenpiper concludes that the recommended 150ml of fruit juice per day, which is an average serving, is reasonable. The paper concluded that foods containing fructose may have some small benefits for long-term blood sugar control when they don't lead to over-consumption of calories.</mark> But when they do lead to too many calories, they risk raising blood sugar and insulin levels.<span class="cn">热量不过剩时，每天 150ml 果汁是合理的，甚至对长期血糖有小益处。</span></p>
+
+    <p class="para" id="p-G"><span class="tag">G</span>So while we know that fruit juice can cause diabetes if it's part of a diet that has more calories overall, it's less clear how juice affects the long-term health of those who aren't overweight. But we have a higher risk of consuming more than the recommended daily number of calories (around 2,000 for women and 2,500 for men) on the days we drink juice, according to research. <mark>Numerous studies have shown that drinking fruit juice doesn't make us consume any less of other foods throughout the day.</mark><span class="cn">大量研究表明：喝果汁并不会让我们少吃其他食物，所以更容易热量超标。</span></p>
+
+    <p class="para" id="p-H"><span class="tag">H</span>As it is easy to consume large amounts of fruit juice quite quickly, extra calories are taken in. And extra calories can contribute to weight gain. <mark>One way we can improve the effects of fruit juice on our health is making sure we select ripe fruit to retain as much of its goodness as possible</mark>, according to Roger Clemens, professor of pharmaceutical(药物的) sciences at the University of Southern California.<span class="cn">果汁易快速喝多→额外热量→增重；选成熟水果榨汁可尽量保留营养。</span></p>
+
+    <p class="para" id="p-I"><span class="tag">I</span><mark>Another reason for fruit juice's recent popularity is the argument that it can help to remove poisonous or harmful substances from the body.</mark> However, "the whole concept of a juice diet helping to remove poisonous or harmful substances from the body is completely false," says Clemens. "We consume compounds every day that may be poisonous and our bodies do a wonderful job of removing and eliminating anything harmful from our bodies."<span class="cn">"果汁排毒"是流行原因之一，但专家说这个概念完全是假的。</span></p>
+
+    <p class="para" id="p-J"><span class="tag">J</span>And juice isn't a cure-all for getting your nutrients, either. <mark>"There are a lot of nutrients contained in the parts of the fruits, such as in apple skins, that are excluded when you juice them,"</mark> says Heather Ferris, a professor of medicine. "You end up with sugary water with some vitamins."<span class="cn">榨汁把果皮等部位的营养排除掉了，最后只剩"带点维生素的糖水"。</span></p>
+
+    <p class="para" id="p-K"><span class="tag">K</span>Plus, she adds, it's not an ideal way to reach the advised 'five a day'. "People try to get five servings of fruit and vegetables per day and don't realise this isn't just about getting vitamins," she says. "It's also about reducing the amount of grain carbs(碳水化合物) and protein and fats in our diet, and increasing fibre." So while fruit juice is better than no fruit at all, there are limits. It particularly comes with risks when we consume more than 150ml of free sugars per day, or when it puts us over our recommended calorie intake. It provides us with vitamins—but fruit juice is far from a quick fix.<span class="cn">果汁替代不了"每天五份"，含游离糖超 150ml 或超热量就有风险，绝非速效良方。</span></p>
+  </section>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>10 道真题（36–45）</h2>
+    <div class="hint">
+      点字母选择答案 → 点"提交答案"。已选 <b id="pc">0</b>/10。答完自动判分、展开解析并高亮原文定位句。
+    </div>
+
+    <div id="questions"></div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+      <button class="btn ghost" id="reset">重新开始</button>
+    </div>
+
+    <div class="score" id="score"></div>
+
+    <details class="fp">
+      <summary>卡住了？点开看"段落指纹表"（做题时的核心工具）</summary>
+      <table>
+        <tr><th>段</th><th>指纹</th><th>段</th><th>指纹</th></tr>
+        <tr><td>A</td><td>1540 亿市场·利润高</td><td>G</td><td>不少吃别的→热量超标</td></tr>
+        <tr><td>B</td><td>整果纤维完好·吸收慢</td><td>H</td><td>选熟果·保留营养</td></tr>
+        <tr><td>C</td><td>去纤维→游离糖→糖尿病</td><td>I</td><td>排毒说法是假的</td></tr>
+        <tr><td>D</td><td>高纤维饮食防多病</td><td>J</td><td>榨汁丢营养·剩糖水</td></tr>
+        <tr><td>E</td><td>155 项研究·过剩则有害</td><td>K</td><td>五份·风险·非速效药</td></tr>
+        <tr><td>F</td><td>不过剩·150ml 合理</td><td>—</td><td>（K 段本篇未出题）</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<footer class="src">
+  <p><b>文章来源与答案核对</b>：原文、Directions 与逐段中文翻译抓取自
+    <a href="https://english-exam.lazynote.cn/cet4/sections/2025-06-2/part3-section-b/" target="_blank" rel="noopener">懒笔记 · 2025年6月第2套 长篇阅读（信息匹配）36–45 题答案+解析</a>；
+    答案另经
+    <a href="https://cet4-6.xdf.cn/202606/15227392.html" target="_blank" rel="noopener">新东方 · 2025年6月大学英语四级长篇阅读匹配真题答案 第二套</a>
+    独立核对，36–45 十道题答案完全一致，<b>无争议题</b>。
+  </p>
+  <p>整卷索引：<a href="https://english-exam.lazynote.cn/cet4/paper/2025-06-2/" target="_blank" rel="noopener">2025 年 6 月第 2 套真题整卷</a>　·　本篇共 11 段（A–K）/ 约 1008 词，10 题命中 10 个不同段落，K 段未出题。</p>
+</footer>
+
+<div class="scorebar" id="scorebar">
+  <div class="sb-score">本轮得分 <b id="sb-score">0 / 10</b></div>
+  <div class="sb-dots" id="sb-dots"></div>
+  <div class="sb-msg" id="sb-msg"></div>
+  <button class="btn ghost" id="sb-reset">重新开始</button>
+</div>
+
+<script>
+const LETTERS = ["A","B","C","D","E","F","G","H","I","J","K"];
+
+const QUESTIONS = [
+  {
+    n: 36,
+    stem: "Fruit juice is different from whole fruit in that it contains much less fibre.",
+    answer: "C",
+    para: "p-C",
+    why: "<p><b>定位</b>：C 段 — \"Unlike whole fruit, fruit juice has most of the fibre removed.\"</p>" +
+         "<p><b>同义替换</b>：is different from ≈ Unlike；contains much less fibre ≈ has most of the fibre removed（\"含量少\" ↔ \"大部分被去掉\"，正反互换）</p>" +
+         "<p><b>陷阱</b>：B 段也出现 fibre（\"the fibre found in whole fruits is intact\"），但主语是<b>整果</b>，讲纤维完好；D 段的 fibre 讲的是高纤维饮食防病。看到 fibre 先看主语是\"果汁\"还是\"饮食\"。</p>"
+  },
+  {
+    n: 37,
+    stem: "Some people believe a juice diet helps to rid our body of harmful or poisonous substances.",
+    answer: "I",
+    para: "p-I",
+    why: "<p><b>定位</b>：I 段 — \"Another reason for fruit juice's recent popularity is the argument that it can help to remove poisonous or harmful substances from the body.\"</p>" +
+         "<p><b>同义替换</b>：Some people believe ≈ the argument that；rid our body of ≈ remove ... from the body</p>" +
+         "<p><b>陷阱</b>：K 段结尾 \"fruit juice is far from a quick fix\" 也像\"否定\"，但 K 段没出现 poisonous / harmful。poisonous 全文只在 I 段出现，属 A 级锚点，20 秒可解。</p>"
+  },
+  {
+    n: 38,
+    stem: "A lot of research comes to the same conclusion that fruit juice does harm to the human body when it leads to surplus calories.",
+    answer: "E",
+    para: "p-E",
+    why: "<p><b>定位</b>：E 段 — \"Aside from the link to type 2 diabetes, many studies agree that fruit juice is harmful if it contributes to an excess in calories.\"</p>" +
+         "<p><b>同义替换</b>：A lot of research comes to the same conclusion ≈ many studies agree；does harm ≈ is harmful；surplus calories ≈ an excess in calories</p>" +
+         "<p><b>陷阱</b>：C 段列了 10 万人、7 万护士两项大研究，但结论是\"果汁与 2 型糖尿病风险相关\"，不是\"热量过剩才伤身\"；F 段方向相反（不过剩时有好处）。</p>"
+  },
+  {
+    n: 39,
+    stem: "The claimed health benefits of fruit and vegetable juices have rendered the industry very profitable.",
+    answer: "A",
+    para: "p-A",
+    why: "<p><b>定位</b>：A 段 — \"Fruit juice also has been linked to claims that it can help you both lose weight and stay healthy. All of which, of course, has made it highly profitable.\"</p>" +
+         "<p><b>同义替换</b>：The claimed health benefits ≈ claims that it can help you ... stay healthy；rendered the industry very profitable ≈ has made it highly profitable</p>" +
+         "<p><b>陷阱</b>：profitable 与 $154 billion 都是 A 段专属；B 段 \"But is juicing really as healthy as we think?\" 是转折质疑，不是\"利润\"。</p>"
+  },
+  {
+    n: 40,
+    stem: "To increase the benefits of fruit juice to our health, we'd better choose ripe fruit to make juice.",
+    answer: "H",
+    para: "p-H",
+    why: "<p><b>定位</b>：H 段 — \"One way we can improve the effects of fruit juice on our health is making sure we select ripe fruit to retain as much of its goodness as possible\"</p>" +
+         "<p><b>同义替换</b>：To increase the benefits ... to our health ≈ improve the effects ... on our health；choose ≈ select；ripe fruit 原词复现</p>" +
+         "<p><b>陷阱</b>：J 段也谈营养，但说的是榨汁把果皮营养丢掉（批评榨汁），不是\"选熟果\"的建议。ripe 只在 H 段出现。</p>"
+  },
+  {
+    n: 41,
+    stem: "Diets containing large amounts of fibre reduce the risk of heart disease, diabetes and other health hazards.",
+    answer: "D",
+    para: "p-D",
+    why: "<p><b>定位</b>：D 段 — \"Diets high in fibre have been linked to a lower risk of developing heart disease, stroke, high blood pressure and diabetes\"</p>" +
+         "<p><b>同义替换</b>：Diets containing large amounts of fibre ≈ Diets high in fibre；reduce the risk ≈ a lower risk；other health hazards ≈ stroke, high blood pressure</p>" +
+         "<p><b>陷阱</b>：C 段也出现 diabetes，但那是\"果汁<b>增加</b>风险\"；题干是\"高纤维饮食<b>降低</b>风险\"，主语和方向都不同。</p>"
+  },
+  {
+    n: 42,
+    stem: "According to a research paper, drinking fruit juice is beneficial on condition that it is consumed in reasonable amounts.",
+    answer: "F",
+    para: "p-F",
+    why: "<p><b>定位</b>：F 段 — \"Sievenpiper concludes that the recommended 150ml of fruit juice per day, which is an average serving, is reasonable. The paper concluded that foods containing fructose may have some small benefits ... when they don't lead to over-consumption of calories.\"</p>" +
+         "<p><b>同义替换</b>：According to a research paper ≈ The paper concluded；is beneficial ≈ may have some small benefits；on condition that ≈ when；consumed in reasonable amounts ≈ the recommended 150ml ... is reasonable</p>" +
+         "<p><b>陷阱</b>：E 段与 F 段是同一组研究的正反两面——E 段\"热量过剩则有害\"（第 38 题），F 段\"热量不过剩则有小益\"（本题）。两题相邻，只能靠 when / on condition that 的<b>条件方向</b>区分。</p>"
+  },
+  {
+    n: 43,
+    stem: "One expert claims that juicing wastes a lot of nutrients contained in fruits.",
+    answer: "J",
+    para: "p-J",
+    why: "<p><b>定位</b>：J 段 — \"There are a lot of nutrients contained in the parts of the fruits, such as in apple skins, that are excluded when you juice them\"</p>" +
+         "<p><b>同义替换</b>：wastes ≈ are excluded（被排除掉＝被浪费掉）；a lot of nutrients contained in fruits ≈ nutrients contained in the parts of the fruits</p>" +
+         "<p><b>陷阱</b>：H 段也谈 nutrients / goodness，但落点是\"<b>怎样保留</b>营养\"（选熟果），是正面建议；J 段是\"榨汁<b>必然丢掉</b>营养\"的负面事实。waste 只对应 J。</p>"
+  },
+  {
+    n: 44,
+    stem: "It takes some time for fruit's cells to be digested and for fructose to be absorbed.",
+    answer: "B",
+    para: "p-B",
+    why: "<p><b>定位</b>：B 段 — \"It takes our digestive system a while to break these cells down and for fructose to enter the bloodstream.\"</p>" +
+         "<p><b>同义替换</b>：It takes some time ≈ It takes ... a while；cells to be digested ≈ break these cells down；fructose to be absorbed ≈ for fructose to enter the bloodstream</p>" +
+         "<p><b>陷阱</b>：C 段说\"去掉纤维后吸收<b>更快</b>\"，方向相反。B 段讲的是<b>整果</b>（纤维完好）所以慢，看清主语是\"完整水果\"还是\"果汁\"。</p>"
+  },
+  {
+    n: 45,
+    stem: "A lot of research has demonstrated that drinking fruit juice does not reduce our daily consumption of other foods.",
+    answer: "G",
+    para: "p-G",
+    why: "<p><b>定位</b>：G 段 — \"Numerous studies have shown that drinking fruit juice doesn't make us consume any less of other foods throughout the day.\"</p>" +
+         "<p><b>同义替换</b>：A lot of research ≈ Numerous studies；does not reduce our daily consumption ≈ doesn't make us consume any less（双重否定＝不会少吃）</p>" +
+         "<p><b>陷阱</b>：题干是否定句，原文也是否定句，读快容易读反。另外 C 段同样有\"大量研究\"，但结论是糖尿病风险，不是\"少吃不少吃\"。</p>"
+  }
+];
+
+const picked = {};
+const quizEl = document.getElementById("questions");
+let sec = 0;
+const timerEl = document.getElementById("timer");
+
+function render(){
+  quizEl.innerHTML = QUESTIONS.map(q => `
+    <div class="q" data-n="${q.n}">
+      <div class="stem"><span class="num">${q.n}.</span>${q.stem}</div>
+      <div class="letters" data-n="${q.n}">
+        ${LETTERS.map(L => `<button type="button" data-l="${L}" data-n="${q.n}" aria-label="第 ${q.n} 题选 ${L}">${L}</button>`).join("")}
+      </div>
+      <div class="fb" id="fb-${q.n}"></div>
+    </div>
+  `).join("");
+}
+
+function updateCount(){
+  document.getElementById("pc").textContent = Object.keys(picked).length;
+}
+
+quizEl.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-l]");
+  if(!btn) return;
+  if(btn.disabled) return;
+  const n = btn.dataset.n, L = btn.dataset.l;
+  picked[n] = L;
+  quizEl.querySelectorAll(`.letters[data-n="${n}"] button`).forEach(b => b.classList.remove("sel"));
+  btn.classList.add("sel");
+  updateCount();
+});
+
+document.getElementById("submit").addEventListener("click", () => {
+  let correct = 0;
+  const wrongTargets = [];
+  clearHighlights();
+
+  QUESTIONS.forEach(q => {
+    const area = quizEl.querySelector(`.letters[data-n="${q.n}"]`);
+    const fb = document.getElementById("fb-" + q.n);
+    const chosen = picked[q.n];
+    const isRight = chosen === q.answer;
+
+    area.querySelectorAll("button").forEach(b => {
+      b.disabled = true;
+      b.classList.remove("sel");
+      if(b.dataset.l === q.answer) b.classList.add("answer");
+      if(b.dataset.l === chosen && !isRight) b.classList.add("wrong");
+      if(b.dataset.l === q.answer && isRight) b.classList.add("right");
+    });
+
+    if(isRight){
+      correct++;
+    }else{
+      wrongTargets.push(q.para);
+    }
+
+    fb.className = "fb " + (isRight ? "ok" : "no") + " show";
+    fb.innerHTML = `<span class="badge">${isRight ? "正确" : (chosen ? "错误" : "未作答")}</span>` +
+      `答案 ${q.answer}　<a class="jump" href="#${q.para}" data-target="${q.para}">跳到 ${q.answer} 段 ↗</a>` + q.why;
+
+    document.getElementById(q.para).classList.add("hit");
+  });
+
+  const s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = `本轮得分：<b>${correct} / ${QUESTIONS.length}</b>　` +
+    (correct === 10 ? "满分。信息匹配你已经掌握——先扫锚点、再核对主语和方向。" :
+     correct >= 8 ? "优秀。回看错题的\"定位句\"即可，重点补同义替换的敏感度。" :
+     correct >= 6 ? "及格水平。重点回看错题的\"定位句\"与\"同义替换\"两栏，把陷阱题重做一遍。" :
+     "先别急。把右侧指纹表用起来，按\"先强锚点（专属名词/数字）、后排除\"的顺序重做一遍。");
+
+  document.getElementById("sb-score").textContent = correct + " / " + QUESTIONS.length;
+  document.getElementById("sb-dots").innerHTML = QUESTIONS.map(q => {
+    const c = picked[q.n];
+    const cls = c === q.answer ? "ok" : (c ? "bad" : "skip");
+    return `<span class="dot ${cls}" title="第 ${q.n} 题">${q.n}</span>`;
+  }).join("");
+  document.getElementById("sb-msg").textContent =
+    "正确 " + correct + " · 错误 " + (QUESTIONS.length - correct) +
+    "　（点解析里的\"跳到 X 段\"可回看原文）";
+  document.getElementById("scorebar").classList.add("show");
+  document.body.classList.add("hasbar");
+
+  const target = wrongTargets.length ? wrongTargets[0] : QUESTIONS[0].para;
+  setTimeout(() => {
+    const el = document.getElementById(target);
+    if(el) el.scrollIntoView({behavior:"smooth", block:"center"});
+  }, 150);
+});
+
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.jump");
+  if(!a) return;
+  e.preventDefault();
+  const el = document.getElementById(a.dataset.target);
+  if(el){
+    el.classList.add("hit");
+    el.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+});
+
+function resetAll(){
+  Object.keys(picked).forEach(k => delete picked[k]);
+  clearHighlights();
+  render();
+  const s = document.getElementById("score");
+  s.className = "score";
+  s.innerHTML = "";
+  document.getElementById("scorebar").classList.remove("show");
+  document.body.classList.remove("hasbar");
+  updateCount();
+  restartTimer();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+document.getElementById("reset").addEventListener("click", resetAll);
+document.getElementById("sb-reset").addEventListener("click", resetAll);
+
+function clearHighlights(){
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+}
+
+/* ---------- 计时器：12 分钟变黄，15 分钟闪红 ---------- */
+function restartTimer(){
+  sec = 0;
+  timerEl.textContent = "00:00";
+  timerEl.classList.remove("warn", "over");
+}
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  timerEl.textContent = `${m}:${s}`;
+  if(sec >= 900){
+    timerEl.classList.add("over");
+    timerEl.classList.remove("warn");
+  }else if(sec >= 720){
+    timerEl.classList.add("warn");
+  }
+}, 1000);
+
+render();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:18px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
