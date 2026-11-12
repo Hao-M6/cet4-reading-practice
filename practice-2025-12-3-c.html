@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2025年12月第三套 · Section C 仔细阅读｜四级阅读练习</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a; --panel:#1c2740;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; padding-bottom:78px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.94); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:var(--panel); color:#a9c1ff;
+  }
+  .timer.warn{background:#3a2a12; color:#ffd48a}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:var(--panel); white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 470px; gap:22px; align-items:start;
+  }
+  @media (max-width:1040px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.18);
+  }
+  .card + .card{margin-top:20px}
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:18px; margin:0 0 4px; letter-spacing:.2px}
+  .passage h2 .qrange{
+    font-size:12px; font-weight:600; color:#a9c1ff; background:var(--panel);
+    border-radius:999px; padding:2px 9px; margin-left:8px; vertical-align:2px;
+  }
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{
+    margin:0 0 14px; padding:2px 8px 2px 40px; position:relative;
+    scroll-margin-top:110px; border-radius:8px; transition:background .25s;
+  }
+  .para .tag{
+    position:absolute; left:8px; top:4px; width:24px; height:24px; border-radius:6px;
+    background:var(--panel); color:#a9c1ff; font-weight:700; font-size:11.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline)}
+  .para.hit .tag{background:var(--markline); color:#241a00}
+  mark{background:var(--mark); color:#f0e6c8; padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  .loc{
+    display:block; margin-top:6px; font-size:12.5px; color:#9db0c8;
+    border-left:2px solid #6b5720; padding-left:8px; line-height:1.6;
+  }
+  .loc b{color:#e3c988; font-weight:700; font-family:ui-monospace,Consolas,monospace}
+  /* ---------- 右栏 ---------- */
+  .quiz{position:sticky; top:78px; max-height:calc(100vh - 108px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .qgroup{
+    font-size:12.5px; font-weight:700; color:#a9c1ff; background:var(--panel);
+    border-radius:7px; padding:4px 10px; margin:16px 0 6px; letter-spacing:.3px;
+  }
+  .qgroup:first-of-type{margin-top:4px}
+  .q{padding:12px 0 4px; border-top:1px solid var(--line)}
+  .q .stem{font-size:14px; line-height:1.6; color:#dde3ec}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px}
+  .opts{display:grid; grid-template-columns:1fr; gap:6px; margin-top:8px}
+  .opt{
+    display:flex; gap:8px; align-items:flex-start; text-align:left;
+    border:1px solid var(--line); background:#10161d; border-radius:8px;
+    padding:7px 10px; color:#c8d0dc; font-size:13px; line-height:1.55;
+    cursor:pointer; font-family:inherit; transition:.12s;
+  }
+  .opt b{
+    flex:0 0 auto; font-family:ui-monospace,Consolas,monospace;
+    color:#a9c1ff; font-size:12.5px;
+  }
+  .opt:hover{border-color:var(--accent); background:#131c28}
+  .opt.sel{border-color:var(--accent); background:#1b2634; color:#eaf1fb}
+  .opt.sel b{color:#cfe0ff}
+  .opt.right{border-color:var(--ok); background:#12261a; color:#cdf6dc}
+  .opt.right b{color:#7ee2a8}
+  .opt.wrong{border-color:var(--bad); background:#2a1416; color:#ffd0ca}
+  .opt.wrong b{color:#ffb4ab}
+  .opt.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  .opt:disabled{cursor:default; opacity:1}
+  .fb{margin:8px 0 6px; font-size:13px; display:none; padding:10px 12px; border-radius:9px}
+  .fb.show{display:block}
+  .fb.ok{background:#12251a; border:1px solid #26543a}
+  .fb.no{background:#2a1416; border:1px solid #5d2b2f}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#1c4a2c; color:#8ff0b6}
+  .fb.no .badge{background:#4a2226; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c8d0dc; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .fb .why b{color:#a9c1ff}
+  /* ---------- 按钮 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#08101c}
+  .btn.primary:hover{background:#79b0ff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  /* ---------- 定位表 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+  details.fp td:first-child{width:44px; font-family:ui-monospace,Consolas,monospace; color:#a9c1ff}
+  details.fp td:nth-child(2){width:52px}
+  /* ---------- 底部得分条 ---------- */
+  .bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(18,22,28,.97); border-top:1px solid var(--line);
+    backdrop-filter:blur(8px);
+    padding:10px 20px; display:flex; gap:20px; align-items:center; flex-wrap:wrap;
+    font-size:13.5px;
+  }
+  .bar .bstat{color:var(--muted)}
+  .bar .bstat b{color:var(--ink); font-size:16px; font-variant-numeric:tabular-nums; margin-left:4px}
+  .bar .bstat b.hi{color:#7cc4e8}
+  .bar .bmsg{flex:1; color:#8fa3bb; font-size:12.5px; min-width:160px}
+  .bar .btn{padding:7px 14px; font-size:13px}
+  /* ---------- 页脚 ---------- */
+  .src{margin:22px 0 8px; font-size:12px; color:#7b8494; line-height:1.9}
+  .src a{color:#8fa8c6}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 12 月 · 第三套 · Section C 仔细阅读
+    <small>Passage One（46–50）· Passage Two（51–55）· 目标 20 分钟</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：两篇文章 ================= -->
+  <div class="col" id="passages">
+
+    <section class="card passage" id="passage1">
+      <h2>Passage One<span class="qrange">Questions 46 to 50</span></h2>
+      <div class="meta">原卷无英文标题 · 主题：纽约 Eleven Madison Park 成为首家摘得米其林三星的素食餐厅（9 段 · 351 词）</div>
+
+      <p class="para" id="p1-1"><span class="tag">P1</span>New York's Eleven Madison Park has become <mark>the first vegan(素食主义的) restaurant to be awarded three Michelin stars</mark>.<span class="loc"><b>Q46</b> 首句即答案：首家获米其林三星的素食餐厅。</span></p>
+
+      <p class="para" id="p1-2"><span class="tag">P2</span>The fine dining establishment received its first three-star Michelin rating in 2011 when the menu was famed for its fancy animal-based dishes.</p>
+
+      <p class="para" id="p1-3"><span class="tag">P3</span>However, last year, the restaurant's co-owner and famous chef, Daniel Humm, made the bold decision to remove meat from the menu, <mark>citing our unsustainable food system</mark>. While cow milk is still served for tea and coffee, the menu is almost 100 percent vegan.<span class="loc"><b>Q47</b> 撤肉的理由：citing our unsustainable food system。</span></p>
+
+      <p class="para" id="p1-4"><span class="tag">P4</span>At the time, Humm <mark>acknowledged the move was risky, admitting that "it wasn't clear if guests would come", but called the gamble "a risk worth taking."</mark><span class="loc"><b>Q48</b> 「有风险 + 不确定客人来」与「值得一冒」两面并存。</span></p>
+
+      <p class="para" id="p1-5"><span class="tag">P5</span>"In view of the climate crisis, I didn't want to open the same restaurant," Humm told the Financial Times in an interview. "If we can show the possibilities of eating plant-based food in this setting, it can open a lot of doors" for others to follow.</p>
+
+      <p class="para" id="p1-6"><span class="tag">P6</span>Now, this impressive new accomplishment validates Eleven Madison Park's decision to take meat off the menu and embrace plant-based foods, with Michelin's 2022 New York guide <mark>branding it 'a bold vision of luxury dining'</mark>.<span class="loc"><b>Q49</b> 2022 纽约指南的原话：a bold vision of luxury dining。</span></p>
+
+      <p class="para" id="p1-7"><span class="tag">P7</span>"We took the jump to transform Eleven Madison Park into a plant-based fine dining restaurant knowing in our hearts this is what we believed in," stated Humm on Instagram. "Last night, we were honored to be awarded three Michelin stars for the 11th year in a row. I am so grateful to the team members who contributed through its nearly 25-year history. We are also grateful to our guests and partners who believed in our vision and encouraged us to push harder."</p>
+
+      <p class="para" id="p1-8"><span class="tag">P8</span>Three Michelin stars is the highest award, given to chefs who are at the peak of their profession. "Their cooking is elevated to an art form and some of their dishes are destined to become classics," reads Michelin's website, in a <mark>clear nod to plant-based foods' growing significance in the culinary(烹饪的) world</mark>.<span class="loc"><b>Q50</b> 授星的本义：对植物性饮食地位上升的明确认可。</span></p>
+
+      <p class="para" id="p1-9"><span class="tag">P9</span>"I think luxury companies have a real role to play and a responsibility," says Humm. "The more creative we are, the more beautiful and delicious our future will be."</p>
+
+      <div class="src">Directions: There are 2 passages in this section. Each passage is followed by some questions or unfinished statements. For each of them there are four choices marked A), B), C) and D). 原文照录，未改写。</div>
+    </section>
+
+    <section class="card passage" id="passage2">
+      <h2>Passage Two<span class="qrange">Questions 51 to 55</span></h2>
+      <div class="meta">原卷无英文标题 · 主题：基因检测到底有多准，哪些结果能信（7 段 · 349 词）</div>
+
+      <p class="para" id="p2-1"><span class="tag">P1</span>With genetic testing becoming increasingly popular, many people are left wondering exactly how accurate it is. Whether you are taking a DNA test to build your extended DNA family tree, or want precise information on inborn(先天的) health conditions, it is important to <mark>understand how accurate genetic tests are</mark>, and what information we can rely upon.<span class="loc"><b>Q51</b> it is important to understand how accurate...：重要的是了解准确度。</span></p>
+
+      <p class="para" id="p2-2"><span class="tag">P2</span>How accurate DNA tests are relies greatly upon the kind of test being taken, on the specific question you ask, and on how complex the genetics behind a trait(特征) is. For example, <mark>tests for traits that depend on a single gene provide much more reliable results</mark>, because you can see whether a disease-causing trait is present.<span class="loc"><b>Q52</b> 单基因性状的检测结果可靠得多。</span></p>
+
+      <p class="para" id="p2-3"><span class="tag">P3</span>Ancestry tests claim to reveal our genetic identities. But saying you are 30 percent East Asian or American hardly reflects your real ancestry.</p>
+
+      <p class="para" id="p2-4"><span class="tag">P4</span>What about using DNA tests to discover distant family members? There are tools to compare one's DNA with others' to find distant relatives based on their genetic identification. These kinds of applications are generally accurate. It's relatively easy to tell whether two DNA samples belong to close relatives. With distant relatives, results become hazier.</p>
+
+      <p class="para" id="p2-5"><span class="tag">P5</span>Genetic health tests claim to be able to detect certain hereditary(遗传的) diseases, or other health conditions. While certain rare diseases can be easily identified, <mark>most potential health conditions cannot be identified by genetic testing alone</mark>. The large majority of our traits and diseases also depend upon non-genetic factors, such as lifestyle, the environment, and many others.<span class="loc"><b>Q53</b> 多数潜在疾病无法「仅靠」基因检测识别。</span></p>
+
+      <p class="para" id="p2-6"><span class="tag">P6</span>Genetic tests for multi-factorial traits are often very tricky to interpret. Height, for example, depends on hundreds of genes, each contributing a little to the outcome, together with a bunch of environmental factors. A test can look at many genes at once, but <mark>it's difficult to predict how they will play together</mark>. Then you should also account for non-genetic factors that are not written in the DNA.<span class="loc"><b>Q54</b> 难在预测多个基因「放在一起怎么协作」。</span></p>
+
+      <p class="para" id="p2-7"><span class="tag">P7</span>Tests that offer to find your perfect romantic match and those claiming to predict personality or talents based on your DNA are <mark>pure nonsense</mark>. At the moment, the scientific bases for these applications are non-existent or incredibly weak.<span class="loc"><b>Q55</b> pure nonsense：作者对这类检测的强烈否定。</span></p>
+
+      <div class="src">原文照录自懒笔站本篇卷面（7 段 · 349 词），未改写、未补句。</div>
+    </section>
+
+  </div>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>10 道真题（46–55）</h2>
+    <div class="hint">点选项作答 → 点「提交答案」。提交后自动判分、展开三段式解析，并滚动高亮首个错题所在段。</div>
+
+    <div id="questions"></div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+    </div>
+
+    <details class="fp">
+      <summary>题目定位表（10 行：题号 / 段落 / 定位关键词）</summary>
+      <table>
+        <tr><th>题</th><th>段</th><th>定位关键词</th></tr>
+        <tr><td>46</td><td>P1</td><td>first vegan restaurant / three Michelin stars</td></tr>
+        <tr><td>47</td><td>P3</td><td>citing our unsustainable food system</td></tr>
+        <tr><td>48</td><td>P4</td><td>risky / wasn't clear if guests would come / a risk worth taking</td></tr>
+        <tr><td>49</td><td>P6</td><td>2022 New York guide / a bold vision of luxury dining</td></tr>
+        <tr><td>50</td><td>P8</td><td>in a clear nod to / growing significance</td></tr>
+        <tr><td>51</td><td>P1</td><td>it is important to understand how accurate</td></tr>
+        <tr><td>52</td><td>P2</td><td>a single gene / much more reliable</td></tr>
+        <tr><td>53</td><td>P5</td><td>most potential health conditions / cannot be identified ... alone</td></tr>
+        <tr><td>54</td><td>P6</td><td>difficult to predict how they will play together</td></tr>
+        <tr><td>55</td><td>P7</td><td>pure nonsense / non-existent or incredibly weak</td></tr>
+      </table>
+    </details>
+
+    <div class="src">
+      数据来源：<a href="https://english-exam.lazynote.cn/cet4/sections/2025-12-3/part3-section-c/" target="_blank" rel="noopener">懒笔站 · 46–50 解析</a> ·
+      <a href="https://english-exam.lazynote.cn/cet4/sections/2025-12-3/part3-section-c-2/" target="_blank" rel="noopener">懒笔站 · 51–55 解析</a> ·
+      <a href="https://m.koolearn.com/cet4/20251213/930096.html" target="_blank" rel="noopener">新东方在线 · 第三套答案</a><br>
+      答案经两源核对一致（46–50 ABACD / 51–55 ADCBD）。
+    </div>
+  </section>
+
+</div>
+
+<div class="bar" id="bar">
+  <span class="bstat">已答 <b id="done">0</b>/10</span>
+  <span class="bstat">得分 <b id="pts">—</b>/10</span>
+  <span class="bmsg" id="msg">目标 20 分钟：两篇各 10 分钟，先看题干再回文定位。</span>
+  <button class="btn ghost" id="reset">重新开始</button>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    n: 46, para: "p1-1", answer: "A",
+    stem: "What do we learn about New York's Eleven Madison Park?",
+    opts: [
+      "It is the first vegan restaurant to receive the highest Michelin rating.",
+      "It is the first restaurant in the city to remove meat from its menu.",
+      "It was famed throughout the U.S. for its fancy regional dishes.",
+      "It was established as a three-star Michelin restaurant in 2011."
+    ],
+    why: '<p><b>① 定位</b>：P1 首句 — "has become the first vegan restaurant to be awarded three Michelin stars"。</p>' +
+         '<p><b>② 同义替换</b>：be awarded three Michelin stars ≈ receive the highest Michelin rating（三星即最高评级）；vegan restaurant 原词保留。</p>' +
+         '<p><b>③ 陷阱</b>：B 偷换概念——原文是「首家获三星的素食餐厅」，不是「全市首家撤肉餐厅」；C 无中生有——animal-based 被换成 regional，还多加了 throughout the U.S.；D 偷换概念——2011 年是首次获评，不是「创立」。</p>'
+  },
+  {
+    n: 47, para: "p1-3", answer: "B",
+    stem: "Why did Daniel Humm decide to remove meat from the menu of his restaurant?",
+    opts: [
+      "To encourage more customers to be vegan.",
+      "To contribute to a sustainable food system.",
+      "To show the appeal of a plant-based menu.",
+      "To strive for the three-star Michelin rating."
+    ],
+    why: '<p><b>① 定位</b>：P3 第 1 句 — "made the bold decision to remove meat from the menu, citing our unsustainable food system"。</p>' +
+         '<p><b>② 同义替换</b>：unsustainable food system → contribute to a sustainable food system（反义正说，动机一致）。</p>' +
+         '<p><b>③ 陷阱</b>：C 答非所问——"it can open a lot of doors" 是决定的后续效果，不是原因；D 因果倒置——三星是撤肉之后的结果；A 偷换概念——原文关注的是食物体系，不是顾客的饮食选择。</p>'
+  },
+  {
+    n: 48, para: "p1-4", answer: "A",
+    stem: "What did Daniel Humm think of his move to a meat-free menu?",
+    opts: [
+      "It was a worthwhile effort even though he was unsure of its success.",
+      "It would set a model for many more restaurants to follow.",
+      "It was a mad gamble few chefs in the fine dining world would risk taking.",
+      "It would prove a right step to take in today's catering business."
+    ],
+    why: '<p><b>① 定位</b>：P4 — "acknowledged the move was risky, admitting that \'it wasn\'t clear if guests would come\', but called the gamble \'a risk worth taking.\'"</p>' +
+         '<p><b>② 同义替换</b>：it wasn\'t clear if guests would come ≈ he was unsure of its success；a risk worth taking ≈ a worthwhile effort；but 的双面态度 ≈ even though。</p>' +
+         '<p><b>③ 陷阱</b>：B 答非所问——"open a lot of doors" 是对外效用，不是他的自我评价；C 过度推断——mad、few chefs would risk 原文没有这种横向比较；D 偷换概念——把个人评价换成对整个餐饮业的判断。</p>'
+  },
+  {
+    n: 49, para: "p1-6", answer: "C",
+    stem: "What does Michelin's 2022 New York guide say about Eleven Madison Park's decision?",
+    opts: [
+      "It elevates the restaurant's cooking to an art form.",
+      "It proves the validity of ratings awarded by Michelin.",
+      "It shows a daring foresight regarding future fine dining.",
+      "It is an effort to transform the restaurant into a luxury one."
+    ],
+    why: '<p><b>① 定位</b>：P6 末 — "with Michelin\'s 2022 New York guide branding it \'a bold vision of luxury dining\'"。</p>' +
+         '<p><b>② 同义替换</b>：a bold vision ≈ a daring foresight；luxury dining ≈ future fine dining。</p>' +
+         '<p><b>③ 陷阱</b>：A 张冠李戴——"cooking is elevated to an art form" 是 P8 米其林对三星厨师的总体描述；B 主客颠倒——validates 的对象是 decision，不是米其林评级；D 无中生有——an effort to transform ... into a luxury one。</p>'
+  },
+  {
+    n: 50, para: "p1-8", answer: "D",
+    stem: "What does the awarding of three Michelin stars to Eleven Madison Park indicate?",
+    opts: [
+      "An optimistic vision of vegan foods becoming mainstream.",
+      "A greater responsibility for the culinary world to undertake.",
+      "A strong incentive for more restaurants to offer healthier foods to their customers.",
+      "An explicit recognition of the rising importance of restaurants serving vegan foods."
+    ],
+    why: '<p><b>① 定位</b>：P8 末 — "in a clear nod to plant-based foods\' growing significance in the culinary world"。</p>' +
+         '<p><b>② 同义替换</b>：in a clear nod to ≈ an explicit recognition of；growing significance ≈ rising importance；plant-based foods ≈ restaurants serving vegan foods。</p>' +
+         '<p><b>③ 陷阱</b>：A 过度推断——地位上升不等于成为主流；B 答非所问——responsibility 出自 P9 Humm 的呼吁；C 偷换概念——vegan 被换成 healthier foods，还虚构了「激励更多餐厅」。</p>'
+  },
+  {
+    n: 51, para: "p2-1", answer: "A",
+    stem: "What does the passage say is of importance regarding genetic tests?",
+    opts: [
+      "Knowing their accuracy.",
+      "Evaluating their applicability.",
+      "Utilizing the information they provide.",
+      "Weighing the consequences they have."
+    ],
+    why: '<p><b>① 定位</b>：P1 第 2 句 — "it is important to understand how accurate genetic tests are, and what information we can rely upon"。</p>' +
+         '<p><b>② 同义替换</b>：it is important to understand ≈ is of importance；how accurate ≈ accuracy。</p>' +
+         '<p><b>③ 陷阱</b>：B 无中生有——applicability 全文未提；C 偷换概念——"what information we can rely upon" 是判断可信度，不是「利用信息」；D 无中生有——consequences 全文未提。</p>'
+  },
+  {
+    n: 52, para: "p2-2", answer: "D",
+    stem: "What kind of genetic tests tend to be comparatively reliable?",
+    opts: [
+      "Those complex enough to reveal the genetics behind a trait.",
+      "Those looking for traits responsible for certain diseases.",
+      "Those focusing on the specific questions being asked.",
+      "Those looking for traits determined by a single gene."
+    ],
+    why: '<p><b>① 定位</b>：P2 第 2 句 — "tests for traits that depend on a single gene provide much more reliable results"。</p>' +
+         '<p><b>② 同义替换</b>：depend on a single gene ≈ determined by a single gene；much more reliable ≈ comparatively reliable。</p>' +
+         '<p><b>③ 陷阱</b>：A 与原文相反——原文说基因越复杂越不可靠；B 张冠李戴——disease-causing trait 只是解释「为什么单基因检测可靠」；C 偷换概念——"the specific question you ask" 讲的是准确度取决于问题，不是「针对特定问题的检测更可靠」。</p>'
+  },
+  {
+    n: 53, para: "p2-5", answer: "C",
+    stem: "What do we learn about genetic health tests from the passage?",
+    opts: [
+      "They are unable to identify certain hereditary diseases by themselves.",
+      "They are generally unable to separate genetic and non-genetic factors.",
+      "They cannot independently identify the majority of potential diseases.",
+      "They cannot tell apart the impact of lifestyle and that of the environment."
+    ],
+    why: '<p><b>① 定位</b>：P5 第 2 句 — "most potential health conditions cannot be identified by genetic testing alone"。</p>' +
+         '<p><b>② 同义替换</b>：most ≈ the majority of；by genetic testing alone ≈ independently；health conditions ≈ diseases。</p>' +
+         '<p><b>③ 陷阱</b>：A 与原文相反——certain rare diseases can be easily identified；B 无中生有——原文从未要求检测「区分」基因与非基因因素；D 偷换概念——lifestyle / environment 只是 non-genetic factors 的举例，没让检测去区分二者影响。</p>'
+  },
+  {
+    n: 54, para: "p2-6", answer: "B",
+    stem: "What makes genetic tests for multi-factorial traits tricky to interpret?",
+    opts: [
+      "The challenge in determining the role of each individual gene.",
+      "The difficulty of foretelling how the various genes will interact.",
+      "The difficulty of telling genetic factors from environmental ones.",
+      "The enormous work to identify the hundreds of genes involved."
+    ],
+    why: '<p><b>① 定位</b>：P6 第 3 句 — "it\'s difficult to predict how they will play together"。</p>' +
+         '<p><b>② 同义替换</b>：difficult ≈ the difficulty of；predict ≈ foretelling；play together ≈ interact。</p>' +
+         '<p><b>③ 陷阱</b>：A 偷换概念——each contributing a little 只说「各贡献一点」，没谈「难以确定各自作用」；C 无中生有——原文只说还要考虑非基因因素；D 无中生有——没说「识别几百个基因工作量巨大」才是难点。</p>'
+  },
+  {
+    n: 55, para: "p2-7", answer: "D",
+    stem: "What does the passage say about DNA tests to predict personality or talents?",
+    opts: [
+      "They are solid scientific bases for application.",
+      "They are helpful in finding a romantic match.",
+      "They do not look promising at the moment.",
+      "They do not make any sense at present."
+    ],
+    why: '<p><b>① 定位</b>：P7 — "are pure nonsense. At the moment, the scientific bases for these applications are non-existent or incredibly weak."</p>' +
+         '<p><b>② 同义替换</b>：pure nonsense ≈ do not make any sense；At the moment ≈ at present。</p>' +
+         '<p><b>③ 陷阱</b>：A 与原文相反——bases are non-existent or incredibly weak；B 与原文相反——romantic match 同属「纯属胡说」；C 程度过轻——promising 把 pure nonsense 的强烈否定弱化成了「前景不佳」。</p>'
+  }
+];
+
+const picked = {};
+const quizEl = document.getElementById("questions");
+
+function render(){
+  let html = "";
+  QUESTIONS.slice().sort((a, b) => a.n - b.n).forEach(q => {
+    if (q.n === 46) html += '<div class="qgroup">Passage One · 46–50</div>';
+    if (q.n === 51) html += '<div class="qgroup">Passage Two · 51–55</div>';
+    html += '<div class="q" data-n="' + q.n + '">'
+          +   '<div class="stem"><span class="num">' + q.n + '.</span>' + q.stem + '</div>'
+          +   '<div class="opts" data-n="' + q.n + '">'
+          +     q.opts.map((t, i) => {
+                  const L = "ABCD"[i];
+                  return '<button type="button" class="opt" data-l="' + L + '" data-n="' + q.n + '"><b>' + L + '</b><span>' + t + '</span></button>';
+                }).join("")
+          +   '</div>'
+          +   '<div class="fb" id="fb-' + q.n + '"></div>'
+          + '</div>';
+  });
+  quizEl.innerHTML = html;
+}
+
+quizEl.addEventListener("click", e => {
+  const btn = e.target.closest("button.opt");
+  if (!btn || btn.disabled) return;
+  const n = btn.dataset.n, L = btn.dataset.l;
+  picked[n] = L;
+  quizEl.querySelectorAll('.opts[data-n="' + n + '"] .opt').forEach(b => b.classList.remove("sel"));
+  btn.classList.add("sel");
+  updateBar();
+});
+
+function doneCount(){
+  return Object.keys(picked).filter(k => picked[k]).length;
+}
+
+function updateBar(){
+  document.getElementById("done").textContent = doneCount();
+}
+
+function setScore(v){
+  const el = document.getElementById("pts");
+  el.textContent = (v === null) ? "—" : v;
+  el.classList.toggle("hi", v !== null);
+}
+
+function setMsg(t){
+  document.getElementById("msg").textContent = t;
+}
+
+function clearHits(){
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+}
+
+document.getElementById("submit").addEventListener("click", () => {
+  let correct = 0;
+  let firstWrong = null;
+  clearHits();
+
+  QUESTIONS.forEach(q => {
+    const chosen = picked[q.n];
+    const ok = (chosen === q.answer);
+    if (ok) correct++; else if (firstWrong === null) firstWrong = q;
+
+    const area = quizEl.querySelector('.opts[data-n="' + q.n + '"]');
+    area.querySelectorAll(".opt").forEach(b => {
+      b.disabled = true;
+      b.classList.remove("sel");
+      if (b.dataset.l === q.answer) b.classList.add("answer");
+      if (b.dataset.l === chosen && !ok) b.classList.add("wrong");
+      if (b.dataset.l === q.answer && ok) b.classList.add("right");
+    });
+
+    const fb = document.getElementById("fb-" + q.n);
+    fb.className = "fb show " + (ok ? "ok" : "no");
+    fb.innerHTML = '<span class="badge">' + (ok ? "正确" : (chosen ? "错误" : "未作答")) + "</span>答案 "
+                 + q.answer + '<div class="why">' + q.why + "</div>";
+  });
+
+  setScore(correct);
+  updateBar();
+
+  if (firstWrong){
+    const p = document.getElementById(firstWrong.para);
+    if (p){
+      p.classList.add("hit");
+      p.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+    setMsg("首个错题是第 " + firstWrong.n + " 题，已滚动到 " + firstWrong.para.toUpperCase() + " 段；先读定位句再对照解析。");
+  } else {
+    document.getElementById("bar").scrollIntoView({behavior:"smooth", block:"end"});
+    setMsg(correct === 10
+      ? "全对。20 分钟内两篇满分，考场上这个节奏就是稳过线。"
+      : "全部答对。");
+  }
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  Object.keys(picked).forEach(k => delete picked[k]);
+  clearHits();
+  render();
+  setScore(null);
+  updateBar();
+  setMsg("已重置，计时继续。目标 20 分钟。");
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+/* ---------- 计时器：目标 20 分钟 ---------- */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  timerEl.textContent = m + ":" + s;
+  if (sec >= 1200) timerEl.classList.add("over");
+  else if (sec >= 900) timerEl.classList.add("warn");
+}, 1000);
+
+render();
+updateBar();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .loc{display:none!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:18px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#08101c;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
