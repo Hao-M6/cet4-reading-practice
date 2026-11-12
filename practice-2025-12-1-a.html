@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级选词填空 · 2025年12月第一套 · 26–35 题</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; padding-bottom:70px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+  }
+  .timer.warn{background:#3a1d1f; color:#ffb4ab}
+  .timer.over{animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 470px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .passage .meta em{color:#b9c3d1; font-style:normal}
+  .txt{margin:0 0 16px; line-height:2.05}
+  /* ---------- 词库 ---------- */
+  .bank{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 18px}
+  .chip{
+    background:#1a1f27; border:1px solid var(--line); border-radius:9px;
+    padding:5px 10px 6px; min-width:138px; line-height:1.45;
+  }
+  .chip b{color:var(--accent); font-family:ui-monospace,Consolas,monospace; margin-right:5px; font-size:13px}
+  .chip .w{font-weight:600; font-size:13.5px}
+  .chip .pos{color:#8f9aab; font-size:11px; margin-left:4px}
+  .chip .gloss{display:block; color:#9aa7b8; font-size:11.5px}
+  /* ---------- 空格 ---------- */
+  .blank{display:inline-flex; align-items:center; vertical-align:baseline; margin:0 3px}
+  .blank i{
+    font-style:normal; display:inline-block; background:#1c2740; color:#a9c1ff;
+    border-radius:4px; font-size:11px; font-weight:700; padding:0 4px;
+    font-family:ui-monospace,Consolas,monospace; line-height:1.5; margin-right:2px;
+  }
+  .blank u{
+    display:inline-block; min-width:76px; height:1.2em; border-bottom:1.6px solid #4a5464;
+    text-decoration:none; text-align:center; font-weight:600; padding:0 4px; font-size:14px;
+  }
+  .blank u.ok{color:#7ee2a8; border-bottom-color:#3fb950}
+  .blank u.bad{color:#ffb4ab; border-bottom-color:#f85149}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 92px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz h3{font-size:13.5px; margin:16px 0 6px; color:#a9c1ff; font-weight:600}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .qitem{padding:10px 0; border-top:1px solid var(--line)}
+  .qitem:first-of-type{border-top:none}
+  .arow{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+  .arow .no{
+    width:30px; height:28px; flex:0 0 30px; border-radius:6px; background:#1c2740;
+    color:#a9c1ff; font-weight:700; font-size:12.5px; display:grid; place-items:center;
+    font-family:ui-monospace,Consolas,monospace;
+  }
+  select{
+    background:#1a1f27; color:var(--ink); border:1px solid var(--line);
+    border-radius:8px; padding:6px 8px; font-size:13.5px; font-family:inherit;
+    min-width:212px; cursor:pointer;
+  }
+  select:focus{outline:2px solid #2f4a77; outline-offset:1px}
+  select option{background:#171c23; color:var(--ink)}
+  select:disabled{opacity:.85; cursor:default}
+  .qitem.ok .arow .no{background:#16301f; color:#7ee2a8}
+  .qitem.bad .arow .no{background:#3a1d1f; color:#ffb4ab}
+  .key{
+    font-size:12.5px; color:#7ee2a8; border:1.5px dashed #3fb950;
+    border-radius:7px; padding:1px 8px; background:#14261a; display:none;
+  }
+  .key.show{display:inline-block}
+  .fb{margin:8px 0 2px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#08101c}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  /* ---------- 固定得分条 ---------- */
+  .dock{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(16,20,26,.97); border-top:1px solid var(--line);
+    padding:9px 20px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+    font-size:13.5px;
+  }
+  .dock .lab{color:var(--muted)}
+  .dock b{color:#a9c1ff; font-variant-numeric:tabular-nums}
+  .dock .big{font-size:17px; color:#7cc4e8}
+  .dock .sp{flex:1}
+  .dock button{
+    border:1px solid var(--line); background:#232a35; color:#c3cad6;
+    border-radius:8px; padding:6px 14px; font-size:13px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .dock button:hover{background:#2b3240}
+  /* ---------- 词性速查 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+  .src{margin:18px auto 0; max-width:1240px; padding:0 20px 20px; color:#7e8798; font-size:12px; line-height:1.7}
+  .src a{color:#7fa8e8; text-decoration:none; border-bottom:1px dotted #3f5b85}
+  .src .flag{color:#e0b062}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 12 月 · 第一套 · Section A 选词填空
+    <small>15 词选 10 · 26–35 题 · 3 段 246 词 · 目标 8 分钟</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：词库 + 原文 ================= -->
+  <section class="card passage" id="passage">
+    <h2>选词填空短文（3 段 · 246 词）</h2>
+    <div class="meta">
+      <em>Directions:</em> In this section, there is a passage with ten blanks. You are required to select one word
+      for each blank from a list of choices given in a word bank following the passage. Read the passage through
+      carefully before making your choices. Each choice in the bank is identified by a letter. You may not use any
+      of the words in the bank more than once.
+    </div>
+
+    <div class="bank" id="bank">
+      <div class="chip"><b>A</b><span class="w">approximately</span><span class="pos">adv.</span><span class="gloss">大约，大致</span></div>
+      <div class="chip"><b>B</b><span class="w">case</span><span class="pos">n.</span><span class="gloss">案例；情况</span></div>
+      <div class="chip"><b>C</b><span class="w">chance</span><span class="pos">n.</span><span class="gloss">机会；可能性</span></div>
+      <div class="chip"><b>D</b><span class="w">confused</span><span class="pos">adj.</span><span class="gloss">困惑的，不知所措的</span></div>
+      <div class="chip"><b>E</b><span class="w">crucial</span><span class="pos">adj.</span><span class="gloss">至关重要的</span></div>
+      <div class="chip"><b>F</b><span class="w">deposited</span><span class="pos">v.</span><span class="gloss">存放；存款（过去式/过去分词）</span></div>
+      <div class="chip"><b>G</b><span class="w">enter</span><span class="pos">v.</span><span class="gloss">进入；着手处理</span></div>
+      <div class="chip"><b>H</b><span class="w">invest</span><span class="pos">v.</span><span class="gloss">投入（时间/精力/金钱）</span></div>
+      <div class="chip"><b>I</b><span class="w">matter</span><span class="pos">v./n.</span><span class="gloss">要紧，有重要性；事情</span></div>
+      <div class="chip"><b>J</b><span class="w">presented</span><span class="pos">v./adj.</span><span class="gloss">被呈现的；提供（过去分词）</span></div>
+      <div class="chip"><b>K</b><span class="w">range</span><span class="pos">n./v.</span><span class="gloss">范围；一系列</span></div>
+      <div class="chip"><b>L</b><span class="w">regular</span><span class="pos">adj.</span><span class="gloss">定期的，常规的</span></div>
+      <div class="chip"><b>M</b><span class="w">seize</span><span class="pos">v.</span><span class="gloss">抓住，夺取</span></div>
+      <div class="chip"><b>N</b><span class="w">selection</span><span class="pos">n.</span><span class="gloss">选择，挑选（动作或结果）</span></div>
+      <div class="chip"><b>O</b><span class="w">ultimately</span><span class="pos">adv.</span><span class="gloss">最终，归根到底</span></div>
+    </div>
+
+    <p class="txt">People tend to want as many choices as possible. They believe this will maximize their
+      <span class="blank"><i>26</i><u id="u26"></u></span> of making the best decision. But research shows that,
+      when it comes to actually making a <span class="blank"><i>27</i><u id="u27"></u></span> from all of these
+      choices, people can become <span class="blank"><i>28</i><u id="u28"></u></span> and avoid making a decision
+      altogether. Even worse, when people finally do decide, they are generally less satisfied with their decision
+      and feel more regretful over whatever choice they made.</p>
+
+    <p class="txt">Why does this happen? Research shows that when people choose from many options, they
+      <span class="blank"><i>29</i><u id="u29"></u></span> more in the decision, but feel less confident in their
+      ability to decide well. In other words, when we are <span class="blank"><i>30</i><u id="u30"></u></span> with
+      more choices, making the "right" or "correct" decision begins to feel more
+      <span class="blank"><i>31</i><u id="u31"></u></span> and, at the same time, more difficult to do. This may
+      contribute to the deep fear that we will make the wrong decision.</p>
+
+    <p class="txt">How can we solve this problem? I believe this fear could be tempered by putting decisions into
+      perspective. It might help to remember that many of the choices you make, such as what to have for lunch, will
+      not <span class="blank"><i>32</i><u id="u32"></u></span> much in the future and that, even more important
+      choices, like accepting a new job, can <span class="blank"><i>33</i><u id="u33"></u></span> be changed. It
+      could also help to <span class="blank"><i>34</i><u id="u34"></u></span> these situations with clear guidelines
+      and ideas of what you want from the <span class="blank"><i>35</i><u id="u35"></u></span> of options, which can
+      narrow the possible choices, and also make you more confident about your ability to make the right decision.</p>
+  </section>
+
+  <!-- ================= 右：作答区 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>作答区（26–35）</h2>
+    <div class="hint">每题从下拉框选一个字母 → 点「提交答案」。判分后空格自动补上正确词，并展开「词性 / 依据 / 干扰项」三段解析。</div>
+
+    <div class="qitem" id="row26">
+      <div class="arow"><span class="no">26</span>
+        <select class="blank-sel" id="sel26" aria-label="第 26 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key26"></span>
+      </div>
+      <div class="fb" id="fb26"></div>
+    </div>
+
+    <div class="qitem" id="row27">
+      <div class="arow"><span class="no">27</span>
+        <select class="blank-sel" id="sel27" aria-label="第 27 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key27"></span>
+      </div>
+      <div class="fb" id="fb27"></div>
+    </div>
+
+    <div class="qitem" id="row28">
+      <div class="arow"><span class="no">28</span>
+        <select class="blank-sel" id="sel28" aria-label="第 28 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key28"></span>
+      </div>
+      <div class="fb" id="fb28"></div>
+    </div>
+
+    <div class="qitem" id="row29">
+      <div class="arow"><span class="no">29</span>
+        <select class="blank-sel" id="sel29" aria-label="第 29 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key29"></span>
+      </div>
+      <div class="fb" id="fb29"></div>
+    </div>
+
+    <div class="qitem" id="row30">
+      <div class="arow"><span class="no">30</span>
+        <select class="blank-sel" id="sel30" aria-label="第 30 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key30"></span>
+      </div>
+      <div class="fb" id="fb30"></div>
+    </div>
+
+    <div class="qitem" id="row31">
+      <div class="arow"><span class="no">31</span>
+        <select class="blank-sel" id="sel31" aria-label="第 31 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key31"></span>
+      </div>
+      <div class="fb" id="fb31"></div>
+    </div>
+
+    <div class="qitem" id="row32">
+      <div class="arow"><span class="no">32</span>
+        <select class="blank-sel" id="sel32" aria-label="第 32 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key32"></span>
+      </div>
+      <div class="fb" id="fb32"></div>
+    </div>
+
+    <div class="qitem" id="row33">
+      <div class="arow"><span class="no">33</span>
+        <select class="blank-sel" id="sel33" aria-label="第 33 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key33"></span>
+      </div>
+      <div class="fb" id="fb33"></div>
+    </div>
+
+    <div class="qitem" id="row34">
+      <div class="arow"><span class="no">34</span>
+        <select class="blank-sel" id="sel34" aria-label="第 34 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key34"></span>
+      </div>
+      <div class="fb" id="fb34"></div>
+    </div>
+
+    <div class="qitem" id="row35">
+      <div class="arow"><span class="no">35</span>
+        <select class="blank-sel" id="sel35" aria-label="第 35 题"><option value="A">A. approximately</option><option value="B">B. case</option><option value="C">C. chance</option><option value="D">D. confused</option><option value="E">E. crucial</option><option value="F">F. deposited</option><option value="G">G. enter</option><option value="H">H. invest</option><option value="I">I. matter</option><option value="J">J. presented</option><option value="K">K. range</option><option value="L">L. regular</option><option value="M">M. seize</option><option value="N">N. selection</option><option value="O">O. ultimately</option></select>
+        <span class="key" id="key35"></span>
+      </div>
+      <div class="fb" id="fb35"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+      <button class="btn ghost" id="reset">重新开始</button>
+    </div>
+
+    <div class="score" id="score"></div>
+
+    <details class="fp">
+      <summary>卡住了？点开看「词库词性分组」（15 词 = 名 4 · 动 6 · 形 3 · 副 2）</summary>
+      <table>
+        <tr><th>词性</th><th>候选词</th></tr>
+        <tr><td>名词 4</td><td>case · chance · range · selection</td></tr>
+        <tr><td>动词 6</td><td>deposited · enter · invest · matter · presented · seize</td></tr>
+        <tr><td>形容词 3</td><td>confused · crucial · regular</td></tr>
+        <tr><td>副词 2</td><td>approximately · ultimately</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<div class="dock">
+  <span class="lab">已答</span><b id="dAns">0</b><span class="lab">/ 10</span>
+  <span class="lab">得分</span><span class="big" id="dScore">—</span>
+  <span class="sp"></span>
+  <span class="lab">目标 8 分钟</span>
+  <button id="dockReset" type="button">重新开始</button>
+</div>
+
+<div class="src">
+  数据来源：<a href="https://english-exam.lazynote.cn/cet4/paper/2025-12-1/part3-section-a/" target="_blank" rel="noopener">懒笔站 · 2025年12月第1套 Section A 卷面</a>
+  ＋ <a href="https://english-exam.lazynote.cn/cet4/sections/2025-12-1/part3-section-a/" target="_blank" rel="noopener">懒笔站逐空解析</a>
+  ｜ 答案交叉核对：<a href="https://cet4-6.xdf.cn/202512/15047563.html" target="_blank" rel="noopener">新东方网 · 2025年12月四级阅读试题及答案（第一套）</a>、
+  <a href="https://cet4.koolearn.com/20251213/930093.html" target="_blank" rel="noopener">新东方在线 · 四级真题及答案完整版（第一套）</a>。
+  两源答案一致（26–30 CNDHJ｜31–35 EIOGK），无存疑项。
+</div>
+
+<script>
+const WORDS = {
+  A:["approximately","adv.","大约，大致"],
+  B:["case","n.","案例；情况"],
+  C:["chance","n.","机会；可能性"],
+  D:["confused","adj.","困惑的，不知所措的"],
+  E:["crucial","adj.","至关重要的"],
+  F:["deposited","v.","存放；存款（过去式/过去分词）"],
+  G:["enter","v.","进入；着手处理"],
+  H:["invest","v.","投入（时间/精力/金钱）"],
+  I:["matter","v./n.","要紧，有重要性；事情"],
+  J:["presented","v./adj.","被呈现的；提供（过去分词）"],
+  K:["range","n./v.","范围；一系列"],
+  L:["regular","adj.","定期的，常规的"],
+  M:["seize","v.","抓住，夺取"],
+  N:["selection","n.","选择，挑选（动作或结果）"],
+  O:["ultimately","adv.","最终，归根到底"]
+};
+
+const ANS = {26:"C", 27:"N", 28:"D", 29:"H", 30:"J", 31:"E", 32:"I", 33:"O", 34:"G", 35:"K"};
+
+const EXPL = {
+  26:'<p><b>① 词性</b>：their 之后、of doing 之前，需要一个名词作中心词。</p>' +
+     '<p><b>② 依据</b>：maximize the chance of doing sth = 最大化做成某事的可能性；本句意为“他们相信这样能最大化做出最佳决定的可能性”。</p>' +
+     '<p><b>③ 干扰项</b>：case 表“案例、情况”，maximize their case of doing 不成搭配；selection 表“挑选（动作/结果）”，且 27 空 make a selection from 更需要它。</p>',
+  27:'<p><b>① 词性</b>：a 之后、from 之前，名词作 making 的宾语。</p>' +
+     '<p><b>② 依据</b>：make a selection from = 从……中做出挑选，与 from all of these choices 正好呼应。</p>' +
+     '<p><b>③ 干扰项</b>：case 的固定搭配是 make a case（论证、辩护），不是“挑选”；chance 不能用于 make a ... from 结构。</p>',
+  28:'<p><b>① 词性</b>：become 后接形容词或过去分词作表语。</p>' +
+     '<p><b>② 依据</b>：“选项太多 → 变得困惑 → 索性不做决定”是顺承因果，confused 描述心理状态最贴。</p>' +
+     '<p><b>③ 干扰项</b>：crucial 表“至关重要”，与“干脆不决定”逻辑相反（它更适合 31 空）；regular 表“定期的、常规的”，不描述心理。</p>',
+  29:'<p><b>① 词性</b>：主语 they 之后缺谓语，与 feel 并列，需动词原形（一般现在时）。</p>' +
+     '<p><b>② 依据</b>：invest more in sth = 在……上投入更多（时间/精力）；“投入更多却更没信心”正是选择悖论的关键转折。</p>' +
+     '<p><b>③ 干扰项</b>：deposited 是过去式/过去分词，形态不符；matter 不及物，不能接 more in；seize 是“抓住”，与 in the decision 不搭。</p>',
+  30:'<p><b>① 词性</b>：are 之后、with 之前，需过去分词或形容词，构成 be + ___ + with。</p>' +
+     '<p><b>② 依据</b>：be presented with sth = 被给予/面对某物；when we are presented with more choices = 当我们面对更多选择时。</p>' +
+     '<p><b>③ 干扰项</b>：confused with 是“把 A 与 B 搞混”，语义反了（且 28 空已用）；crucial 不与 with 搭配；regular 与语境无关。</p>',
+  31:'<p><b>① 词性</b>：feel + more + ___，与 difficult 并列，需形容词。</p>' +
+     '<p><b>② 依据</b>：“正确决定”既显得更重要（crucial），又更难做，才能引出下文“深深害怕选错”。</p>' +
+     '<p><b>③ 干扰项</b>：regular 与“重要/难做”不构成并列；confused 不能修饰 decision（decision feels confused 不成立）。</p>',
+  32:'<p><b>① 词性</b>：will not 之后、much 之前，需动词原形（不及物）。</p>' +
+     '<p><b>② 依据</b>：matter much = 关系重大；will not matter much in the future = 将来没什么要紧，呼应“把决定放进合适视角”。</p>' +
+     '<p><b>③ 干扰项</b>：seize 及物，缺宾语且语义不合；invest 需接 in，且“午餐吃什么”谈不上“投入”。</p>',
+  33:'<p><b>① 词性</b>：can 与 be changed 之间，需副词作状语。</p>' +
+     '<p><b>② 依据</b>：ultimately 表“最终、归根到底”，弱化“接受新工作”这类决定的不可逆感。</p>' +
+     '<p><b>③ 干扰项</b>：approximately 修饰数量，不修饰动作；regular 是形容词，不能放这个位置。</p>',
+  34:'<p><b>① 词性</b>：与上句 to remember 并列的 to + ___，需动词原形。</p>' +
+     '<p><b>② 依据</b>：enter these situations with clear guidelines = 带着明确准则进入/面对这些情境。</p>' +
+     '<p><b>③ 干扰项</b>：seize 强调“强力抓住、夺取”，与 with clear guidelines and ideas 这种“带着准备从容应对”的气质冲突。</p>',
+  35:'<p><b>① 词性</b>：the 之后、of options 之前，需名词。</p>' +
+     '<p><b>② 依据</b>：the range of options = 这一系列选项，range of 是稳定搭配。</p>' +
+     '<p><b>③ 干扰项</b>：case of options 不成搭配；selection of options 虽说得通，但 27 空的 make a selection 更不可替代（每词只用一次）。</p>'
+};
+
+const sels = Array.prototype.slice.call(document.querySelectorAll("select.blank-sel"));
+
+function answeredCount(){
+  var n = 0;
+  sels.forEach(function(s){ if(s.value) n++; });
+  return n;
+}
+
+function refreshDock(){
+  document.getElementById("dAns").textContent = answeredCount();
+}
+
+sels.forEach(function(s){
+  s.selectedIndex = -1;
+  s.addEventListener("change", refreshDock);
+});
+
+document.getElementById("submit").addEventListener("click", function(){
+  var score = 0;
+  Object.keys(ANS).forEach(function(n){
+    var code = ANS[n];
+    var word = WORDS[code][0];
+    var sel = document.getElementById("sel" + n);
+    var item = document.getElementById("row" + n);
+    var key = document.getElementById("key" + n);
+    var fb = document.getElementById("fb" + n);
+    var u = document.getElementById("u" + n);
+    var chosen = sel.value;
+    var right = chosen === code;
+
+    item.classList.remove("ok","bad");
+    item.classList.add(right ? "ok" : "bad");
+
+    key.className = "key show";
+    key.textContent = right ? "" : (code + ") " + word);
+    if(right) key.className = "key";
+
+    u.textContent = word;
+    u.className = right ? "ok" : "bad";
+
+    fb.className = "fb show " + (right ? "ok" : "no");
+    fb.innerHTML = '<span class="badge">' + (right ? "正确" : (chosen ? "错误" : "未作答")) + '</span>' +
+      "答案 " + code + ") " + word + " · " + WORDS[code][1] +
+      '<div class="why">' + EXPL[n] + '</div>';
+
+    if(right) score++;
+    sel.disabled = true;
+  });
+
+  document.getElementById("dScore").textContent = score + " / 10";
+
+  var s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = "本轮得分：<b>" + score + " / 10</b>　" +
+    (score === 10 ? "全对！词性槽 + 搭配两步走已经完全跑通。" :
+     score >= 8 ? "稳定发挥，8 分以上是考场目标。重点回看错空的“词性第一判断”。" :
+     score >= 6 ? "及格线附近：先把 15 个词按词性分组，再逐空锁词性，最后比搭配。" :
+     "别急着刷下一套：先只做词性判断（名词/动词/形容词/副词），把 10 个空全部标完再选词。");
+  refreshDock();
+  s.scrollIntoView({behavior:"smooth", block:"center"});
+});
+
+function resetAll(){
+  sels.forEach(function(s){
+    s.disabled = false;
+    s.selectedIndex = -1;
+  });
+  Object.keys(ANS).forEach(function(n){
+    document.getElementById("row" + n).classList.remove("ok","bad");
+    var key = document.getElementById("key" + n);
+    key.className = "key";
+    key.textContent = "";
+    var u = document.getElementById("u" + n);
+    u.textContent = "";
+    u.className = "";
+    var fb = document.getElementById("fb" + n);
+    fb.className = "fb";
+    fb.innerHTML = "";
+  });
+  document.getElementById("dScore").textContent = "—";
+  document.getElementById("score").className = "score";
+  refreshDock();
+}
+
+document.getElementById("reset").addEventListener("click", resetAll);
+document.getElementById("dockReset").addEventListener("click", resetAll);
+
+/* ---------- 计时器：目标 8 分钟 ---------- */
+var sec = 0;
+var timerEl = document.getElementById("timer");
+setInterval(function(){
+  sec++;
+  var m = String(Math.floor(sec/60)).padStart(2,"0");
+  var s = String(sec%60).padStart(2,"0");
+  timerEl.textContent = m + ":" + s;
+  if(sec >= 480) timerEl.classList.add("over");
+  else if(sec >= 420) timerEl.classList.add("warn");
+}, 1000);
+
+refreshDock();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}html.blind .gloss{visibility:hidden}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:74px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏词义</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示词义':'🙈 隐藏词义';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.btn.primary{color:#08101c}
+select,select option{background:#1a1f27;color:#e3e7ee}
+.blank u.ok{color:#7ee2a8}
+.blank u.bad{color:#ffb4ab}
+</style>
+</body>
+</html>
