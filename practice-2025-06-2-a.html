@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级选词填空 · Section A 练习｜2025 年 6 月第二套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+    transition:.3s;
+  }
+  .timer.warn{background:#3a2f14; color:#f0b95a}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  .tlabel{font-size:12px; color:var(--muted); white-space:nowrap}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px 20px 104px;
+    display:grid; grid-template-columns:minmax(0,1fr) 440px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  .card h2{font-size:16.5px; margin:0 0 4px}
+  .card h2.sub{font-size:15px; margin:22px 0 4px; padding-top:16px; border-top:1px solid var(--line)}
+  .card .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  /* ---------- 词库 ---------- */
+  .bankcard{grid-column:1 / -1}
+  .pos-stat{font-size:11.5px; font-weight:600; color:#8fb7e8; background:#1c2740; border-radius:999px; padding:2px 9px; margin-left:8px; vertical-align:2px}
+  .bank{display:flex; flex-wrap:wrap; gap:7px}
+  .chip{
+    display:inline-flex; align-items:baseline; gap:6px;
+    padding:5px 10px; border:1px solid var(--line); border-radius:9px;
+    background:#1a1f27; font-size:13px; line-height:1.6;
+  }
+  .chip b{color:var(--accent); font-family:ui-monospace,Consolas,monospace; font-size:12.5px}
+  .chip .w{font-weight:700; color:#e9edf4}
+  .chip i{font-style:normal; font-size:11px; color:#d0a459; letter-spacing:.2px}
+  .chip em{font-style:normal; font-size:11.5px; color:var(--muted)}
+  /* ---------- 文章 ---------- */
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .passage .txt{margin:0 0 16px; font-size:15.5px; line-height:2.05}
+  .blank{white-space:nowrap; display:inline-block; margin:0 1px}
+  .blank .bn{
+    display:inline-block; min-width:24px; padding:0 5px; margin-right:3px; border-radius:5px;
+    background:#1c2740; color:#a9c1ff; font:700 12px/1.5 ui-monospace,Consolas,monospace;
+    text-align:center; vertical-align:1px;
+  }
+  .blank .bl{
+    display:inline-block; min-width:74px; line-height:1.35; text-align:center;
+    border-bottom:2px solid #4a5468; color:#c3cad6;
+    font:700 13px/1.35 ui-monospace,Consolas,monospace; vertical-align:-2px;
+  }
+  .blank .bl.filled{color:#9dc0ff; border-bottom-color:var(--accent)}
+  .blank.ok .bl{color:#7ee2a8; border-bottom-color:var(--ok)}
+  .blank.no .bl{color:#ffb4ab; border-bottom-color:var(--bad)}
+  .blank .cor{
+    display:none; margin-left:4px; padding:0 6px; border:1px dashed var(--ok); border-radius:5px;
+    color:#7ee2a8; font:700 11.5px/1.6 ui-monospace,Consolas,monospace; vertical-align:1px;
+  }
+  .blank.no .cor{display:inline-block}
+  /* ---------- 作答区 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 190px); overflow-y:auto}
+  .arow{display:flex; align-items:center; gap:8px; margin:9px 0 0}
+  .arow .an{width:26px; text-align:right; flex:0 0 26px; font:700 13px/1 ui-monospace,Consolas,monospace; color:var(--accent)}
+  .arow select{
+    flex:1; min-width:0; height:36px; padding:0 8px; border-radius:8px;
+    border:1px solid var(--line); background:#1a1f27; color:var(--ink);
+    font-family:inherit; font-size:13.5px; cursor:pointer; appearance:auto;
+  }
+  .arow select:hover{border-color:#3d5a8a}
+  .arow select:focus{outline:none; border-color:var(--accent)}
+  .arow.ok select{border-color:var(--ok); background:#152a1c; color:#b7f3cd}
+  .arow.no select{border-color:var(--bad); background:#2b1a1c; color:#ffc9c4}
+  select option{background:#1a1f27; color:#e3e7ee}
+  .fix{display:none; flex:0 0 auto; font-size:11.5px; font-weight:700; color:#7ee2a8;
+       border:1px dashed var(--ok); border-radius:7px; padding:3px 7px; white-space:nowrap}
+  .arow.no .fix{display:inline-block}
+  .ana{
+    display:none; margin:6px 0 12px 34px; padding:9px 12px; border-left:2px solid #2b4a5e;
+    background:#141a21; border-radius:0 8px 8px 0; font-size:12.8px; line-height:1.7; color:#c3cad6;
+  }
+  .ana.show{display:block}
+  .ana p{margin:4px 0}
+  .ana p:first-child{margin-top:0}
+  .ana b{color:#a9c1ff; font-weight:700}
+  /* ---------- 底部固定得分条 ---------- */
+  .scorebar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+    padding:9px 18px; background:rgba(16,20,26,.96); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line); font-size:13.5px;
+  }
+  .scorebar .k{color:var(--muted)}
+  .scorebar b{color:#a9c1ff; font-size:17px; font-variant-numeric:tabular-nums; line-height:1}
+  .scorebar .sep{width:1px; height:22px; background:var(--line)}
+  .scorebar .tipmsg{font-size:12.5px; color:#8fb7e8}
+  .btn{
+    border:none; border-radius:9px; padding:9px 18px; font-size:13.5px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  /* ---------- 词性清单 ---------- */
+  details.fp{margin-top:18px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left; vertical-align:top}
+  details.fp th{background:#1a1f27; font-weight:600; white-space:nowrap; color:#c3cad6}
+  /* ---------- 来源 ---------- */
+  footer.src{max-width:1240px; margin:0 auto; padding:0 20px 26px; font-size:12px; color:#7b8494; line-height:1.9}
+  footer.src a{color:#8f9aab; text-decoration:none; border-bottom:1px dotted #4a5468}
+  footer.src a:hover{color:var(--accent)}
+  /* ---------- 盲做 ---------- */
+  html.blind .chip i, html.blind .chip em{visibility:hidden}
+  #blindBtn{bottom:76px!important}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 6 月 · 第二套 · Section A 选词填空
+    <small>Sir Alfred Hitchcock · 原文 3 段 · 26–35 题 · 15 词选 10</small>
+  </h1>
+  <span class="tlabel">目标 08:00</span>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 词库 ================= -->
+  <section class="card bankcard" id="bankcard">
+    <h2>词库 · 15 个备选词<span class="pos-stat">名 4 · 动 6 · 形 2 · 副 3</span></h2>
+    <div class="hint">按 A–O 排列；每词最多用一次。先给每个词标词性，再回原文看空里缺什么。点右下角 🙈 可隐藏词性与释义，纯靠词形记忆盲做。</div>
+    <div class="bank">
+      <span class="chip"><b>A</b><span class="w">caught</span><i>v./adj.</i><em>抓住；被困住的</em></span>
+      <span class="chip"><b>B</b><span class="w">cinema</span><i>n.</i><em>电影；电影业</em></span>
+      <span class="chip"><b>C</b><span class="w">engaging</span><i>adj.</i><em>引人入胜的</em></span>
+      <span class="chip"><b>D</b><span class="w">graphically</span><i>adv.</i><em>生动地、形象地</em></span>
+      <span class="chip"><b>E</b><span class="w">highly</span><i>adv.</i><em>高度地、非常</em></span>
+      <span class="chip"><b>F</b><span class="w">incentive</span><i>n.</i><em>激励、动机</em></span>
+      <span class="chip"><b>G</b><span class="w">instincts</span><i>n.</i><em>本能、直觉</em></span>
+      <span class="chip"><b>H</b><span class="w">offences</span><i>n.</i><em>罪行、违法行为</em></span>
+      <span class="chip"><b>I</b><span class="w">punished</span><i>v.</i><em>惩罚（过去式/过去分词）</em></span>
+      <span class="chip"><b>J</b><span class="w">referred</span><i>v.</i><em>referred to as = 被称为</em></span>
+      <span class="chip"><b>K</b><span class="w">stood</span><i>v.</i><em>stand the test of time = 经得起时间考验</em></span>
+      <span class="chip"><b>L</b><span class="w">symbolic</span><i>adj.</i><em>象征性的；be symbolic of</em></span>
+      <span class="chip"><b>M</b><span class="w">tuned</span><i>v./adj.</i><em>调音、调频、调试</em></span>
+      <span class="chip"><b>N</b><span class="w">visually</span><i>adv.</i><em>视觉上、在视觉方面</em></span>
+      <span class="chip"><b>O</b><span class="w">worshipped</span><i>v.</i><em>崇拜、敬仰</em></span>
+    </div>
+  </section>
+
+  <!-- ================= 原文 ================= -->
+  <section class="card passage" id="passage">
+    <h2>Sir Alfred Hitchcock</h2>
+    <div class="meta">
+      Directions: In this section, there is a passage with ten blanks. You are required to select one word for each
+      blank from a list of choices given in a word bank following the passage. You may not use any of the words in
+      the bank more than once. 原文逐字照录，共 3 段。
+    </div>
+
+    <p class="txt">Sir Alfred Hitchcock was an English movie director and producer. Famously <span class="blank" id="bk-26"><span class="bn">26</span><span class="bl" id="bl-26">______</span><span class="cor"></span></span> to as 'The Master of Suspense,' Hitchcock is one of the most influential filmmakers in the history of <span class="blank" id="bk-27"><span class="bn">27</span><span class="bl" id="bl-27">______</span><span class="cor"></span></span> . He was an extraordinary director who entertained his audience with <span class="blank" id="bk-28"><span class="bn">28</span><span class="bl" id="bl-28">______</span><span class="cor"></span></span> and gripping suspense movies.</p>
+
+    <p class="txt">His fascination with crime began at an early age when he was <span class="blank" id="bk-29"><span class="bn">29</span><span class="bl" id="bl-29">______</span><span class="cor"></span></span> by his father who made him spend a few minutes inside a prison for his misconduct. Hence, his movies are <span class="blank" id="bk-30"><span class="bn">30</span><span class="bl" id="bl-30">______</span><span class="cor"></span></span> of the guilt and innocence of the wrongdoer and the victim. He had a gift for creating stories that consisted of deceit, robbery, murder, corruption, and other criminal <span class="blank" id="bk-31"><span class="bn">31</span><span class="bl" id="bl-31">______</span><span class="cor"></span></span> with incredible plot twists in the storyline. The principal characters in his movies were often ordinary people <span class="blank" id="bk-32"><span class="bn">32</span><span class="bl" id="bl-32">______</span><span class="cor"></span></span> in unwanted and unavoidable situations.</p>
+
+    <p class="txt">He was <span class="blank" id="bk-33"><span class="bn">33</span><span class="bl" id="bl-33">______</span><span class="cor"></span></span> productive and his amazing body of work is considered fascinating by the critics. Most of his movies have <span class="blank" id="bk-34"><span class="bn">34</span><span class="bl" id="bl-34">______</span><span class="cor"></span></span> the test of time and are considered to be masterpieces. He is also remembered by other filmmakers, for he continues to inspire them to be passionate about their work. He is also <span class="blank" id="bk-35"><span class="bn">35</span><span class="bl" id="bl-35">______</span><span class="cor"></span></span> by people around the world for his entertaining and exciting stories.</p>
+  </section>
+
+  <!-- ================= 作答区 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>作答区 · 26–35</h2>
+    <div class="hint">每行选一个字母，原文空里会同步显示。全部选完点下方「提交答案」。</div>
+
+    <div id="answerArea">      <div class="arow" id="row-26">
+        <span class="an">26</span>
+        <select id="s26" data-n="26" aria-label="第 26 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-26"></span>
+      </div>
+      <div class="ana" id="ana-26"></div>
+      <div class="arow" id="row-27">
+        <span class="an">27</span>
+        <select id="s27" data-n="27" aria-label="第 27 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-27"></span>
+      </div>
+      <div class="ana" id="ana-27"></div>
+      <div class="arow" id="row-28">
+        <span class="an">28</span>
+        <select id="s28" data-n="28" aria-label="第 28 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-28"></span>
+      </div>
+      <div class="ana" id="ana-28"></div>
+      <div class="arow" id="row-29">
+        <span class="an">29</span>
+        <select id="s29" data-n="29" aria-label="第 29 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-29"></span>
+      </div>
+      <div class="ana" id="ana-29"></div>
+      <div class="arow" id="row-30">
+        <span class="an">30</span>
+        <select id="s30" data-n="30" aria-label="第 30 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-30"></span>
+      </div>
+      <div class="ana" id="ana-30"></div>
+      <div class="arow" id="row-31">
+        <span class="an">31</span>
+        <select id="s31" data-n="31" aria-label="第 31 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-31"></span>
+      </div>
+      <div class="ana" id="ana-31"></div>
+      <div class="arow" id="row-32">
+        <span class="an">32</span>
+        <select id="s32" data-n="32" aria-label="第 32 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-32"></span>
+      </div>
+      <div class="ana" id="ana-32"></div>
+      <div class="arow" id="row-33">
+        <span class="an">33</span>
+        <select id="s33" data-n="33" aria-label="第 33 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-33"></span>
+      </div>
+      <div class="ana" id="ana-33"></div>
+      <div class="arow" id="row-34">
+        <span class="an">34</span>
+        <select id="s34" data-n="34" aria-label="第 34 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-34"></span>
+      </div>
+      <div class="ana" id="ana-34"></div>
+      <div class="arow" id="row-35">
+        <span class="an">35</span>
+        <select id="s35" data-n="35" aria-label="第 35 空"><option value="A">A. caught</option><option value="B">B. cinema</option><option value="C">C. engaging</option><option value="D">D. graphically</option><option value="E">E. highly</option><option value="F">F. incentive</option><option value="G">G. instincts</option><option value="H">H. offences</option><option value="I">I. punished</option><option value="J">J. referred</option><option value="K">K. stood</option><option value="L">L. symbolic</option><option value="M">M. tuned</option><option value="N">N. visually</option><option value="O">O. worshipped</option></select>
+        <span class="fix" id="fix-35"></span>
+      </div>
+      <div class="ana" id="ana-35"></div></div>
+
+    <details class="fp">
+      <summary>词性清单（先分类，再对号入座）</summary>
+      <table>
+        <tr><th>名词（4）</th><td>B cinema · F incentive · G instincts · H offences</td></tr>
+        <tr><th>动词（6）</th><td>A caught · I punished · J referred · K stood · M tuned · O worshipped（多为 -ed 形式，优先考虑被动 / 完成 / 后置定语）</td></tr>
+        <tr><th>形容词（2）</th><td>C engaging · L symbolic（L 常配 be symbolic of）</td></tr>
+        <tr><th>副词（3）</th><td>D graphically · E highly · N visually（副词位 3 个词同槽，靠搭配定生死）</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<footer class="src">
+  <p>数据来源：<a href="https://english-exam.lazynote.cn/cet4/paper/2025-06-2/part3-section-a/" target="_blank" rel="noopener">懒笔记 · 试卷原卷</a>　|　<a href="https://english-exam.lazynote.cn/cet4/sections/2025-06-2/part3-section-a/" target="_blank" rel="noopener">懒笔记 · 逐空解析</a>　|　<a href="https://cet4-6.xdf.cn/202606/15227401.html" target="_blank" rel="noopener">新东方 · 三级选词填空答案汇总</a></p>
+  <p>原文、词库、空位逐字照录原卷；答案经懒笔记逐空解析与新东方答案表双源核对，两源一致（26–35 = J B C I L H A E K O）。本页仅用于个人备考练习。</p>
+</footer>
+
+<div class="scorebar" id="scorebar">
+  <span class="k">已答</span><b id="cnt">0</b><span class="k">/ 10</span>
+  <span class="sep"></span>
+  <span class="k">得分</span><b id="sc">—</b><span class="k">/ 10</span>
+  <span class="sep"></span>
+  <span class="tipmsg" id="tipmsg">目标 8 分钟：先标词性，再对号入座</span>
+  <button class="btn primary" id="submit" type="button">提交答案</button>
+  <button class="btn ghost" id="reset" type="button">重新开始</button>
+</div>
+
+<script>
+const WORD = {A:"caught",B:"cinema",C:"engaging",D:"graphically",E:"highly",F:"incentive",
+              G:"instincts",H:"offences",I:"punished",J:"referred",K:"stood",L:"symbolic",
+              M:"tuned",N:"visually",O:"worshipped"};
+
+/* 26–35 的答案字母 */
+const ans = ["J","B","C","I","L","H","A","E","K","O"];
+
+/* 每空三段解析：① 词性/形式 ② 语义与搭配依据 ③ 干扰项为什么错 */
+const WHY = {
+  26:"<p><b>① 词性/形式</b>：空夹在副词 Famously 与介词 to 之间，需要一个能与 to 构成固定搭配的过去分词（被动）。</p>" +
+     "<p><b>② 语义与搭配依据</b>：be referred to as = 被称为；Hitchcock 与 refer 是被动关系，后面紧跟的 'The Master of Suspense' 正是他的称号，与下文 one of the most influential filmmakers 的褒扬口吻一致。</p>" +
+     "<p><b>③ 干扰项</b>：caught / punished / stood / tuned / worshipped 都不与 to as 搭配；punished 语义还与褒扬相反，stood 的专属搭配是第 34 空的 stand the test of time。</p>",
+  27:"<p><b>① 词性/形式</b>：the history of ______ 是介词 of 的宾语位，需名词。</p>" +
+     "<p><b>② 语义与搭配依据</b>：上句已定位他是 movie director、producer，此处 filmmakers in the history of cinema（电影史上）才把话题收在同一行业上。</p>" +
+     "<p><b>③ 干扰项</b>：incentive（激励）、instincts（本能）、offences（罪行）虽都是名词，但 history of incentive / instincts / offences 语义不成立。</p>",
+  28:"<p><b>① 词性/形式</b>：with ______ and gripping suspense movies 中与 gripping 并列作定语，需 -ing 形式的形容词。</p>" +
+     "<p><b>② 语义与搭配依据</b>：engaging = 引人入胜的，与 gripping = 扣人心弦的构成同义并列，共同修饰 suspense movies，呼应前面的 entertained his audience。</p>" +
+     "<p><b>③ 干扰项</b>：symbolic（象征性的）不表“吸引人”，且它真正的搭配位是第 30 空的 be symbolic of。</p>",
+  29:"<p><b>① 词性/形式</b>：was ______ by his father 是被动语态，需过去分词。</p>" +
+     "<p><b>② 语义与搭配依据</b>：for his misconduct（因行为不端）＋ made him spend a few minutes inside a prison 说明父亲是在“惩罚”他，be punished by 完全成立。</p>" +
+     "<p><b>③ 干扰项</b>：caught 也能被动，但“被父亲抓住”与“关进监狱几分钟”的管教目的不合；stand / tune 与语境无关。</p>",
+  30:"<p><b>① 词性/形式</b>：are ______ of the guilt... 是系表结构＋of 短语，需形容词。</p>" +
+     "<p><b>② 语义与搭配依据</b>：be symbolic of = 象征着；他的电影在象征层面探讨罪与无辜（the guilt and innocence）这一抽象主题。</p>" +
+     "<p><b>③ 干扰项</b>：engaging 词性可入但语义不通（“引人入胜的罪与无辜”不成话），且一词只用一次，engaging 已用于第 28 空。</p>",
+  31:"<p><b>① 词性/形式</b>：other criminal ______ 由形容词 criminal 修饰，需名词；前面并列的 deceit / robbery / murder / corruption 全是“行为类”名词。</p>" +
+     "<p><b>② 语义与搭配依据</b>：criminal offences = 刑事罪行，是高度固定的搭配，正好总括前文一串犯罪行为。</p>" +
+     "<p><b>③ 干扰项</b>：instincts（本能）与 incentive（动机）属“心理／动机”范畴，与“行为类”并列项不同类——这是本题最强的两个干扰，criminal instincts 听着像固定说法，但并列项决定了范畴。</p>",
+  32:"<p><b>① 词性/形式</b>：ordinary people ______ in unwanted and unavoidable situations 是名词后的后置定语，需过去分词。</p>" +
+     "<p><b>② 语义与搭配依据</b>：be caught in ＋ 情境 = 陷入／被困于；普通人“陷入不想要又逃不掉的处境”正是希区柯克式情节。</p>" +
+     "<p><b>③ 干扰项</b>：tuned in 指“调到某频道／听懂”，stood in 表“站在／代替”，都不表“陷入处境”。</p>",
+  33:"<p><b>① 词性/形式</b>：He was ______ productive 是副词修饰形容词 productive。</p>" +
+     "<p><b>② 语义与搭配依据</b>：highly productive = 极为多产，是高频搭配；后文 his amazing body of work（作品数量惊人）正好对应“多产”。</p>" +
+     "<p><b>③ 干扰项</b>：graphically（生动地）、visually（视觉上）同为副词，都能塞进副词位，但它们只修饰“描绘／视觉”类形容词，不与 productive 搭配——这是本题最强干扰。</p>",
+  34:"<p><b>① 词性/形式</b>：have ______ the test of time 是完成时谓语，需过去分词，且必须与 the test of time 搭配。</p>" +
+     "<p><b>② 语义与搭配依据</b>：stand the test of time = 经受住时间的考验，与后文 are considered to be masterpieces 互为因果。</p>" +
+     "<p><b>③ 干扰项</b>：tuned 不能与 the test of time 搭配；caught / punished 与“时间考验”毫无关系。</p>",
+  35:"<p><b>① 词性/形式</b>：is also ______ by people around the world for... 是被动语态＋by 施动者＋for 原因，需过去分词。</p>" +
+     "<p><b>② 语义与搭配依据</b>：worship = 崇拜、敬仰；“全世界的人因他精彩的故事而敬仰他”，与上句 inspire、passionate 的褒扬语气一脉相承。</p>" +
+     "<p><b>③ 干扰项</b>：punished 语义相反；caught 含“被抓”的偶然／贬义色彩，与 for his entertaining stories 的褒义原因冲突。</p>"
+};
+
+const area = document.getElementById("answerArea");
+const sels = Array.from(area.querySelectorAll("select"));
+const cntEl = document.getElementById("cnt");
+const scEl  = document.getElementById("sc");
+const tipEl = document.getElementById("tipmsg");
+
+function idx(n){ return n - 26; }
+
+function paintBlank(n, letter){
+  const bl = document.getElementById("bl-" + n);
+  if(!bl) return;
+  bl.textContent = letter ? letter : "______";
+  bl.classList.toggle("filled", !!letter);
+}
+
+function updateCount(){
+  const done = sels.filter(s => s.value).length;
+  cntEl.textContent = done;
+  if(done === 10) tipEl.textContent = "10 空都填了，可以提交了";
+  else tipEl.textContent = "还差 " + (10 - done) + " 空";
+}
+
+area.addEventListener("change", function(e){
+  const s = e.target.closest("select");
+  if(!s) return;
+  paintBlank(Number(s.dataset.n), s.value);
+  updateCount();
+});
+
+document.getElementById("submit").addEventListener("click", function(){
+  let correct = 0;
+  for(let n = 26; n <= 35; n++){
+    const sel  = document.getElementById("s" + n);
+    const row  = document.getElementById("row-" + n);
+    const bk   = document.getElementById("bk-" + n);
+    const fix  = document.getElementById("fix-" + n);
+    const ana  = document.getElementById("ana-" + n);
+    const cor  = bk.querySelector(".cor");
+    const v    = sel.value;
+    const key  = ans[idx(n)];
+    const isOk = v === key;
+
+    row.classList.remove("ok","no");
+    bk.classList.remove("ok","no");
+    sel.disabled = true;
+
+    if(isOk){
+      correct++;
+      row.classList.add("ok");
+      bk.classList.add("ok");
+      cor.textContent = "";
+    }else{
+      row.classList.add("no");
+      bk.classList.add("no");
+      cor.textContent = key + " " + WORD[key];
+      fix.textContent = "正确：" + key + ". " + WORD[key];
+    }
+
+    ana.innerHTML = WHY[n];
+    ana.classList.add("show");
+  }
+
+  scEl.textContent = correct;
+  scEl.style.color = correct >= 8 ? "#7ee2a8" : (correct >= 6 ? "#f0b95a" : "#ffb4ab");
+  tipEl.textContent = correct === 10 ? "全对！词性＋搭配两条线都走通了。"
+    : correct >= 8 ? "稳定，错的那两空基本是搭配题。"
+    : correct >= 6 ? "及格线附近：先按词性把 15 个词分四类，再逐空排除。"
+    : "先别硬猜：① 给每个词标词性 ② 看空前后缺什么成分 ③ 再比搭配。";
+});
+
+document.getElementById("reset").addEventListener("click", function(){
+  for(let n = 26; n <= 35; n++){
+    const sel = document.getElementById("s" + n);
+    sel.disabled = false;
+    sel.value = "";
+    sel.selectedIndex = -1;
+    document.getElementById("row-" + n).classList.remove("ok","no");
+    const bk = document.getElementById("bk-" + n);
+    bk.classList.remove("ok","no");
+    bk.querySelector(".cor").textContent = "";
+    document.getElementById("fix-" + n).textContent = "";
+    const ana = document.getElementById("ana-" + n);
+    ana.classList.remove("show");
+    ana.innerHTML = "";
+    paintBlank(n, "");
+  }
+  scEl.textContent = "—";
+  scEl.style.color = "";
+  updateCount();
+  tipEl.textContent = "目标 8 分钟：先标词性，再对号入座";
+});
+
+/* ---------- 计时器：目标 8 分钟，超时变红 ---------- */
+let sec = 0;
+const GOAL = 480;
+const timerEl = document.getElementById("timer");
+setInterval(function(){
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2,"0");
+  const s = String(sec % 60).padStart(2,"0");
+  timerEl.textContent = m + ":" + s;
+  if(sec >= GOAL) timerEl.classList.add("over");
+  else if(sec >= GOAL * 0.8) timerEl.classList.add("warn");
+}, 1000);
+
+/* 初始把 10 个下拉置为“未选”，避免默认显示 A 项 */
+sels.forEach(function(s){ s.selectedIndex = -1; });
+updateCount();
+</script>
+
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:18px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<script>/* Section A 无定位句可藏：盲做模式改为隐藏词库里的词性与中文释义，强制靠词形记忆判断。 */
+(function(){var b=document.getElementById('blindBtn');if(!b)return;b.textContent='🙈 盲做（藏词性释义）';
+b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示词性释义':'🙈 盲做（藏词性释义）';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
