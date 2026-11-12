@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级仔细阅读 · Section C 练习｜2025年12月第二套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; padding-bottom:66px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+  }
+  .timer.warn{background:#3a2c14; color:#ffd28a}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 470px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage h2.p2{margin-top:26px; padding-top:20px; border-top:1px solid var(--line)}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px; line-height:1.7}
+  .para{margin:0 0 10px; padding:6px 0 6px 34px; position:relative; border-radius:0 8px 8px 0}
+  .para .tag{
+    position:absolute; left:0; top:9px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{
+    display:block; margin-top:7px; padding:5px 10px; font-size:12.5px; line-height:1.65;
+    color:#b9c3d1; background:#141922; border-left:2px solid var(--markline);
+    border-radius:0 6px 6px 0;
+  }
+  .para.hit{background:#15211a; box-shadow:inset 3px 0 0 var(--ok)}
+  .para.hit .tag{background:#1f4a2c; color:#a8e6bd}
+  mark{
+    background:var(--mark); color:#ece2c4; padding:0 2px; border-radius:3px;
+    border-bottom:1px solid var(--markline);
+  }
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 96px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .bank-hint{color:var(--muted); font-size:12px; margin:0 0 12px}
+  .q{padding:12px 0; border-top:1px solid var(--line)}
+  .q:first-child{border-top:none; padding-top:2px}
+  .stem{font-size:14px; font-weight:600; margin-bottom:8px; line-height:1.6}
+  .stem .num{color:var(--accent); font-family:ui-monospace,Consolas,monospace; margin-right:5px}
+  .opt{
+    display:flex; gap:9px; width:100%; text-align:left;
+    background:#1a1f27; border:1px solid var(--line); color:var(--ink);
+    border-radius:9px; padding:7px 11px; font-size:13.5px; line-height:1.55;
+    cursor:pointer; font-family:inherit; margin:0 0 7px;
+  }
+  .opt:hover{border-color:#3a4a66}
+  .opt b{color:#a9c1ff; font-family:ui-monospace,Consolas,monospace; font-size:12.5px; flex:none; padding-top:1px}
+  .opt span{flex:1}
+  .opt.sel{border-color:var(--accent); background:#1b2634}
+  .opt.right{border-color:#2f6b41; background:#16301f}
+  .opt.right b{color:#7ee2a8}
+  .opt.wrong{border-color:#6b2f2f; background:#2b191b}
+  .opt.wrong b{color:#ffb4ab}
+  .opt.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  .fb{margin-top:6px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .right-line{font-size:12.5px; color:#9fb0c6; margin:2px 0 4px}
+  .fb .right-line b{color:#7ee2a8}
+  .fb .why{color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .fb .why b{color:#a9c1ff}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:8px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:9px 17px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  /* ---------- 固定得分条 ---------- */
+  .bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(18,22,28,.96); border-top:1px solid var(--line);
+    padding:9px 18px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+    font-size:13.5px;
+  }
+  .bar .grow{flex:1}
+  .bar .stat{color:var(--muted)}
+  .bar .stat b{color:var(--ink); font-variant-numeric:tabular-nums}
+  .bar .stat b.big{font-size:19px; color:#7cc4e8}
+  /* ---------- 定位表 ---------- */
+  .locate{
+    max-width:1240px; margin:0 auto 20px; background:var(--card);
+    border:1px solid var(--line); border-radius:12px; padding:14px 20px;
+  }
+  .locate summary{
+    cursor:pointer; font-weight:600; font-size:14px; color:#a9c1ff; outline:none;
+  }
+  .locate summary:hover{color:#d6e4ff}
+  .locate table{width:100%; border-collapse:collapse; margin-top:12px; font-size:13px}
+  .locate th,.locate td{
+    border-bottom:1px solid var(--line); padding:6px 8px; text-align:left;
+    vertical-align:top; line-height:1.6;
+  }
+  .locate th{color:#a9c1ff; font-weight:600; white-space:nowrap}
+  .locate td:first-child{color:var(--accent); font-weight:700; font-family:ui-monospace,Consolas,monospace; white-space:nowrap}
+  .locate td:nth-child(2){white-space:nowrap; color:#c3cad6}
+  .locate .kw{color:#9fb0c6; font-size:12.5px}
+  /* ---------- 来源 ---------- */
+  .src{
+    max-width:1240px; margin:0 auto 24px; padding:14px 20px;
+    color:var(--muted); font-size:12.5px; line-height:1.9;
+  }
+  .src b{color:var(--ink)}
+  .src a{color:var(--accent); text-decoration:none}
+  .src a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 12 月 · 第二套 · Section C 仔细阅读
+    <small>Passage One · Passage Two · 46–50 / 51–55 · 12 段 698 词 · 目标 20 分钟</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：两篇原文 ================= -->
+  <section class="card passage" id="passage">
+    <h2>Part Ⅲ Section C · Passage One（46–50）</h2>
+    <div class="meta">
+      Questions 46 to 50 are based on the following passage. 原卷未印标题；原文出处标题为
+      "Teens reject junk food when healthy eating is framed as rebellion"（Julia Gottwald，digest.bps.org.uk，2016-10-20）。
+    </div>
+
+    <p class="para" id="p1-1"><span class="tag">1</span>Junk food is now a staple of many Americans' diets. Advertising campaigns from the snack food companies, often featuring sports stars, send the message that <mark>we can neutralize any negative effects of consuming their products simply by getting more physical exercise</mark>. But recent studies show a lack of exercise is not to blame for rising obesity rates. Bad diets are.<span class="cn">广告的潜台词是「多吃运动就能抵消零食的坏处」——第 46 题考的就是这条信息。</span></p>
+
+    <p class="para" id="p1-2"><span class="tag">2</span>Interventions(干预) to help reduce junk food consumption are especially important for children and teenagers. Prevention is better than cure because obesity is so difficult to treat. Unfortunately, <mark>while health education has shown some success among young children, teens have been harder to reach</mark>.<span class="cn">幼儿身上尚见成效，青少年却「难以触及」——第 47 题 D 项的改写依据。</span></p>
+
+    <p class="para" id="p1-3"><span class="tag">3</span>Now a large-scale study has tried an innovative approach to change teenagers' attitudes towards healthy eating, and the results are promising. The researchers argued that previous interventions have probably been unsuccessful because of a major flaw: <mark>they focused on a future, healthier you and assumed that this would be enough motivation for teenagers</mark>. In contrast, the new intervention <mark>cleverly exploits teenagers' instinct for rebelliousness and autonomy, and the value they place on social justice</mark>.<span class="cn">旧干预的硬伤是只描绘「未来更健康的你」（48 题 B）；新干预则借力青少年的叛逆本能与自主需求（49 题 C）。</span></p>
+
+    <p class="para" id="p1-4"><span class="tag">4</span>To do this, researchers had students read an article on the food industry. It revealed a secret about the manipulative and deceptive strategies used to make junk food more addictive and characterize the products as healthy. The article also explained how advertising campaigns specifically target very young and poor people, causing harm for these vulnerable groups. Afterwards, the participants read a fictional survey of teens who wanted to "fight back against the companies by buying and eating less processed food"<span class="cn">实验材料：揭露食品工业的操控与欺骗，把「少吃加工食品」包装成对公司的反击。</span></p>
+
+    <p class="para" id="p1-5"><span class="tag">5</span>After the intervention, participants associated healthy eating with autonomy and social justice. The teenagers also rated healthy eating as being more appealing. Importantly, there were also some promising effects of the new intervention on actual behavior. A day later the students were offered a choice of snacks and drinks in a seemingly unrelated context. The teens chose healthy snacks and drinks (such as fruit or water) more often over unhealthy options (like biscuits and soda). Apparently <mark>associating a healthy diet with teenagers' own values seems to be a promising avenue to prevent obesity</mark>.<span class="cn">把健康饮食与青少年自身价值观挂钩，是预防肥胖的希望之路——第 50 题 C 项即此句改写。</span></p>
+
+    <h2 class="p2">Part Ⅲ Section C · Passage Two（51–55）</h2>
+    <div class="meta">
+      Questions 51 to 55 are based on the following passage. 原卷未印标题；原文出处标题为
+      "What Do Babies Dream About?"（Dr. Harvey Karp，happiestbaby.com，页面未标注日期）。
+    </div>
+
+    <p class="para" id="p2-1"><span class="tag">1</span>Adults dream during REM (rapid eye movement) sleep and infants have loads of REM. So, it might be fair to assume that babies have tons of dreams.<span class="cn">成人 REM 期做梦、婴儿 REM 更多，于是「想当然」以为婴儿梦也多——注意这只是待反驳的假设。</span></p>
+
+    <p class="para" id="p2-2"><span class="tag">2</span>But scientists believe <mark>REM serves a completely different purpose for newborns and infants than dreaming</mark>. <mark>When babies are in REM, it allows their brain to develop pathways, connections, and eventually, learn languages</mark>.<span class="cn">婴儿 REM 的功能是长神经通路、学语言，与做梦无关——第 51 题 D 项。</span></p>
+
+    <p class="para" id="p2-3"><span class="tag">3</span>Since your baby doesn't dream at this stage of brain development, it's safe to assume babies do not have nightmares, either. <mark>Nightmares stem from exposure to trauma(创伤), an overactive imagination, and the normal stresses of everyday life</mark>.<span class="cn">婴儿不做梦，也就没有噩梦；噩梦源于创伤、想象过度与日常压力——第 52 题 B 项。</span></p>
+
+    <p class="para" id="p2-4"><span class="tag">4</span>Are you wondering, what do babies dream about? Good question, but the answer is nothing! So, when do babies start dreaming? The general consensus is that they start dreaming around the age of two. Psychologist David Foulkes studies children (from very small kids to teens) <mark>to bring the secrets of their dreams to the light of day</mark>. In his lab, he lets kids fall asleep and then wakes them 3 times a night and asks them to describe what they recall.<span class="cn">Foulkes 反复叫醒孩子追问梦的内容，目的正是「把梦的秘密带到光天化日之下」——第 53 题 A 项。</span></p>
+
+    <p class="para" id="p2-5"><span class="tag">5</span>Foulkes' findings are unsurprising. Basically, little kids have little dreams. But exactly what kids see while dreaming depends on their age. <mark>As children develop and grow, their dreams do too</mark>.<span class="cn">小小孩做小梦，梦随年龄一起成长变化——第 54 题 C 项。</span></p>
+
+    <p class="para" id="p2-6"><span class="tag">6</span>Dreams of very small kids are usually just snapshots(快照), looking much more like a slideshow than a movie, when compared to the dreams of adults. They heavily feature animals and other familiar sights, like images of people eating. According to Foulkes, "Children's dream life…seems to be similar to their waking imagination and narration." Kids ages 5 – 9 begin seeing moving images and characters in action. Dreams now include multiple events strung together, one after the other. They also start developing greater ability to remember dreams. Still, that's not always the case: When roused during REM sleep, 25% of the kids in Foulkes' studies had no recollection of dreaming, a trend that continues through age 9.<span class="cn">幼儿梦像幻灯片；5–9 岁出现连续情节，但仍有 25% 被叫醒后完全不记得做过梦。</span></p>
+
+    <p class="para" id="p2-7"><span class="tag">7</span>So, if your baby seems to be in a stressful state while sleeping or is upset upon waking, <mark>there may be other factors at play</mark>.<span class="cn">婴儿睡中不安或醒来哭闹，未必是做梦，可能有别的因素——第 55 题 D 项。</span></p>
+  </section>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>题目（46–55）· 每题 4 选 1</h2>
+    <div class="bank-hint">点击选项作答；提交后展开「① 定位 ② 同义替换 ③ 陷阱」三段解析，并自动跳到首个错题所在段落。</div>
+    <div id="questions"></div>
+    <div class="actions">
+      <button class="btn primary" id="submit" type="button">提交答案</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- ================= 题目定位表（可折叠） ================= -->
+<details class="locate" id="locate">
+  <summary>📌 题目定位表（10 题 · 段落 · 定位关键词）</summary>
+  <table>
+    <thead>
+      <tr><th>题号</th><th>段落</th><th>定位关键词</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>46</td><td>Passage One · 第 1 段第 2 句</td><td class="kw">advertising campaigns … neutralize any negative effects … simply by getting more physical exercise</td></tr>
+      <tr><td>47</td><td>Passage One · 第 2 段末句</td><td class="kw">health education has shown some success … teens have been harder to reach</td></tr>
+      <tr><td>48</td><td>Passage One · 第 3 段第 2 句</td><td class="kw">a major flaw … a future, healthier you … enough motivation</td></tr>
+      <tr><td>49</td><td>Passage One · 第 3 段末句</td><td class="kw">cleverly exploits … instinct for rebelliousness and autonomy</td></tr>
+      <tr><td>50</td><td>Passage One · 第 5 段末句</td><td class="kw">associating a healthy diet with teenagers' own values … a promising avenue to prevent obesity</td></tr>
+      <tr><td>51</td><td>Passage Two · 第 2 段首句</td><td class="kw">REM serves a completely different purpose for newborns and infants than dreaming</td></tr>
+      <tr><td>52</td><td>Passage Two · 第 3 段第 2 句</td><td class="kw">Nightmares stem from … the normal stresses of everyday life</td></tr>
+      <tr><td>53</td><td>Passage Two · 第 4 段第 4 句</td><td class="kw">Foulkes … to bring the secrets of their dreams to the light of day</td></tr>
+      <tr><td>54</td><td>Passage Two · 第 5 段末句</td><td class="kw">As children develop and grow, their dreams do too</td></tr>
+      <tr><td>55</td><td>Passage Two · 第 7 段</td><td class="kw">upset upon waking … there may be other factors at play</td></tr>
+    </tbody>
+  </table>
+</details>
+
+<footer class="src">
+  <b>来源与答案核对</b>（46–55 答案串：<b>A D B C C D B A C D</b>）<br>
+  · 真题原文（懒笔记 · 试卷排版）：Passage One <a href="https://english-exam.lazynote.cn/cet4/paper/2025-12-2/part3-section-c/" target="_blank" rel="noopener">english-exam.lazynote.cn/cet4/paper/2025-12-2/part3-section-c/</a>；Passage Two <a href="https://english-exam.lazynote.cn/cet4/paper/2025-12-2/part3-section-c-2/" target="_blank" rel="noopener">part3-section-c-2/</a><br>
+  · 逐题解析（懒笔记）：<a href="https://english-exam.lazynote.cn/cet4/sections/2025-12-2/part3-section-c/" target="_blank" rel="noopener">part3-section-c/</a> 与 <a href="https://english-exam.lazynote.cn/cet4/sections/2025-12-2/part3-section-c-2/" target="_blank" rel="noopener">part3-section-c-2/</a><br>
+  · 新东方四六级（第二套阅读答案）：<a href="https://cet4-6.xdf.cn/202512/15047564.html" target="_blank" rel="noopener">cet4-6.xdf.cn/202512/15047564.html</a><br>
+  · 新东方四六级（天津版，答案相同）：<a href="https://mtoutiao.xdf.cn/www/94/202602/15098312.html" target="_blank" rel="noopener">mtoutiao.xdf.cn/www/94/202602/15098312.html</a><br>
+  · 说明：懒笔记与新东方两处 46–55 答案逐题一致（46 A / 47 D / 48 B / 49 C / 50 C / 51 D / 52 B / 53 A / 54 C / 55 D），无存疑项。原文按懒笔记「试卷排版」页逐字录入，Passage One 5 段 350 词、Passage Two 7 段 348 词，段落数与原卷一致，未改写、未补句（第 4 段末句原卷即无句末标点，照录）。
+</footer>
+
+<div class="bar" id="bar">
+  <span class="stat">已答 <b id="answered">0</b>/10</span>
+  <span class="stat">得分 <b class="big" id="scoreNum">0</b>/10</span>
+  <span class="grow"></span>
+  <span class="stat" id="tip">目标 20 分钟 · 超时变红</span>
+  <button class="btn ghost" id="reset" type="button">重新开始</button>
+</div>
+
+<script>
+/* ============ 题目数据（逐字照录原卷） ============ */
+const QUESTIONS = [
+  {
+    n: 46,
+    stem: "What do we learn about advertising campaigns from the snack food companies?",
+    opts: [
+      "They convey the idea that their products are ok if consumers exercise more.",
+      "They send the message that bad diets are responsible for Americans' obesity.",
+      "They usually feature sports stars to emphasize the benefits of their snack foods.",
+      "They claim that lack of exercise is to blame for the increasing obesity rates."
+    ],
+    answer: "A",
+    para: "p1-1",
+    why: "<p><b>① 定位</b>：第 1 段第 2 句——广告「send the message that we can neutralize any negative effects of consuming their products simply by getting more physical exercise」。</p>" +
+         "<p><b>② 同义替换</b>：neutralize any negative effects ≈ their products are ok；simply by getting more physical exercise ≈ if consumers exercise more。</p>" +
+         "<p><b>③ 陷阱</b>：B 把作者随后引述的研究结论（Bad diets are）说成广告立场，张冠李戴；C 偷换概念，明星代表的是「运动」而非「零食好处」；D 删掉原文 not to blame 中的 not，与原文正好相反。</p>"
+  },
+  {
+    n: 47,
+    stem: "What does the passage say about health education?",
+    opts: [
+      "It has shed light on teens' instinct for rebellion and autonomy.",
+      "It has placed much more emphasis on cure than on prevention.",
+      "It has contributed little to the campaigns against obesity.",
+      "It has largely failed to turn teens away from junk food."
+    ],
+    answer: "D",
+    para: "p1-2",
+    why: "<p><b>① 定位</b>：第 2 段末句——「Unfortunately, while health education has shown some success among young children, teens have been harder to reach.」</p>" +
+         "<p><b>② 同义替换</b>：teens have been harder to reach ≈ largely failed to turn teens away from junk food；Unfortunately 的负面语气对应 largely failed。</p>" +
+         "<p><b>③ 陷阱</b>：A 张冠李戴，rebelliousness/autonomy 是第 3 段新干预借力的概念，与健康教育无关；B 偷换概念，Prevention is better than cure 是作者对干预策略的总评；C 以偏概全，原文明确承认对幼儿「some success」。</p>"
+  },
+  {
+    n: 48,
+    stem: "What is a major flaw in previous interventions to help reduce junk food consumption?",
+    opts: [
+      "They motivated teens to stay away from junk food only temporarily.",
+      "They focused on the benefits young people would reap in the future.",
+      "They were based on the assumption that motivation was the only key.",
+      "They were incapable of appealing to teens' instinct for rebelliousness."
+    ],
+    answer: "B",
+    para: "p1-3",
+    why: "<p><b>① 定位</b>：第 3 段第 2 句——「a major flaw: they focused on a future, healthier you and assumed that this would be enough motivation for teenagers」。</p>" +
+         "<p><b>② 同义替换</b>：focused on a future, healthier you ≈ focused on the benefits … would reap in the future。</p>" +
+         "<p><b>③ 陷阱</b>：A 无中生有，原文未讨论效果持续时间；C 过度推断，assumed this would be enough 是「以为动机足够」，不等于「认为动机是唯一关键」；D 是考生反推，原文没把「未利用叛逆本能」列为旧干预的缺陷。</p>"
+  },
+  {
+    n: 49,
+    stem: "In what way is the new intervention innovative?",
+    opts: [
+      "It emphasizes people's sense of social responsibility.",
+      "It cleverly exploits teenagers' personal weaknesses.",
+      "It takes advantage of teenagers' natural inclination.",
+      "It promises immediate rather than future benefits."
+    ],
+    answer: "C",
+    para: "p1-3",
+    why: "<p><b>① 定位</b>：第 3 段末句——「the new intervention cleverly exploits teenagers' instinct for rebelliousness and autonomy, and the value they place on social justice」。</p>" +
+         "<p><b>② 同义替换</b>：exploits teenagers' instinct ≈ takes advantage of teenagers' natural inclination。</p>" +
+         "<p><b>③ 陷阱</b>：A 偷换概念且缩小范围，原文是社会正义（social justice）且限于青少年，不是泛泛的「人们的社会责任感」；B 贬义化，instinct 是中性/本能，不是 personal weaknesses；D 过度推断，原文未把「即时好处」当作创新点。</p>"
+  },
+  {
+    n: 50,
+    stem: "What conclusion can be drawn from the new research?",
+    opts: [
+      "A totally different approach could be adopted to combat advertising campaigns for snack food.",
+      "An effective intervention has to be found to persuade teenagers to switch to a healthier lifestyle.",
+      "Obesity can be hopefully prevented by building links between teenagers' values and healthy eating.",
+      "An innovative way to beat obesity is to expose food companies' manipulative and deceptive practices."
+    ],
+    answer: "C",
+    para: "p1-5",
+    why: "<p><b>① 定位</b>：第 5 段末句——「Apparently associating a healthy diet with teenagers' own values seems to be a promising avenue to prevent obesity.」</p>" +
+         "<p><b>② 同义替换</b>：associating a healthy diet with teenagers' own values ≈ building links between teenagers' values and healthy eating；a promising avenue to prevent obesity ≈ can be hopefully prevented。</p>" +
+         "<p><b>③ 陷阱</b>：A 以偏概全，「反击广告」只是实验材料，不是研究结论；B 与原文相反，研究已经给出有效干预，不是「还得再找」；D 以偏概全，揭露公司只是手段，落脚点是价值观联结。</p>"
+  },
+  {
+    n: 51,
+    stem: "What do scientists think of REM?",
+    opts: [
+      "It is a sign of dreaming in adults and infants alike.",
+      "It is essential to human beings' language learning.",
+      "It determines the formation of connections in the brain.",
+      "It performs a different function in babies than in adults."
+    ],
+    answer: "D",
+    para: "p2-2",
+    why: "<p><b>① 定位</b>：第 2 段首句——「scientists believe REM serves a completely different purpose for newborns and infants than dreaming」。</p>" +
+         "<p><b>② 同义替换</b>：serves a completely different purpose for newborns and infants than dreaming ≈ performs a different function in babies than in adults。</p>" +
+         "<p><b>③ 陷阱</b>：A 与原文相反，婴儿 REM 期恰恰不做梦；B 以偏概全，学语言只是大脑发育的结果之一，不是 REM 的本质功能；C 偷换概念，allows（提供条件）≠ determines（决定）。</p>"
+  },
+  {
+    n: 52,
+    stem: "What can we infer about nightmares from the passage?",
+    opts: [
+      "They occur often in people with an active imagination.",
+      "They occur in people suffering from emotional stress.",
+      "They vary in different stages of brain development.",
+      "They appear in the sleep of both adults and infants."
+    ],
+    answer: "B",
+    para: "p2-3",
+    why: "<p><b>① 定位</b>：第 3 段第 2 句——「Nightmares stem from exposure to trauma(创伤), an overactive imagination, and the normal stresses of everyday life.」</p>" +
+         "<p><b>② 同义替换</b>：the normal stresses of everyday life ≈ emotional stress；stem from ≈ occur in people suffering from。</p>" +
+         "<p><b>③ 陷阱</b>：A 以偏概全，三个成因之一被抽成唯一成因，还加了 often；C 无中生有，原文没把噩梦与大脑发育阶段挂钩；D 与原文相反，原文明确说婴儿不做噩梦。</p>"
+  },
+  {
+    n: 53,
+    stem: "What is the aim of psychologist David Foulkes' study?",
+    opts: [
+      "To reveal the secrets of children's dreams.",
+      "To see if children start dreaming at age two.",
+      "To solve the mystery of dreaming and brain growth.",
+      "To confirm the general consensus on when kids dream."
+    ],
+    answer: "A",
+    para: "p2-4",
+    why: "<p><b>① 定位</b>：第 4 段第 4 句——「Psychologist David Foulkes studies children (from very small kids to teens) to bring the secrets of their dreams to the light of day.」</p>" +
+         "<p><b>② 同义替换</b>：bring the secrets of their dreams to the light of day ≈ reveal the secrets of children's dreams。</p>" +
+         "<p><b>③ 陷阱</b>：B 偷换概念，「两岁」是前文 the general consensus 的背景信息，不是研究目的；C 无中生有，把第 2 段的 brain growth 硬接到研究目的上；D 张冠李戴，共识是既有结论，不是 Foulkes 要验证的对象。</p>"
+  },
+  {
+    n: 54,
+    stem: "What are Foulkes' findings about kids' dreams?",
+    opts: [
+      "They feature strange animals.",
+      "They are unsurprising to adults.",
+      "They grow and evolve with age.",
+      "They reflect kids' waking life."
+    ],
+    answer: "C",
+    para: "p2-5",
+    why: "<p><b>① 定位</b>：第 5 段末两句——「But exactly what kids see while dreaming depends on their age. As children develop and grow, their dreams do too.」</p>" +
+         "<p><b>② 同义替换</b>：As children develop and grow, their dreams do too ≈ They grow and evolve with age。</p>" +
+         "<p><b>③ 陷阱</b>：A 以偏概全且加戏，动物是幼儿梦的常见元素，原文并无 strange；B 答非所问，unsurprising 是作者对 findings 的评价，不是 findings 的内容；D 偷换概念，原文说的是 similar to their waking imagination and narration，不等于「反映清醒生活」。</p>"
+  },
+  {
+    n: 55,
+    stem: "What can we assume about babies who appear upset upon waking?",
+    opts: [
+      "They have been roused against their will.",
+      "They have been disturbed by a nightmare.",
+      "They have trouble recollecting the images of their dreams.",
+      "They have been affected by something other than dreaming."
+    ],
+    answer: "D",
+    para: "p2-7",
+    why: "<p><b>① 定位</b>：第 7 段——「if your baby seems to be in a stressful state while sleeping or is upset upon waking, there may be other factors at play」。</p>" +
+         "<p><b>② 同义替换</b>：there may be other factors at play ≈ affected by something other than dreaming。</p>" +
+         "<p><b>③ 陷阱</b>：A 无中生有，原文没有「被叫醒」更没有「违背意愿」；B 与原文相反，前文已说婴儿不做噩梦；C 答非所问，25% 无记忆说的是 5–9 岁孩子，不是婴儿。</p>"
+  }
+];
+
+/* ============ 状态 ============ */
+const picks = {};          // 46..55 -> "A".."D"
+let graded = false;
+
+/* ============ 渲染 ============ */
+function render(){
+  const box = document.getElementById("questions");
+  if(!box) return;
+  const LET = ["A","B","C","D"];
+  box.innerHTML = QUESTIONS.map(function(q){
+    const opts = q.opts.map(function(t, i){
+      return '<button type="button" class="opt" data-n="' + q.n + '" data-l="' + LET[i] + '">' +
+               '<b>' + LET[i] + '</b><span>' + t + '</span>' +
+             '</button>';
+    }).join("");
+    return '<div class="q" id="q' + q.n + '">' +
+             '<div class="stem"><span class="num">' + q.n + '.</span>' + q.stem + '</div>' +
+             '<div class="opts">' + opts + '</div>' +
+             '<div class="fb" id="fb' + q.n + '"></div>' +
+           '</div>';
+  }).join("");
+}
+
+function optsOf(n){
+  return document.querySelectorAll('#questions .opt[data-n="' + n + '"]');
+}
+
+/* ============ 交互 ============ */
+function pick(n, L){
+  if(graded) return;
+  picks[n] = L;
+  const btns = optsOf(n);
+  for(let i = 0; i < btns.length; i++){
+    if(btns[i].getAttribute("data-l") === L) btns[i].classList.add("sel");
+    else btns[i].classList.remove("sel");
+  }
+  refreshBar();
+}
+
+function answeredCount(){
+  let c = 0;
+  QUESTIONS.forEach(function(q){ if(picks[q.n]) c++; });
+  return c;
+}
+
+function refreshBar(){
+  const a = document.getElementById("answered");
+  if(a) a.textContent = String(answeredCount());
+}
+
+function clearHighlights(){
+  const ps = document.querySelectorAll(".para");
+  for(let i = 0; i < ps.length; i++) ps[i].classList.remove("hit");
+}
+
+function grade(){
+  let correct = 0, firstBad = null;
+  clearHighlights();
+
+  QUESTIONS.forEach(function(q){
+    const chosen = picks[q.n] || "";
+    const ok = chosen === q.answer;
+    if(ok) correct++;
+    else if(!firstBad) firstBad = q;
+
+    const btns = optsOf(q.n);
+    for(let i = 0; i < btns.length; i++){
+      const L = btns[i].getAttribute("data-l");
+      btns[i].classList.remove("sel","right","wrong","answer");
+      if(L === q.answer) btns[i].classList.add("answer");
+      if(L === chosen){
+        btns[i].classList.add("sel");
+        if(ok) btns[i].classList.add("right");
+        else btns[i].classList.add("wrong");
+      }
+    }
+
+    const fb = document.getElementById("fb" + q.n);
+    if(fb){
+      fb.className = "fb show " + (ok ? "ok" : "no");
+      const badge = ok ? "正确" : (chosen ? "错误" : "未作答");
+      fb.innerHTML = '<span class="badge">' + badge + '</span>' +
+                     '<div class="right-line">正确答案 <b>' + q.answer + '</b>) ' +
+                     q.opts["ABCD".indexOf(q.answer)] + '</div>' +
+                     '<div class="why">' + q.why + '</div>';
+    }
+
+    if(!ok){
+      const p = document.getElementById(q.para);
+      if(p) p.classList.add("hit");
+    }
+  });
+
+  graded = true;
+
+  const sc = document.getElementById("scoreNum");
+  if(sc) sc.textContent = String(correct);
+  refreshBar();
+
+  const tip = document.getElementById("tip");
+  if(tip){
+    tip.textContent = correct === 10 ? "全对！仔细阅读满分。" :
+                      correct >= 8 ? "稳定发挥，考场目标 8 分以上。" :
+                      correct >= 6 ? "及格线附近，重点回看错题的定位句。" :
+                      "先练定位：每题先找到题干关键词所在的句子，再看选项。";
+  }
+
+  // 滚动到首个错题所在段落并高亮
+  if(firstBad){
+    const target = document.getElementById(firstBad.para);
+    if(target && target.scrollIntoView) target.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+
+  return correct;
+}
+
+function reset(){
+  graded = false;
+  QUESTIONS.forEach(function(q){
+    delete picks[q.n];
+    const btns = optsOf(q.n);
+    for(let i = 0; i < btns.length; i++){
+      btns[i].classList.remove("sel","right","wrong","answer");
+    }
+    const fb = document.getElementById("fb" + q.n);
+    if(fb){ fb.className = "fb"; fb.innerHTML = ""; }
+  });
+  clearHighlights();
+  refreshBar();
+  const sc = document.getElementById("scoreNum");
+  if(sc) sc.textContent = "0";
+  const tip = document.getElementById("tip");
+  if(tip) tip.textContent = "目标 20 分钟 · 超时变红";
+  sec = 0;
+  if(timerEl){ timerEl.textContent = "00:00"; timerEl.className = "timer"; }
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+/* ============ 绑定 ============ */
+render();
+
+document.getElementById("questions").addEventListener("click", function(e){
+  let t = e.target;
+  while(t && t !== this && !(t.classList && t.classList.contains("opt"))) t = t.parentNode;
+  if(!t || t === this || !t.getAttribute) return;
+  const n = parseInt(t.getAttribute("data-n"), 10);
+  const L = t.getAttribute("data-l");
+  if(n && L) pick(n, L);
+});
+
+document.getElementById("submit").addEventListener("click", grade);
+document.getElementById("reset").addEventListener("click", reset);
+
+/* ============ 计时器：15 分钟转黄，20 分钟变红 ============ */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(function(){
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  timerEl.textContent = m + ":" + s;
+  if(sec >= 1200) timerEl.className = "timer over";
+  else if(sec >= 900) timerEl.className = "timer warn";
+}, 1000);
+
+refreshBar();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para .cn{display:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:66px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+.bar{background:#12161c}
+.opt.right,.opt.sel{color:#e3e7ee}
+</style>
+</body>
+</html>
