@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级长篇阅读 · 信息匹配练习｜2025年6月第一套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  .back{
+    font-size:12.5px; color:var(--muted); text-decoration:none; white-space:nowrap;
+    border:1px solid var(--line); border-radius:999px; padding:3px 11px; background:#171c23;
+  }
+  .back:hover{color:var(--accent); border-color:var(--accent); background:#1b2634}
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+  }
+  .timer.warn{background:#3a2f14; color:#d29922}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.4}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 460px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{margin:0 0 14px; padding-left:34px; position:relative; transition:background .25s; scroll-margin-top:78px}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{display:block; color:var(--muted); font-size:12.5px; margin-top:4px}
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:var(--markline); color:#ffe9a8}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 90px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .q{padding:14px 0; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none; padding-top:4px}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px}
+  .q .stem{font-size:14px; line-height:1.6}
+  .letters{display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-top:9px}
+  .letters button{
+    height:32px; border:1px solid var(--line); background:#171c23; border-radius:7px;
+    cursor:pointer; font-weight:600; font-size:13px; font-family:ui-monospace,Consolas,monospace;
+    color:#c3cad6; transition:.12s;
+  }
+  .letters button:hover{border-color:var(--accent); color:var(--accent); background:#1b2634}
+  .letters button.sel{background:var(--accent); border-color:var(--accent); color:#fff}
+  .letters button.right{background:var(--ok); border-color:var(--ok); color:#fff}
+  .letters button.wrong{background:var(--bad); border-color:var(--bad); color:#fff}
+  .letters button.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  .letters button:disabled{cursor:default}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .fb .jump{
+    display:inline-block; margin-top:6px; font-size:12.5px; color:var(--accent);
+    text-decoration:none; border-bottom:1px dashed currentColor;
+  }
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  .score .time{margin-left:10px; color:#7cc4e8; font-size:12.5px}
+  /* ---------- 指纹表 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+  details.fp td:first-child{width:34px; text-align:center; font-family:ui-monospace,Consolas,monospace; font-weight:700; color:#a9c1ff}
+  /* ---------- 来源 ---------- */
+  .src{
+    max-width:1240px; margin:0 auto 40px; padding:0 20px;
+    color:var(--muted); font-size:12px; line-height:1.9;
+  }
+  .src a{color:var(--accent); text-decoration:none; border-bottom:1px solid #33507e}
+  .src a:hover{border-bottom-color:var(--accent)}
+  .src code{font-size:11.5px; color:#8f9aab; word-break:break-all}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    四级 Part III Section B · 信息匹配
+    <small>2025 年 6 月 · 第一套 · Getting young minds into design（13 段 A–M）</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：文章 ================= -->
+  <section class="card passage" id="passage">
+    <h2>Getting young minds into design</h2>
+    <div class="meta">
+      Directions: In this section, you are going to read a passage with ten statements attached to it.
+      Each statement contains information given in one of the paragraphs. Identify the paragraph from which
+      the information is derived. You may choose a paragraph more than once. Each paragraph is marked with a
+      letter. 段落字母标在每段左侧，黄色高亮为各题定位句。
+    </div>
+
+    <p class="para" id="p-A"><span class="tag">A</span>Recently, a leading design federation in the UK warned that the UK could face a creative skills shortage, after the latest figures revealed a drop of almost 10 percent in students studying Design and Technology. These figures showed that <mark>the number of pupils that sat exams in Design and Technology fell 10 percent from 204,788 to 185,279 last year</mark>.<span class="cn">设计联合会警告创意技能短缺：去年考设计与技术的学生少了近 10%（20.4 万 → 18.5 万）。</span></p>
+
+    <p class="para" id="p-B"><span class="tag">B</span>Chief executive John Kampfner of the Creative Industries Federation thinks that this drop in figures has worrying implications for the skills pipeline in Britain's hugely successful arts and creative industries. He said, "We already have skills shortages in many jobs such as animation(动画制作) and special effects." He added: "<mark>Engineering, which requires a similar mix of creative and technical skills, also has recruitment problems.</mark>"<span class="cn">Kampfner：动画、特效已缺人；工程领域同样招不到人。</span></p>
+
+    <p class="para" id="p-C"><span class="tag">C</span>Many other designers and architects have expressed concern over the future supply of home-grown talent for UK firms, and industry bodies have pointed out that there has been a lack of roots-level support. However, <mark>if these designers had visited the Design Museum shop in London earlier this year their fears may have been eased</mark>. With £10 to spend, they could have bought a fascinating children's toy called "Dazzle Racer". An automotive cylinder(圆柱体), it included a wind-up, elastic(有弹性的)-band-powered mechanism, minimal parts, all 100 percent recycled, and lots of stickers. It was good fun, simple, eye-catching and very original.<span class="cn">设计师担心本土人才断供，但逛一趟博物馆商店、看到 10 英镑的玩具，担忧就能缓解。</span></p>
+
+    <p class="para" id="p-D"><span class="tag">D</span>Well, you'd expect the Design Museum to commission and make some interesting items, but this one was different. Designed by a group of six Year 9 and Year 10 boys from Finchley Catholic High School, the toy was the winning entry in the museum's 2015 Design Ventura competition, which brings the business of design to life for students aged 13 to 16 by <mark>challenging them to develop a new creative, sustainable and commercially feasible product</mark> for the Design Museum shop and attracts hundreds of entries nationwide.<span class="cn">获奖玩具出自六个中学生；比赛要求做出有创意、可持续、商业可行的产品。</span></p>
+
+    <p class="para" id="p-E"><span class="tag">E</span>"We did Design Ventura in my previous school," says Liam Hourican, Finchley Catholic High School's design technology curriculum leader. "Then when I changed schools four years ago, I introduced it here because it helps to develop so many skills."<span class="cn">Hourican 换学校后把这套比赛带了过去，因为它能培养很多技能。</span></p>
+
+    <p class="para" id="p-F"><span class="tag">F</span>The theme for last year's competition was "Move", and Hourican began with three groups working in lunch breaks and after school before selecting the group with the most innovative idea. Each participating school may submit just one proposal. "It's the taking part and doing the work which is important," he says. "And I never dreamt we'd win."<span class="cn">去年主题 "Move"；校内三组先做，再挑最有创意的一组，每校只能交一份。</span></p>
+
+    <p class="para" id="p-G"><span class="tag">G</span>Catherine Ritman Smith, head of learning at the Design Museum, is expecting around 10,000 participants aged 13 to 16 to take part this year and says that the project—funded by Deutsche Bank as part of its youth engagement programme Born To Be—is the biggest event in the museum's calendar. "We started Design Ventura with around 800 young people in 2010 and it has grown steadily since," she says. "<mark>Teachers like it because the skills are all transferable and it helps to validate the value of design as a subject</mark>," she explains, telling me that nearly 600 schools have taken part so far.<span class="cn">老师喜欢它：技能可迁移，还能证明"设计"这门学科的价值。</span></p>
+
+    <p class="para" id="p-H"><span class="tag">H</span>So how does the competition work? A single-word theme is announced in the summer. This year it is "Change". Schools work with groups to produce imaginative design ideas for a product in simple materials that could sell for £10 in the Design Museum shop. Participating schools then register by November and eventually submit their design idea. Along the way <mark>there is training and support for teachers and tutoring for students from designers</mark>. An additional bonus is when the winners see their design on sale in the spring of the following year.<span class="cn">赛制：夏天公布主题，11 月注册；过程中老师有培训、学生有设计师辅导。</span></p>
+
+    <p class="para" id="p-I"><span class="tag">I</span>Hourican and his pupils have happy memories of spending a whole day at the museum, having been selected as one of 10 shortlisted schools to present their idea to a panel of judges, including designer Jasper Conran. Then they worked with the Kin Design Studio in Shoreditch, met designers at their school and attended a lunch with Deutsche Bank employees. The students helped to make decisions and there were plenty of discussions—they changed the product's name, for example.<span class="cn">入围十强，进博物馆向评委答辩一整天，还改了产品名字。</span></p>
+
+    <p class="para" id="p-J"><span class="tag">J</span>"One of the really useful things about this competition," says Hourican, "is that there's a commercial element because the product is going on sale for real and <mark>the boys had to learn about budgeting and marketing, as well as designing their game</mark>." Profits go to charity. "The winning team chooses where it wants the profits to go," says Ritman Smith. "The Finchley Catholic High School product raised about £1,000 for Great Ormond Street Hospital." Winning entries in past years have included a make-your-own cloth kit called Dove Bunting and a threefold, wallet-sized travel game with goals at each end, called Badoiiing.<span class="cn">商业元素：学生要学做预算、学营销，不只是设计游戏；利润捐慈善。</span></p>
+
+    <p class="para" id="p-K"><span class="tag">K</span><mark>It costs the schools nothing to participate in Design Ventura</mark>; the professional designers provide their services for free. Among them are architect Asif Khan, a Design Museum trustee who has worked as designer-in-residence at the museum, helping emerging architects. He has recently been commissioned to design the new Museum of London building in Smithfield.<span class="cn">学校参赛零费用，专业设计师免费出力。</span></p>
+
+    <p class="para" id="p-L"><span class="tag">L</span>Another is television presenter and interior designer Naomi Cleaver, who is one of the competition's judges. "I'm very keen to encourage young people," she says, observing that design brings together other subjects such as literature, art, history, geography and science. "Now that design education is limited in the curriculum, I'm all in favour of competitions such as Design Ventura, <mark>which helps to bring the standard curriculum to life</mark>," says Cleaver. "And the judging day is terrific fun. Some of these students are very imaginative. One group presented their idea in the form of a puppet show and we see some marvelous demonstration models. I'm always impressed by the levels of confidence and the support the students get from their teachers."<span class="cn">评委 Cleaver：设计教育在课程里被压缩，这个比赛让标准课程"活起来"。</span></p>
+
+    <p class="para" id="p-M"><span class="tag">M</span>Ritman Smith adds: "Design technology has become a tricky subject to make a case for, and we've heard of departments closing in some schools. We find that <mark>if pupils take part in Design Ventura in Year Nine it can be the trigger which leads them to opt for it</mark> at General Certificate of Secondary Education, so we are helping to keep alive something which is crucial to industry and entrepreneurship."<span class="cn">九年级参赛会成为"触发点"，促使他们在 GCSE 阶段选这门课。</span></p>
+  </section>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>10 道真题（36–45）</h2>
+    <div class="hint">点字母选择答案 → 点"提交答案"。判分后自动高亮原文定位句并展开解析。</div>
+
+    <div id="questions"></div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+      <button class="btn ghost" id="reset">重新开始</button>
+    </div>
+
+    <div class="score" id="score"></div>
+
+    <details class="fp">
+      <summary>卡住了？点开看"段落指纹表"（13 段各一句话）</summary>
+      <table>
+        <tr><th>段</th><th>指纹</th></tr>
+        <tr><td>A</td><td>考生降 10%（20.4万→18.5万）</td></tr>
+        <tr><td>B</td><td>工程领域也招不到人</td></tr>
+        <tr><td>C</td><td>逛博物馆商店→担忧缓解</td></tr>
+        <tr><td>D</td><td>2015 获奖玩具＋赛题三要求</td></tr>
+        <tr><td>E</td><td>老师换校后主动引入</td></tr>
+        <tr><td>F</td><td>主题 Move＋校内三选一</td></tr>
+        <tr><td>G</td><td>老师喜欢：证明学科价值</td></tr>
+        <tr><td>H</td><td>赛制：教师培训＋学生辅导</td></tr>
+        <tr><td>I</td><td>入围十强进馆答辩</td></tr>
+        <tr><td>J</td><td>学预算营销＋利润捐慈善</td></tr>
+        <tr><td>K</td><td>学校零费用参赛</td></tr>
+        <tr><td>L</td><td>评委：让标准课程活起来</td></tr>
+        <tr><td>M</td><td>九年级参赛→GCSE 选修</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<div class="src">
+  <p>
+    来源：
+    <a href="https://english-exam.lazynote.cn/cet4/sections/2025-06-1/part3-section-b/" target="_blank" rel="noopener">懒笔记 · 2025年6月第1套 长篇阅读 36–45 题答案与解析</a>　|　
+    <a href="https://www.xdf.cn/373/202506/14533638.html" target="_blank" rel="noopener">新东方 · 2025年6月大学英语四级阅读试题及答案（第一套）</a>
+  </p>
+  <p>两处来源答案完全一致（36–40 HCLAM / 41–45 GKDJB），无存疑题目。原文取自懒笔记卷面排版；题号为 36–45，共 13 段 A–M。</p>
+  <p><code>[懒笔记](https://english-exam.lazynote.cn/cet4/sections/2025-06-1/part3-section-b/) | [新东方](https://www.xdf.cn/373/202506/14533638.html)</code></p>
+</div>
+
+<script>
+const LETTERS = ["A","B","C","D","E","F","G","H","I","J","K","L","M"];
+
+const QUESTIONS = [
+  {
+    n: 36,
+    stem: "During the course of preparing for Design Ventura, teachers receive training and support while students get tutoring from designers.",
+    answer: "H",
+    para: "p-H",
+    why: `<p><b>定位</b>：H 段 — "Along the way there is training and support for teachers and tutoring for students from designers."</p>` +
+         `<p><b>同义替换</b>：receive training and support ≈ training and support for teachers（主动↔存在句换位）；get tutoring from designers ≈ tutoring for students from designers</p>` +
+         `<p><b>陷阱</b>：G 段讲“老师为什么喜欢”（第 41 题的落点），I 段讲入围学生进馆答辩，都不涉及“培训/辅导”这条流程细节。</p>`
+  },
+  {
+    n: 37,
+    stem: "A visit to the Design Museum shop in London can reduce the designers' fears about the future supply of talents educated in Britain.",
+    answer: "C",
+    para: "p-C",
+    why: `<p><b>定位</b>：C 段 — "However, if these designers had visited the Design Museum shop in London earlier this year their fears may have been eased."</p>` +
+         `<p><b>同义替换</b>：A visit ≈ if they had visited（名词化↔动词化）；can reduce ... fears ≈ fears may have been eased；talents educated in Britain ≈ 前一句的 home-grown talent</p>` +
+         `<p><b>陷阱</b>：D 段同样出现 Design Museum 和那款玩具，但讲的是“2015 年获奖作品”，没有“参观商店 → 担忧缓解”这条因果。</p>`
+  },
+  {
+    n: 38,
+    stem: "One of Design Ventura's judges says the competition adds vigour to the standard curriculum in schools.",
+    answer: "L",
+    para: "p-L",
+    why: `<p><b>定位</b>：L 段 — "Now that design education is limited in the curriculum, I'm all in favour of competitions such as Design Ventura, which helps to bring the standard curriculum to life."</p>` +
+         `<p><b>同义替换</b>：adds vigour to ≈ bring ... to life；one of Design Ventura's judges ≈ one of the competition's judges（说话人 Naomi Cleaver）</p>` +
+         `<p><b>陷阱</b>：G 段也有 curriculum 和 "Teachers like it"，但说话人是博物馆学习部主管，不是评委，且落点是“老师欢迎”（第 41 题）。身份对不上就不能选。</p>`
+  },
+  {
+    n: 39,
+    stem: "Enrollment in Design and Technology decreased by nearly ten percent last year in the UK.",
+    answer: "A",
+    para: "p-A",
+    why: `<p><b>定位</b>：A 段 — "These figures showed that the number of pupils that sat exams in Design and Technology fell 10 percent from 204,788 to 185,279 last year."</p>` +
+         `<p><b>同义替换</b>：Enrollment ≈ the number of pupils that sat exams；decreased ≈ fell；nearly ten percent ≈ 10 percent（题干用 nearly，原文给精确数字）</p>` +
+         `<p><b>要点</b>：带具体数字（204,788 / 185,279）的句子是 A 级锚点，扫读时先抓数字。</p>`
+  },
+  {
+    n: 40,
+    stem: "Participation of ninth graders in Design Ventura can motivate them to choose design technology as their subject.",
+    answer: "M",
+    para: "p-M",
+    why: `<p><b>定位</b>：M 段 — "if pupils take part in Design Ventura in Year Nine it can be the trigger which leads them to opt for it at General Certificate of Secondary Education"</p>` +
+         `<p><b>同义替换</b>：Participation ≈ take part in；ninth graders ≈ Year Nine；motivate ≈ be the trigger which leads them to；choose ... as their subject ≈ opt for it at GCSE</p>` +
+         `<p><b>陷阱</b>：E 段也讲“引入比赛的理由”，但停在“能培养很多技能”，没有“学生因此选这门课”的因果链；F 段讲的是校内选拔。</p>`
+  },
+  {
+    n: 41,
+    stem: "Design Ventura is welcomed by teachers because it helps to prove the worth of design as a school subject.",
+    answer: "G",
+    para: "p-G",
+    why: `<p><b>定位</b>：G 段 — "Teachers like it because the skills are all transferable and it helps to validate the value of design as a subject"</p>` +
+         `<p><b>同义替换</b>：welcomed by teachers ≈ Teachers like it（被动↔主动）；prove the worth ≈ validate the value</p>` +
+         `<p><b>陷阱</b>：L 段是评委的态度 "I'm all in favour of competitions such as Design Ventura"，主体不是老师，别被“支持/欢迎”的语气骗走（那是第 38 题）。</p>`
+  },
+  {
+    n: 42,
+    stem: "The schools don't have to pay anything to take part in the Design Ventura competition.",
+    answer: "K",
+    para: "p-K",
+    why: `<p><b>定位</b>：K 段 — "It costs the schools nothing to participate in Design Ventura; the professional designers provide their services for free."</p>` +
+         `<p><b>同义替换</b>：don't have to pay anything ≈ costs ... nothing / provide their services for free</p>` +
+         `<p><b>陷阱</b>：G 段提到 Deutsche Bank 资助项目，但那是“项目经费来源”，不是“学校要不要交钱”。问的是学校，不是赞助方。</p>`
+  },
+  {
+    n: 43,
+    stem: "Participants in Design Ventura are challenged to create sustainable and marketable products.",
+    answer: "D",
+    para: "p-D",
+    why: `<p><b>定位</b>：D 段 — "by challenging them to develop a new creative, sustainable and commercially feasible product for the Design Museum shop"</p>` +
+         `<p><b>同义替换</b>：are challenged to create ≈ by challenging them to develop；marketable ≈ commercially feasible；products ≈ product</p>` +
+         `<p><b>陷阱</b>：J 段也讲“产品要真的卖”（commercial element），但落点是学生学到预算和营销（第 44 题）；D 段落点是“赛题对产品的要求”。</p>`
+  },
+  {
+    n: 44,
+    stem: "Students benefit from Design Ventura because they can learn about budgeting and marketing in addition to game design.",
+    answer: "J",
+    para: "p-J",
+    why: `<p><b>定位</b>：J 段 — "the boys had to learn about budgeting and marketing, as well as designing their game"</p>` +
+         `<p><b>同义替换</b>：in addition to ≈ as well as；game design ≈ designing their game；benefit from ≈ the really useful things about this competition</p>` +
+         `<p><b>要点</b>：budgeting / marketing 是全文低频词，几乎只出现在 J 段，属于强锚点。</p>`
+  },
+  {
+    n: 45,
+    stem: "According to an officer of the Creative Industries Federation, there is difficulty now in recruiting engineers in the UK.",
+    answer: "B",
+    para: "p-B",
+    why: `<p><b>定位</b>：B 段 — "Engineering, which requires a similar mix of creative and technical skills, also has recruitment problems."</p>` +
+         `<p><b>同义替换</b>：an officer ≈ chief executive John Kampfner；difficulty in recruiting ≈ recruitment problems；engineers ≈ Engineering（行业代指从业者）</p>` +
+         `<p><b>陷阱</b>：A 段同样在讲“技能短缺”，但主体是“学设计与技术的学生人数下降”（第 39 题），不是“招工程师难”。机构名相同也要看落点。</p>`
+  }
+];
+
+const picked = {};
+const quizEl = document.getElementById("questions");
+
+function render(){
+  quizEl.innerHTML = QUESTIONS.map(q => `
+    <div class="q" data-n="${q.n}">
+      <div class="stem"><span class="num">${q.n}.</span>${q.stem}</div>
+      <div class="letters" data-n="${q.n}">
+        ${LETTERS.map(L => `<button type="button" data-l="${L}" data-n="${q.n}">${L}</button>`).join("")}
+      </div>
+      <div class="fb" id="fb-${q.n}"></div>
+    </div>
+  `).join("");
+}
+
+quizEl.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-l]");
+  if(!btn) return;
+  if(btn.disabled) return;
+  const n = btn.dataset.n, L = btn.dataset.l;
+  picked[n] = L;
+  quizEl.querySelectorAll(`.letters[data-n="${n}"] button`).forEach(b => b.classList.remove("sel"));
+  btn.classList.add("sel");
+});
+
+document.getElementById("submit").addEventListener("click", () => {
+  let correct = 0;
+  clearHighlights();
+
+  QUESTIONS.forEach(q => {
+    const area = quizEl.querySelector(`.letters[data-n="${q.n}"]`);
+    const fb = document.getElementById("fb-" + q.n);
+    const chosen = picked[q.n];
+    const isRight = chosen === q.answer;
+
+    area.querySelectorAll("button").forEach(b => {
+      b.disabled = true;
+      b.classList.remove("sel");
+      if(b.dataset.l === q.answer) b.classList.add("answer");
+      if(b.dataset.l === chosen && !isRight) b.classList.add("wrong");
+      if(b.dataset.l === q.answer && isRight) b.classList.add("right");
+    });
+
+    if(isRight) correct++;
+
+    fb.className = "fb " + (isRight ? "ok" : "no") + " show";
+    fb.innerHTML =
+      `<span class="badge">${isRight ? "正确" : (chosen ? "错误" : "未作答")}</span>正确答案 ${q.answer}` +
+      q.why +
+      `<a class="jump" href="#${q.para}">→ 跳到 ${q.answer} 段定位句</a>`;
+
+    document.getElementById(q.para).classList.add("hit");
+  });
+
+  // 滚动到第一道错题的对应段落（全对则停在第一题段落）
+  const firstBad = QUESTIONS.find(q => picked[q.n] !== q.answer) || QUESTIONS[0];
+  document.getElementById(firstBad.para).scrollIntoView({behavior:"smooth", block:"center"});
+
+  stopTimer();
+  const s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = `本轮得分：<b>${correct} / ${QUESTIONS.length}</b>` +
+    `<span class="time">用时 ${fmt(sec)}</span><br>` +
+    (correct === 10 ? "全对，信息匹配的速度和定位感都已经到位。" :
+     correct >= 8 ? "不错了，回看错题的“定位句 + 同义替换”，把丢的那一两分补上。" :
+     correct >= 6 ? "及格水平，重点练“先找强锚点（数字、专有名词、低频词），再排除同话题段”。" :
+     "先别硬做：翻开指纹表，按“强锚点优先”的顺序重扫一遍，再点“重新开始”。");
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  Object.keys(picked).forEach(k => delete picked[k]);
+  clearHighlights();
+  render();
+  document.getElementById("score").className = "score";
+  document.getElementById("score").innerHTML = "";
+  startTimer();
+});
+
+function clearHighlights(){
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+}
+
+/* ---------- 计时器 ---------- */
+let sec = 0, tick = null;
+const timerEl = document.getElementById("timer");
+
+function fmt(total){
+  const m = String(Math.floor(total/60)).padStart(2,"0");
+  const s = String(total%60).padStart(2,"0");
+  return `${m}:${s}`;
+}
+
+function startTimer(){
+  if(tick) clearInterval(tick);
+  sec = 0;
+  timerEl.className = "timer";
+  timerEl.textContent = "00:00";
+  tick = setInterval(() => {
+    sec++;
+    timerEl.textContent = fmt(sec);
+    if(sec >= 900){
+      timerEl.classList.remove("warn");
+      timerEl.classList.add("over");
+    }else if(sec >= 720){
+      timerEl.classList.add("warn");
+    }
+  }, 1000);
+}
+
+function stopTimer(){
+  if(tick){ clearInterval(tick); tick = null; }
+}
+
+render();
+startTimer();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:18px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
