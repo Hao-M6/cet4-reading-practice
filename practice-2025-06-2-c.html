@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级仔细阅读 · Section C 练习｜2025 年 6 月第二套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:220px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+    transition:.3s;
+  }
+  .timer.warn{background:#3a2f14; color:#f0b95a}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  .tlabel{font-size:12px; color:var(--muted); white-space:nowrap}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 版心 ---------- */
+  .wrap{max-width:960px; margin:0 auto; padding:20px 20px 104px}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:22px 26px 26px; margin-bottom:22px;
+  }
+  .phead{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap}
+  .plabel{
+    font-size:12px; font-weight:700; letter-spacing:.6px; color:#a9c1ff;
+    background:#1c2740; border-radius:999px; padding:2px 11px;
+  }
+  .pwords{font-size:12px; color:var(--muted)}
+  h2.ptopic{font-size:18px; margin:12px 0 2px; letter-spacing:.2px}
+  h2.ptopic small{font-size:12px; font-weight:400; color:var(--muted); margin-left:8px}
+  .pmeta{font-size:12.5px; color:var(--muted); margin-bottom:18px}
+  /* ---------- 段落 ---------- */
+  .para{
+    position:relative; margin:0 0 15px; padding:2px 0 2px 30px;
+    font-size:15.5px; line-height:1.95; border-radius:8px;
+    transition:background .25s, box-shadow .25s;
+    scroll-margin-top:80px;
+  }
+  .para .tag{
+    position:absolute; left:0; top:4px; width:22px; height:22px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font:700 12px/22px ui-monospace,Consolas,monospace;
+    text-align:center;
+  }
+  .para .cn{
+    display:block; margin-top:7px; padding-left:9px; border-left:2px solid #2b4a5e;
+    font-size:12.5px; line-height:1.7; color:#9db8d6;
+  }
+  .para.hit{background:var(--mark); box-shadow:inset 3px 0 0 var(--markline)}
+  .para.hit .tag{background:var(--markline); color:#241a00}
+  mark{
+    background:var(--mark); color:#f5e8c9; padding:0 2px; border-radius:3px;
+    box-shadow:inset 0 -1px 0 var(--markline);
+  }
+  /* ---------- 题目 ---------- */
+  .qsep{
+    display:flex; align-items:center; gap:12px; margin:26px 0 4px;
+    font-size:12.5px; font-weight:700; color:#8fb7e8;
+  }
+  .qsep::before,.qsep::after{content:""; height:1px; background:var(--line); flex:1}
+  .q{margin-top:18px; padding-top:16px; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none; padding-top:4px}
+  .qh{display:flex; gap:8px; font-size:14.8px; font-weight:600; line-height:1.7}
+  .qn{flex:0 0 auto; color:var(--accent); font-family:ui-monospace,Consolas,monospace}
+  .opts{display:grid; gap:6px; margin:9px 0 0 28px}
+  .opt{
+    display:flex; gap:8px; align-items:flex-start; width:100%; text-align:left;
+    background:#1a1f27; border:1px solid var(--line); border-radius:8px;
+    color:#c3cad6; padding:7px 10px; font-family:inherit; font-size:13.6px;
+    line-height:1.6; cursor:pointer; transition:.15s;
+  }
+  .opt:hover{border-color:#3d5a8a; background:#1b2430}
+  .opt .L{flex:0 0 14px; font-weight:700; font-family:ui-monospace,Consolas,monospace; color:#8fb7e8}
+  .opt.sel{background:#1c2740; border-color:var(--accent); color:#eaf1ff}
+  .opt.sel .L{color:#a9c1ff}
+  .opt.right{background:#16301f; border-color:var(--ok); color:#c6f5d8}
+  .opt.right .L{color:#7ee2a8}
+  .opt.wrong{background:#3a1d1f; border-color:var(--bad); color:#ffc9c4}
+  .opt.wrong .L{color:#ff9d95}
+  .opt.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  /* ---------- 解析 ---------- */
+  .fb{
+    display:none; margin:10px 0 0 28px; padding:10px 12px; font-size:12.8px; line-height:1.72;
+    background:#141a21; border-left:2px solid #2b4a5e; border-radius:0 8px 8px 0; color:#c3cad6;
+  }
+  .fb.show{display:block}
+  .fb .badge{display:inline-block; margin-bottom:6px; padding:1px 9px; border-radius:999px; font-size:11.5px; font-weight:700}
+  .fb .badge.ok{background:#16351f; color:#7ee2a8; border:1px solid #2b5b38}
+  .fb .badge.no{background:#3a1d1f; color:#ffb4ab; border:1px solid #6b2a2a}
+  .fb p{margin:4px 0}
+  .fb p:first-of-type{margin-top:0}
+  .fb b{color:#a9c1ff}
+  /* ---------- 底部固定得分条 ---------- */
+  .scorebar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+    padding:9px 18px; background:rgba(16,20,26,.96); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line); font-size:13.5px;
+  }
+  .scorebar .k{color:var(--muted)}
+  .scorebar b{color:#a9c1ff; font-size:17px; font-variant-numeric:tabular-nums; line-height:1}
+  .scorebar .sep{width:1px; height:22px; background:var(--line)}
+  .scorebar .tipmsg{font-size:12.5px; color:#8fb7e8}
+  .btn{border:none; border-radius:9px; padding:9px 18px; font-size:13.5px; font-weight:600; cursor:pointer; font-family:inherit}
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  /* ---------- 定位表 ---------- */
+  details.loc{margin-top:6px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px}
+  details.loc summary{cursor:pointer; font-size:13.5px; font-weight:700; color:var(--accent)}
+  details.loc table{width:100%; border-collapse:collapse; margin-top:12px; font-size:12.8px}
+  details.loc th,details.loc td{border:1px solid var(--line); padding:6px 9px; text-align:left; vertical-align:top}
+  details.loc th{background:#1a1f27; font-weight:600; color:#c3cad6; white-space:nowrap}
+  details.loc td:first-child{white-space:nowrap; color:#a9c1ff; font-family:ui-monospace,Consolas,monospace; font-weight:700}
+  details.loc td:nth-child(2){white-space:nowrap; color:#c3cad6}
+  /* ---------- 来源 ---------- */
+  footer.src{max-width:960px; margin:0 auto; padding:0 20px 26px; font-size:12px; color:#7b8494; line-height:1.9}
+  footer.src a{color:#8f9aab; text-decoration:none; border-bottom:1px dotted #4a5468}
+  footer.src a:hover{color:var(--accent)}
+  /* ---------- 盲做 ---------- */
+  #blindBtn{bottom:74px!important}
+  @media (max-width:700px){
+    .card{padding:18px 16px 20px}
+    .para{padding-left:26px; font-size:15px}
+    .opts,.fb{margin-left:0}
+    .wrap{padding:14px 12px 104px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 6 月 · 第二套 · Section C 仔细阅读
+    <small>两篇 · 46–55 题 · 每题 14.2 分 · 原文逐字照录</small>
+  </h1>
+  <span class="tlabel">目标 20:00</span>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="wrap">
+
+  <!-- ==================== Passage One ==================== -->
+  <section class="card" id="passage1">
+    <div class="phead">
+      <span class="plabel">PASSAGE ONE</span>
+      <span class="pwords">原文 6 段 · 349 词</span>
+    </div>
+    <h2 class="ptopic">主题：衣着与行为<small>原卷未给英文标题</small></h2>
+    <div class="pmeta">Questions 46 to 50 are based on the following passage.</div>
+
+    <p class="para" id="p1-1"><span class="tag">1</span>We all take a little extra effort to look nice for special occasions. But most of us have conflicting feelings about dressing up and feel guilty about taking the time to focus on clothes. Science now suggests the right dress may <mark>give ourselves the extra edge in our professional and personal lives</mark>.<span class="cn">科学结论的落点：穿对衣服，在职业和个人生活里都能占到便宜。</span></p>
+
+    <p class="para" id="p1-2"><span class="tag">2</span>We hear sayings like "dress for the job you want; not the job you have". Most people don't really believe in them, but research into the impact of clothes on behavior now suggests that there may actually be a grain of truth in these sayings. Science says that the clothes we wear <mark>affect our behavior, our mood and even the way we interact with others because of the symbolic meaning that we assign to different types of clothing</mark>.<span class="cn">衣服影响互动，靠的不是布料，而是我们给不同衣物附加的「象征意义」。</span></p>
+
+    <p class="para" id="p1-3"><span class="tag">3</span>We consider some clothes to be powerful, some to be fun, and so on. We even evaluate people whom we have just met based on their clothes. We also <mark>evaluate ourselves based on what we are wearing</mark> because of the way they make us feel. This means that the experience of wearing something affects our attitudes and our choice of behavior.<span class="cn">自我评价的通道是「感受」——穿上它，让我觉得自己是个什么样的人。</span></p>
+
+    <p class="para" id="p1-4"><span class="tag">4</span>There's a reason tailored jackets are associated with being 'dressed for success'. It seems that <mark>wearing formal office wear puts us in the right frame of mind to conduct business</mark>. Wearing power clothing makes us feel more confident and even increases hormones needed for displaying dominance. This in turn helps us become better negotiators and abstract thinkers.<span class="cn">正装真正给的是「心态」：进入做生意的正确心理状态。</span></p>
+
+    <p class="para" id="p1-5"><span class="tag">5</span>While a good suit works wonders for our performance in the boardroom, <mark>wearing formal wear isn't a great idea when we want to socialize</mark>. Studies have found that people tend to be less open and less able to relax when they wear formal clothes.<span class="cn">转折：要社交时别穿正装，正装让人不开放、不放松。</span></p>
+
+    <p class="para" id="p1-6"><span class="tag">6</span><mark>On the other hand, a casual dress helps us become more friendly and creative.</mark> These findings support the idea of wearing business casuals on a Friday; since colleagues are most likely to take out time to socialize on the last work day of the week. I mean, who wants to hang out with people in their suits?<span class="cn">对比收尾：休闲装让人更友善、更有创造力，所以周五穿商务休闲装。</span></p>
+
+    <div class="qsep"><span>Questions 46–50</span></div>
+    <div class="qs" id="qs1"></div>
+  </section>
+
+  <!-- ==================== Passage Two ==================== -->
+  <section class="card" id="passage2">
+    <div class="phead">
+      <span class="plabel">PASSAGE TWO</span>
+      <span class="pwords">原文 5 段 · 346 词</span>
+    </div>
+    <h2 class="ptopic">主题：歌剧与古典乐今天还重要吗<small>原卷未给英文标题</small></h2>
+    <div class="pmeta">Questions 51 to 55 are based on the following passage.</div>
+
+    <p class="para" id="p2-1"><span class="tag">1</span>With the rise of pop music, jazz, and electronic music, both opera and classical music started to fade away from the public eye. Some people are beginning to wonder whether opera and classical music are still relevant to the modern world of music. Granted, you will not typically see today's teenagers lending their ears to Bach anytime soon, but <mark>there are some major indicators that both opera and classical music are now still quite alive</mark>.<span class="cn">先让步再转折：作者立场是「它们仍然活着」，后面全在举证。</span></p>
+
+    <p class="para" id="p2-2"><span class="tag">2</span>The most major indicator of classical music's importance in society today is the fact that <mark>much of the popular music that is currently being produced uses similar beats, harmonies, and melodies(旋律) as those that were used in some of classical music's best works</mark>. Even so, it can be difficult for those who do not study music theory to see this as an indicator, since it is subtle and just shows the impact symphonic(交响乐的) orchestras have had on society's taste in music.<span class="cn">第一个指标：当下的流行乐在节拍、和声、旋律上沿用古典名作。</span></p>
+
+    <p class="para" id="p2-3"><span class="tag">3</span><mark>A better example for the relevance of opera and classical music can be seen in the invention of the rock opera.</mark> Opera, in its simplest definition, is telling a story using music as its form. The art of telling a story using music has not faded in the least bit. In fact, sometimes actual orchestras are used for major parts of the opera itself. Some of the world's greatest hits have been parts of rock operas.<span class="cn">举摇滚歌剧，恰恰是为了证明「相关性」还在——这是举例的目的，不是定义题。</span></p>
+
+    <p class="para" id="p2-4"><span class="tag">4</span>Fans of classical music can also tell you that <mark>there are few types of music that are more expressive</mark>. So, it should come as no surprise to anyone that classical music pieces are still used as background music in modern movies. Symphonic orchestra compositions have also been created solely for the purpose of being included in major motion pictures. These are often very well received amongst mainstream music fans.<span class="cn">因果链：极富表现力（最高级说法）→ 所以至今仍是电影配乐。</span></p>
+
+    <p class="para" id="p2-5"><span class="tag">5</span><mark>Classical music and opera are the very foundation of what our modern music is based upon.</mark> Considering the huge impact they have had on our current society, it is without doubt that we can expect them to continue to remain important for centuries to come.<span class="cn">定调：现代音乐的根基；预测未来几百年仍然重要。</span></p>
+
+    <div class="qsep"><span>Questions 51–55</span></div>
+    <div class="qs" id="qs2"></div>
+  </section>
+
+  <details class="loc">
+    <summary>📌 题目定位表（10 行 · 先看表，再回原文找那一句）</summary>
+    <table>
+      <thead><tr><th>题号</th><th>段落</th><th>定位关键词</th></tr></thead>
+      <tbody>
+        <tr><td>46</td><td>P1 末句</td><td>Science now suggests / the extra edge / professional and personal lives</td></tr>
+        <tr><td>47</td><td>P2 末句</td><td>affect our behavior / interact with others / symbolic meaning</td></tr>
+        <tr><td>48</td><td>P3 第三句</td><td>evaluate ourselves / the way they make us feel</td></tr>
+        <tr><td>49</td><td>P4 第二句</td><td>formal office wear / right frame of mind / conduct business</td></tr>
+        <tr><td>50</td><td>P6 首句（辅 P5）</td><td>casual dress / friendly and creative / business casuals on a Friday</td></tr>
+        <tr><td>51</td><td>P1 末句</td><td>major indicators / still quite alive</td></tr>
+        <tr><td>52</td><td>P2 首句</td><td>similar beats, harmonies, and melodies / best works</td></tr>
+        <tr><td>53</td><td>P3 首句</td><td>A better example for the relevance / rock opera</td></tr>
+        <tr><td>54</td><td>P4 前两句</td><td>few types … more expressive / background music</td></tr>
+        <tr><td>55</td><td>P5 首句</td><td>the very foundation / modern music is based upon</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+</div>
+
+<footer class="src">
+  <p>数据来源：<a href="https://english-exam.lazynote.cn/cet4/paper/2025-06-2/part3-section-c/" target="_blank" rel="noopener">懒笔记 · Section C 原卷</a>　|　<a href="https://english-exam.lazynote.cn/cet4/paper/2025-06-2/part3-section-c-2/" target="_blank" rel="noopener">懒笔记 · Section C (2) 原卷</a>　|　<a href="https://english-exam.lazynote.cn/cet4/sections/2025-06-2/part3-section-c/" target="_blank" rel="noopener">懒笔记 · 逐题解析</a>　|　<a href="https://mtoutiao.xdf.cn/www/1001/202506/14533511.html" target="_blank" rel="noopener">新东方 · 阅读试题及答案（第二套）</a></p>
+  <p>答案双源核对：懒笔记逐题解析 = 新东方「46–50 ADBDC / 51–55 ADCBA」，两源一致。核对说明：新东方页面第 47 题的选项文本有错行（重复贴了 48 题的 B 项），但答案串不受影响，故不构成答案分歧。原文、选项、题干均逐字照录原卷，未作改写。</p>
+</footer>
+
+<div class="scorebar" id="scorebar">
+  <span class="k">已答</span><b id="cnt">0</b><span class="k">/ 10</span>
+  <span class="sep"></span>
+  <span class="k">得分</span><b id="sc">—</b><span class="k">/ 10</span>
+  <span class="sep"></span>
+  <span class="tipmsg" id="tipmsg">目标 20 分钟：一篇 10 分钟，卡住先跳</span>
+  <button class="btn primary" id="submit" type="button">提交答案</button>
+  <button class="btn ghost" id="reset" type="button">重新开始</button>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    n: 46,
+    stem: "What does science suggest the right dress may do?",
+    opts: ["Add to our advantage in work and life.",
+           "Enable us to look a lot more attractive.",
+           "Help us to enjoy a fuller personal life.",
+           "Provide extra energy for what we do."],
+    answer: "A",
+    para: "p1-1",
+    why: "<p><b>① 定位</b>：P1 末句 “Science now suggests the right dress may give ourselves the extra edge in our professional and personal lives.” 题干把 suggests 后的内容问成 “may do”。</p>" +
+         "<p><b>② 同义替换</b>：give ourselves the extra edge in our professional and personal lives → add to our advantage in work and life（extra edge = advantage；professional / personal = work / life）。</p>" +
+         "<p><b>③ 陷阱</b>：B 项 attractive 是首句 look nice 的偷换，且那只是“我们自己的做法”，不是科学结论；C 项 fuller personal life 只覆盖 personal，漏掉 professional，fuller 属无中生有；D 项把 extra edge 偷换成 extra energy。</p>"
+  },
+  {
+    n: 47,
+    stem: "Why does science say the clothes one wears may affect their interaction with others?",
+    opts: ["Clothes usually represent one's social and economic status.",
+           "Clothes largely determine one's likability by people around.",
+           "Different types of clothing markedly reflect different personalities.",
+           "Different types of clothing convey different messages symbolically."],
+    answer: "D",
+    para: "p1-2",
+    why: "<p><b>① 定位</b>：P2 末句 “…affect our behavior, our mood and even the way we interact with others <b>because of the symbolic meaning that we assign to different types of clothing</b>.” 题干把 because of 之后的原因问成 why。</p>" +
+         "<p><b>② 同义替换</b>：the symbolic meaning that we assign to different types of clothing → different types of clothing convey different messages symbolically（assign meaning = convey messages；symbolic meaning = messages … symbolically）。</p>" +
+         "<p><b>③ 陷阱</b>：A 项 social and economic status 张冠李戴，原文只说 symbolic meaning，从未提地位；B 项 determine 是绝对化，likability 也无中生有；C 项 personalities 偷换概念，原文讲的是我们赋予衣物的 meaning，不是衣物“反映性格”。</p>"
+  },
+  {
+    n: 48,
+    stem: "How do the clothes we wear sway our evaluation of ourselves?",
+    opts: ["By exerting an effect on our power of judgment.",
+           "By impacting how we feel about ourselves.",
+           "By affecting what we take as the basis for assessment.",
+           "By influencing our interpretation of symbolic messages."],
+    answer: "B",
+    para: "p1-3",
+    why: "<p><b>① 定位</b>：P3 第三句 “We also evaluate ourselves based on what we are wearing <b>because of the way they make us feel</b>.” 题干 sway = affect，问的是方式。</p>" +
+         "<p><b>② 同义替换</b>：because of the way they make us feel → by impacting how we feel about ourselves（the way they make us feel = how we feel about ourselves）。</p>" +
+         "<p><b>③ 陷阱</b>：A 项 power of judgment 偷换，原文是 evaluate（评价），不是“判断力强弱”；C 项 basis for assessment 把 based on what we are wearing 说成“评估依据被改变”，方向反了；D 项 symbolic messages 是 47 题的依据，张冠李戴。</p>"
+  },
+  {
+    n: 49,
+    stem: "Why does the author say tailored jackets are associated with being 'dressed for success'?",
+    opts: ["They are necessary for formal business dealings.",
+           "They may help people concentrate on their business.",
+           "They are vital to keeping a dominant position in business transactions.",
+           "They may enable people to have the right mentality for doing business."],
+    answer: "D",
+    para: "p1-4",
+    why: "<p><b>① 定位</b>：P4 第一、二句 “There's a reason tailored jackets are associated with being 'dressed for success'. It seems that <b>wearing formal office wear puts us in the right frame of mind to conduct business</b>.”</p>" +
+         "<p><b>② 同义替换</b>：puts us in the right frame of mind to conduct business → enable people to have the right mentality for doing business（frame of mind = mentality；puts us in = enable people to have）。</p>" +
+         "<p><b>③ 陷阱</b>：A 项 necessary 绝对化，原文只说 associated with、It seems；B 项 concentrate 偷换概念，原文讲的是心态不是注意力；C 项 dominant position 张冠李戴，下一句的 displaying dominance / negotiators 说的是“显得强势、更会谈”，不是“保住商业主导地位”。</p>"
+  },
+  {
+    n: 50,
+    stem: "What are people advised to do when they want to socialize?",
+    opts: ["Focus on clothing.",
+           "Wear a good suit.",
+           "Dress casually.",
+           "Look unusual."],
+    answer: "C",
+    para: "p1-6",
+    why: "<p><b>① 定位</b>：P6 首句 “On the other hand, <b>a casual dress helps us become more friendly and creative</b>.”，并由 P5 “wearing formal wear isn't a great idea when we want to socialize” 与 P6 “support the idea of wearing business casuals on a Friday” 共同支撑。</p>" +
+         "<p><b>② 同义替换</b>：a casual dress helps us become more friendly → dress casually（casual dress 的动词化表达）。</p>" +
+         "<p><b>③ 陷阱</b>：B 项 Wear a good suit 与原文正相反，P5 明说社交时穿正装不合适；A 项 Focus on clothing 是把首段“别为衣服花太多时间”反着说；D 项 Look unusual 无中生有。</p>"
+  },
+  {
+    n: 51,
+    stem: "What does the author think of classical music and opera in today's world?",
+    opts: ["They still make their presence felt.",
+           "They have given way to electronic music.",
+           "They will not fade away from the public eye.",
+           "They are no longer relevant to teenagers' lives."],
+    answer: "A",
+    para: "p2-1",
+    why: "<p><b>① 定位</b>：P1 末句 “…but <b>there are some major indicators that both opera and classical music are now still quite alive</b>.”</p>" +
+         "<p><b>② 同义替换</b>：are now still quite alive → still make their presence felt（alive = 存在感仍在；still 对应 still）。</p>" +
+         "<p><b>③ 陷阱</b>：C 项 will not fade away 是对未来的绝对化断言，原文只讲“现在仍然活着”，fade away 出现在首句描述过去的趋势；B 项 given way to 张冠李戴，首句只说电子乐兴起、二者淡出公众视野，没说“让位”；D 项 no longer relevant 与作者立场正相反（作者正要反驳这种怀疑）。</p>"
+  },
+  {
+    n: 52,
+    stem: "What do we learn about much of the popular music currently produced?",
+    opts: ["It can be difficult for many classical music fans to appreciate.",
+           "It can be seen as an indicator of refinement on classical music.",
+           "It caters to society's taste in music in a more subtle way than classical music.",
+           "It contains elements similar to those in some masterpieces of classical music."],
+    answer: "D",
+    para: "p2-2",
+    why: "<p><b>① 定位</b>：P2 首句 “…much of the popular music that is currently being produced <b>uses similar beats, harmonies, and melodies(旋律) as those that were used in some of classical music's best works</b>.”</p>" +
+         "<p><b>② 同义替换</b>：uses similar beats, harmonies, and melodies as … best works → contains elements similar to those in some masterpieces（beats / harmonies / melodies = elements；best works = masterpieces）。</p>" +
+         "<p><b>③ 陷阱</b>：A 项 difficult … to appreciate 张冠李戴，原文“难”的是不学乐理的人看不出这个指标，不是古典乐迷欣赏不了流行乐；B 项 indicator of refinement 偷换，指标指向的是 classical music 的重要性，refinement 无中生有；C 项 subtle 位置放错，subtle 修饰“这个指标不易察觉”，不是“流行乐更微妙地迎合口味”。</p>"
+  },
+  {
+    n: 53,
+    stem: "Why does the author mention the invention of the rock opera?",
+    opts: ["To illustrate how to tell a story using music.",
+           "To present the simplest definition of opera.",
+           "To show the relevance of opera and classical music.",
+           "To justify the necessity of using orchestras in opera."],
+    answer: "C",
+    para: "p2-3",
+    why: "<p><b>① 定位</b>：P3 首句 “<b>A better example for the relevance of opera and classical music</b> can be seen in the invention of the rock opera.” 段首句直接交代举例目的。</p>" +
+         "<p><b>② 同义替换</b>：A better example for the relevance of … → to show the relevance of …（举例即为了证明 relevance）。</p>" +
+         "<p><b>③ 陷阱</b>：A 项 illustrate how to tell a story 和 B 项 simplest definition 都来自紧接的第二句 “Opera, in its simplest definition, is telling a story using music as its form”，那是顺带下的定义，不是举例目的；D 项 necessity 绝对化，原文只说 sometimes actual orchestras are used。</p>"
+  },
+  {
+    n: 54,
+    stem: "Why are classical music pieces still used as background music in modern movies?",
+    opts: ["There are few types of music for movie producers to choose from.",
+           "They are considered to be the most expressive type of music.",
+           "They are well received by movie fans from all over the world.",
+           "They are essential for movies to become the world's greatest hits."],
+    answer: "B",
+    para: "p2-4",
+    why: "<p><b>① 定位</b>：P4 前两句 “Fans of classical music can also tell you that <b>there are few types of music that are more expressive</b>. <b>So</b>, it should come as no surprise to anyone that classical music pieces are still used as background music in modern movies.” So 明确标出因果。</p>" +
+         "<p><b>② 同义替换</b>：there are few types of music that are more expressive（比较级表最高级）→ the most expressive type of music。</p>" +
+         "<p><b>③ 陷阱</b>：A 项把 “few types … that are more expressive”（没有几种比它更有表现力）偷换成“可选的音乐种类很少”；C 项 well received 张冠李戴，原文说的是交响乐原创作品 “well received amongst mainstream music fans”，不是配乐被全球影迷接受；D 项 essential / greatest hits 绝对化，greatest hits 原文指摇滚歌剧的曲目。</p>"
+  },
+  {
+    n: 55,
+    stem: "What do we learn about our modern music?",
+    opts: ["It could not have come into being without classical music and opera as its foundation.",
+           "It cannot outcompete classical music and opera in its impact on our current society.",
+           "It will not enjoy as much popularity as classical music and opera among music fans.",
+           "It might not be able to rival classical music and opera in importance for centuries to come."],
+    answer: "A",
+    para: "p2-5",
+    why: "<p><b>① 定位</b>：P5 首句 “<b>Classical music and opera are the very foundation of what our modern music is based upon.</b>”</p>" +
+         "<p><b>② 同义替换</b>：are the very foundation of what our modern music is based upon → could not have come into being without … as its foundation（把“根基”还原成虚拟语气：没有根基就没有现代音乐）。</p>" +
+         "<p><b>③ 陷阱</b>：B 项 outcompete 偷换比较关系，原文没有“谁的影响力更大”这种较量；C 项 popularity 无中生有；D 项 importance for centuries to come 张冠李戴——那是原文对古典乐与歌剧的未来预测，被套到“现代音乐”头上。</p>"
+  }
+];
+
+const picked = {};
+let graded = false;
+const LETTERS = "ABCD";
+
+function render(list, hostId){
+  const host = document.getElementById(hostId);
+  list.forEach(function(q){
+    const box = document.createElement("div");
+    box.className = "q";
+    box.id = "q-" + q.n;
+    let html = '<div class="qh"><span class="qn">' + q.n + '.</span><span class="qt">' + q.stem + '</span></div>';
+    html += '<div class="opts">';
+    q.opts.forEach(function(t, i){
+      html += '<button type="button" class="opt" data-n="' + q.n + '" data-l="' + LETTERS[i] + '">' +
+              '<span class="L">' + LETTERS[i] + '</span><span class="T">' + t + '</span></button>';
+    });
+    html += '</div><div class="fb" id="fb-' + q.n + '"></div>';
+    box.innerHTML = html;
+    host.appendChild(box);
+  });
+}
+
+render(QUESTIONS.slice(0, 5), "qs1");
+render(QUESTIONS.slice(5), "qs2");
+
+const cntEl = document.getElementById("cnt");
+const scEl  = document.getElementById("sc");
+const tipEl = document.getElementById("tipmsg");
+
+function updateCount(){
+  const done = Object.keys(picked).length;
+  cntEl.textContent = done;
+  if(done === 10) tipEl.textContent = "10 题都选了，可以提交";
+  else tipEl.textContent = "还差 " + (10 - done) + " 题";
+}
+
+document.addEventListener("click", function(e){
+  const btn = e.target.closest(".opt");
+  if(!btn) return;
+  if(graded) return;
+  const n = Number(btn.dataset.n);
+  const l = btn.dataset.l;
+  if(picked[n] === l){ delete picked[n]; }else{ picked[n] = l; }
+  document.querySelectorAll('.opt[data-n="' + n + '"]').forEach(function(b){
+    b.classList.toggle("sel", b.dataset.l === picked[n]);
+  });
+  updateCount();
+});
+
+document.getElementById("submit").addEventListener("click", function(){
+  graded = true;
+  let correct = 0;
+  const wrongParas = [];
+  const done = [];
+
+  QUESTIONS.forEach(function(q){
+    const box = document.getElementById("q-" + q.n);
+    const fb  = document.getElementById("fb-" + q.n);
+    const pick = picked[q.n] || null;
+    const ok = pick === q.answer;
+
+    document.querySelectorAll('.opt[data-n="' + q.n + '"]').forEach(function(b){
+      b.classList.remove("right","wrong","answer");
+      if(b.dataset.l === q.answer) b.classList.add("answer");
+      if(ok && b.dataset.l === q.answer) b.classList.add("right");
+      if(!ok && b.dataset.l === pick) b.classList.add("wrong");
+    });
+
+    if(ok){ correct++; } else if(q.para && wrongParas.indexOf(q.para) < 0){ wrongParas.push(q.para); }
+
+    let badge = ok ? '<span class="badge ok">✓ 正确</span>' : '<span class="badge no">✗ 错误 · 正确答案 ' + q.answer + '</span>';
+    if(!pick) badge = '<span class="badge no">未作答 · 正确答案 ' + q.answer + '</span>';
+    fb.innerHTML = badge + q.why;
+    fb.classList.add("show");
+    done.push(q.n);
+  });
+
+  document.querySelectorAll(".para").forEach(function(p){ p.classList.remove("hit"); });
+  wrongParas.forEach(function(id){
+    const p = document.getElementById(id);
+    if(p) p.classList.add("hit");
+  });
+
+  scEl.textContent = correct;
+  scEl.style.color = correct >= 8 ? "#7ee2a8" : (correct >= 6 ? "#f0b95a" : "#ffb4ab");
+  tipEl.textContent = correct === 10 ? "全对！定位句 + 同义替换，两项都稳。"
+    : (correct >= 8 ? "不错，错的题多半是绝对化/张冠李戴项。"
+    : "回看高亮段：先定位原句，再逐词比对同义替换。");
+
+  const firstWrong = QUESTIONS.filter(function(q){ return picked[q.n] !== q.answer; })[0];
+  if(firstWrong){
+    const el = document.getElementById(firstWrong.para);
+    if(el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+});
+
+document.getElementById("reset").addEventListener("click", function(){
+  graded = false;
+  Object.keys(picked).forEach(function(k){ delete picked[k]; });
+  document.querySelectorAll(".opt").forEach(function(b){ b.classList.remove("sel","right","wrong","answer"); });
+  document.querySelectorAll(".fb").forEach(function(f){ f.classList.remove("show"); f.innerHTML = ""; });
+  document.querySelectorAll(".para").forEach(function(p){ p.classList.remove("hit"); });
+  scEl.textContent = "—";
+  scEl.style.color = "";
+  updateCount();
+  tipEl.textContent = "目标 20 分钟：一篇 10 分钟，卡住先跳";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/* ---------- 计时器：目标 20 分钟，超时变红 ---------- */
+let sec = 0;
+const GOAL = 1200;
+const timerEl = document.getElementById("timer");
+setInterval(function(){
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2,"0");
+  const s = String(sec % 60).padStart(2,"0");
+  timerEl.textContent = m + ":" + s;
+  if(sec >= GOAL) timerEl.classList.add("over");
+  else if(sec >= GOAL * 0.8) timerEl.classList.add("warn");
+}, 1000);
+
+updateCount();
+</script>
+
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:18px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
