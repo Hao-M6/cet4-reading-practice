@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级长篇阅读 · 信息匹配练习｜2025年12月第一套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75;
+    padding-bottom:64px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  a.back{
+    font-size:13px; font-weight:600; color:var(--accent); text-decoration:none;
+    white-space:nowrap; border:1px solid var(--line); background:#171c23;
+    padding:4px 10px; border-radius:8px;
+  }
+  a.back:hover{background:#1b2634; border-color:var(--accent)}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+    transition:background .25s,color .25s;
+  }
+  .timer.warn{background:#3a2f14; color:#f0b95a}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 460px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px; line-height:1.5}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .passage .meta .src{display:block; margin-top:2px}
+  button.mini{
+    margin-top:6px; font:inherit; font-size:12px; font-weight:600; cursor:pointer;
+    border:1px solid var(--line); background:#1a1f27; color:#c3cad6;
+    padding:3px 10px; border-radius:999px;
+  }
+  button.mini:hover{border-color:var(--accent); color:var(--accent); background:#1b2634}
+  .mini-note{font-size:12px; color:var(--muted)}
+  .para{margin:0 0 14px; padding-left:34px; position:relative; transition:background .25s}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{display:block; color:var(--muted); font-size:12.5px; margin-top:4px}
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:var(--markline); color:#ffe9a8}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  body.hide-marks mark{background:transparent; border-bottom:none; color:inherit; padding:0}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:76px; max-height:calc(100vh - 152px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .q{padding:14px 0; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none; padding-top:4px}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px}
+  .q .stem{font-size:14px; line-height:1.6}
+  .letters{display:grid; grid-template-columns:repeat(8,1fr); gap:5px; margin-top:9px}
+  .letters button{
+    height:31px; border:1px solid var(--line); background:#171c23; border-radius:7px;
+    cursor:pointer; font-weight:600; font-size:12.5px; font-family:ui-monospace,Consolas,monospace;
+    color:#c3cad6; transition:.12s; padding:0;
+  }
+  .letters button:hover{border-color:var(--accent); color:var(--accent); background:#1b2634}
+  .letters button.sel{background:var(--accent); border-color:var(--accent); color:#fff}
+  .letters button.right{background:var(--ok); border-color:var(--ok); color:#fff}
+  .letters button.wrong{background:var(--bad); border-color:var(--bad); color:#fff}
+  .letters button.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  /* ---------- 指纹表 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+  details.fp td.fpnote{color:var(--muted); font-size:11.5px}
+  /* ---------- 底部得分条 ---------- */
+  .bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(255,255,255,.94); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line); padding:9px 20px;
+  }
+  .bar-inner{max-width:1240px; margin:0 auto; display:flex; align-items:center; gap:14px; font-size:13px; color:#c3cad6}
+  .bar-inner .lbl{white-space:nowrap; font-variant-numeric:tabular-nums}
+  .bar-inner .lbl b{font-size:15px}
+  .track{flex:1; height:8px; border-radius:999px; background:#262d38; overflow:hidden; min-width:80px}
+  .fill{height:100%; width:0; border-radius:999px; background:linear-gradient(90deg,#60a5fa,#5b9dff); transition:width .35s}
+  .fill.ok{background:linear-gradient(90deg,#4ade80,#3fb950)}
+  .fill.warn{background:linear-gradient(90deg,#fbbf24,#d97706)}
+  .fill.bad{background:linear-gradient(90deg,#f87171,#f85149)}
+  .bar-inner .goal{color:var(--muted); font-size:12px; white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    四级 Part III Section B · 信息匹配
+    <small>2025 年 12 月 · 第一套 · The battle over bike lanes needs a mindset shift（15 段 A–O · 36–45 题）</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：文章 ================= -->
+  <section class="card passage" id="passage">
+    <h2>The battle over bike lanes needs a mindset shift</h2>
+    <div class="meta">
+      Directions: In this section, you are going to read a passage with ten statements attached to it.
+      Each statement contains information given in one of the paragraphs. Identify the paragraph from which
+      the information is derived. You may choose a paragraph more than once. Each paragraph is marked with a letter.
+      <span class="src">原文逐字照录 · 15 段（A–O）· 来源：懒笔记 english-exam.lazynote.cn</span>
+      <button class="mini" id="toggleMark" type="button">隐藏定位句</button>
+      <span class="mini-note">计时：12 分钟转黄，15 分钟转红</span>
+    </div>
+
+    <p class="para" id="p-A"><span class="tag">A</span>Five years ago, the city of Queens, New York, announced that it would be putting bike lanes onto a stretch of Skillman Ave — and removing 116 parking spots. Cyclists loved the plan, but local business owners got very angry. <mark>Taking out those parking spots, as they argued at protests and in letters to the city council, would ruin stores and restaurants along Skillman.</mark> "Parking here is already a nightmare," one shouted at a protest rally.<span class="cn">五年前皇后区宣布在 Skillman 大道建自行车道、撤 116 个车位，商户抗议说这会毁掉沿街生意。</span></p>
+
+    <p class="para" id="p-B"><span class="tag">B</span>But the bike lanes were a done deal, and soon they were in place. Early this year, Jesse Coburn — an investigative writer with Streetsblog New York — wondered whether those predictions of economic collapse came true. So he asked the city's Department of Finance to give him a few years' worth of sales figures for that stretch of Skillman Ave. How had the businesses on that street fared?<span class="cn">车道木已成舟；记者 Coburn 向市财政索要几年销售数据，验证“经济崩溃”的预言。</span></p>
+
+    <p class="para" id="p-C"><span class="tag">C</span>Quite well, it turns out. <mark>In the year after the bike lanes arrived, businesses on Skillman saw sales rise by 12 percent, compared to 3 percent for Queens in general. What's more, that section of road saw new businesses open, while Queens overall had a net loss.</mark><span class="cn">结果不错：Skillman 销售额涨 12%（全区 3%），还有新店开张，而全区净减少。</span></p>
+
+    <p class="para" id="p-D"><span class="tag">D</span>The thing is, the actual merchants along Skillman? They didn't believe it. When Coburn spoke to them and described what he'd found, only a few store owners admitted the lanes had helped. <mark>Many still insisted the lanes were killing their part of the city.</mark> And emotions ran hot: Someone scattered tacks(大头钉) on the bike lane.<span class="cn">商户不信数据，坚持车道在“杀死”他们那片城区，甚至有人在车道上撒大头钉。</span></p>
+
+    <p class="para" id="p-E"><span class="tag">E</span>This little story turns out to be a fascinating glimpse at the challenges cities face as they try to update their urban infrastructure — to clean up the air, reduce greenhouse emissions, and speed up travel by making towns more bike-friendly. <mark>There's a rising amount of data showing that installing bike lanes and making streets more pedestrian-friendly boosts the economic fortunes of a place.</mark> Removing cars and parking spots works. But the folks who run local businesses simply aren't convinced, even when their own street performs. Given that sort of mess, can political fights over bike lanes ever end?<span class="cn">作者点评：数据越来越多地证明车道提振经济，但本地商户就是不信，哪怕自家街道表现很好。</span></p>
+
+    <p class="para" id="p-F"><span class="tag">F</span>In 2013, researchers at New York City's Department of Transportation studied seven stretches of road that had installed bike lanes or created pedestrian-friendly areas. The city analyzed the data for businesses along those routes and found that by the third year, sales grew faster on five of the streets than in the district overall, on average — up to five times faster, in fact.<span class="cn">2013 年纽约交通局研究 7 段路：到第三年，5 段销售增速超过全区平均，最高快 5 倍。</span></p>
+
+    <p class="para" id="p-G"><span class="tag">G</span>Beyond New York, <mark>a survey of research from 23 cities found that bike lanes and pedestrian-friendly design didn't hurt local retail and food stores.</mark> ("Fears of disastrous consequences for local businesses are unfounded," the researchers concluded.) More recent work has shown roughly the same.<span class="cn">23 个城市的研究综述：自行车道和步行友好设计并未损害本地零售与餐饮。</span></p>
+
+    <p class="para" id="p-H"><span class="tag">H</span>The truth is that in fairly dense areas, bikes are more efficient at moving people around. You might lose one car driver's business — but you gain shoppers who now can arrive more easily on bikes. "Cyclists and pedestrians are consumers too," notes Professor Susan Handy. Plus, <mark>streets redesigned for bikes and pedestrians tend to become more pleasant places to hang around</mark>, so "in a lot of cases, that's created much nicer environments that are really good for those businesses."<span class="cn">密集区骑车更高效；骑车人和行人也是消费者；为骑行步行重设的街道更宜人、更适合逗留。</span></p>
+
+    <p class="para" id="p-I"><span class="tag">I</span>Mom-and-pop shops are usually pretty quick at recognizing situations that will help their bottom lines. So why the blind spot here? Perhaps it's that attention focuses on horror stories — and some merchants do get hit when bike lanes come in.<span class="cn">夫妻店通常对利润信号很敏感；这里的盲点在于注意力被“恐怖故事”占据。</span></p>
+
+    <p class="para" id="p-J"><span class="tag">J</span>I spoke to Cindy Hughes, a hairdresser(理发师) in Cambridge, Massachusetts. <mark>She said business fell by at least 40 percent when the city removed nearby parking to put in a bike lane.</mark> The majority of her customers drive, with many coming from nearby towns. Only a very few have shifted to cycling, and even those almost certainly won't cycle in Boston's snowy winters. So while Hughes supports bike lanes — "cyclists deserve to be safe" — she sees the parking loss as an existential risk. <mark>"Look, 90 percent of my customers drive," she told me.</mark> "For our business, the bike lanes are way worse than Covid was."<span class="cn">理发师 Cindy Hughes：撤车位建车道后生意跌至少 40%，90% 顾客开车来，她把失去车位视为生存风险。</span></p>
+
+    <p class="para" id="p-K"><span class="tag">K</span><mark>For others, the pushback is cultural, says Henry Grabar, a writer for the Slate Magazine.</mark> Small business owners are frequently drivers who commute from other parts of the city by car, Grabar points out. They're also often longtime locals. "They tend to be people with deep roots in the city, who have hung around since before the neighborhood became what it is today," he adds. Driving around town in a car is so normal to them that cycling seems weird and unusual — despite its boost from Covid, when bike sales exploded by 75 percent.<span class="cn">Slate 撰稿人 Grabar：另一部分抵触是文化性的——小店主多是开车通勤、根深蒂固的老本地人。</span></p>
+
+    <p class="para" id="p-L"><span class="tag">L</span>Psychology beats all! Who knew, right? The fierce divide between store owners and bike-lane advocates seems similar to our larger culture wars over climate change. <mark>If we've learned anything about culture wars, it's that data isn't much good at changing minds.</mark><span class="cn">心理学战胜一切：围绕车道的分歧像文化战，而数据在改变人们想法上没什么用。</span></p>
+
+    <p class="para" id="p-M"><span class="tag">M</span>When Janette Sadik-Khan was the head of New York City's Transportation Department back in the early 2000s, she oversaw a rollout(推出) of bike lanes — and got angry blowback from residents and business owners who claimed there weren't enough cyclists to justify installing lanes. Now, she notes ironically, the lanes are so full of activity that opponents have turned to claiming the problem is the opposite: There are too many cyclists getting in the way of cars.<span class="cn">Sadik-Khan 回忆：早年反对者嫌骑车人太少，如今又改口嫌骑车人太多挡了汽车。</span></p>
+
+    <p class="para" id="p-N"><span class="tag">N</span>Maybe bike lanes will always be charged with emotion, until enough of the public is finally concerned about climate change — and it seems reckless(鲁莽的) to not have them.<span class="cn">也许车道永远带着情绪色彩，直到足够多公众真正担心气候变化——不建反而显得鲁莽。</span></p>
+
+    <p class="para" id="p-O"><span class="tag">O</span><mark>Crises, after all, have a way of opening people's eyes to possibilities.</mark> During Covid, restaurants and cafés lost so much business that cities nationwide began allowing them to build curbside seating areas where people could sit, safely, in the open air. It greatly reduced parking — but because, well, <mark>shop owners didn't see any way around it</mark>. Customers loved the outdoor seating so much that cities are making it permanent: A New York City study of several streets closed during Covid found storeowners making more than before, and diners enjoying the outdoor lifestyle. If data won't change minds, customers might.<span class="cn">危机让人看到可能性：疫情逼出路边户外座位，顾客喜欢，城市索性永久保留。</span></p>
+  </section>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>10 道真题 · 36–45</h2>
+    <div class="hint">点字母选择答案 → 点“提交答案”。提交后展开定位句、同义替换与陷阱，并高亮原文段落。</div>
+
+    <div id="questions"></div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+      <button class="btn ghost" id="reset">重新开始</button>
+    </div>
+
+    <div class="score" id="score"></div>
+
+    <details class="fp">
+      <summary>卡住了？点开看“段落指纹表”（15 段各一句）</summary>
+      <table>
+        <tr><th>段</th><th>指纹</th><th>段</th><th>指纹</th></tr>
+        <tr><td>A</td><td>116 车位被撤·商户抗议</td><td>I</td><td>夫妻店的盲点</td></tr>
+        <tr><td>B</td><td>记者索要销售数据</td><td>J</td><td>理发师·跌 40%·90% 开车</td></tr>
+        <tr><td>C</td><td>涨 12%·新店开张</td><td>K</td><td>Slate·文化性抵触</td></tr>
+        <tr><td>D</td><td>不信数据·撒大头钉</td><td>L</td><td>文化战·数据无用</td></tr>
+        <tr><td>E</td><td>数据渐多·提振经济</td><td>M</td><td>骑车人太少→太多</td></tr>
+        <tr><td>F</td><td>7 段路·最高快 5 倍</td><td>N</td><td>情绪化·气候变化</td></tr>
+        <tr><td>G</td><td>23 城综述·未受损</td><td>O</td><td>危机·路边座位</td></tr>
+        <tr><td>H</td><td>宜人·适合逗留</td><td colspan="3" class="fpnote">街道重设后更适合闲逛（pleasant / hang around）</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<!-- ================= 底部得分条 ================= -->
+<div class="bar">
+  <div class="bar-inner">
+    <span class="lbl" id="barText">已答 <b>0</b> / 10</span>
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <span class="lbl" id="barScore">得分 —</span>
+    <span class="goal">目标 8+</span>
+  </div>
+</div>
+
+<script>
+const LETTERS = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O"];
+
+const QUESTIONS = [
+  {
+    n: 36,
+    stem: "An increasing amount of data indicates that installing bike lanes raises local business revenues.",
+    answer: "E",
+    para: "p-E",
+    why: "<p><b>定位</b>：E 段 — “There's a rising amount of data showing that installing bike lanes and making streets more pedestrian-friendly boosts the economic fortunes of a place.”</p>" +
+         "<p><b>同义替换</b>：increasing ↔ rising；indicates ↔ showing；raises local business revenues ↔ boosts the economic fortunes of a place（具体“收入”→上位“经济运势”）。</p>" +
+         "<p><b>陷阱</b>：F 段（2013 年纽约 7 段路）和 G 段（23 城综述）都只是“某一次研究的结果”，撑不起题干“数据越来越多”的<b>趋势</b>义。看到 data，先分清是“趋势”还是“单次结论”。</p>"
+  },
+  {
+    n: 37,
+    stem: "According to a magazine writer, some small business owners' resistance to bike lanes arises from cultural factors.",
+    answer: "K",
+    para: "p-K",
+    why: "<p><b>定位</b>：K 段 — “For others, the pushback is cultural, says Henry Grabar, a writer for the Slate Magazine.”</p>" +
+         "<p><b>同义替换</b>：a magazine writer ↔ a writer for the Slate Magazine（人名→身份类指）；resistance ↔ pushback；arises from cultural factors ↔ is cultural。</p>" +
+         "<p><b>陷阱</b>：L 段通篇 culture wars，却没有“具名杂志撰稿人”这个来源；J 段是停车位带来的<b>经济</b>生存风险，与“文化”无关。题干里的 According to 是硬约束。</p>"
+  },
+  {
+    n: 38,
+    stem: "A stretch of Skillman Ave witnessed not only a big increase in sales but also the opening of new businesses.",
+    answer: "C",
+    para: "p-C",
+    why: "<p><b>定位</b>：C 段 — “In the year after the bike lanes arrived, businesses on Skillman saw sales rise by 12 percent … What's more, that section of road saw new businesses open, while Queens overall had a net loss.”</p>" +
+         "<p><b>同义替换</b>：witnessed ↔ saw；a big increase in sales ↔ sales rise by 12 percent；the opening of new businesses ↔ saw new businesses open。</p>" +
+         "<p><b>陷阱</b>：A 段是建成<b>前</b>的预言“would ruin …”，方向相反；D 段是建成<b>后</b>商户仍不承认。题干 not only … but also 要求“销售增长 + 新店开张”两件事同段出现，只有 C 段齐备。</p>"
+  },
+  {
+    n: 39,
+    stem: "When people have no way out in crises, they are more likely to embrace changes.",
+    answer: "O",
+    para: "p-O",
+    why: "<p><b>定位</b>：O 段 — “Crises, after all, have a way of opening people's eyes to possibilities.” + “shop owners didn't see any way around it”。</p>" +
+         "<p><b>同义替换</b>：have no way out ↔ didn't see any way around it；are more likely to embrace changes ↔ have a way of opening people's eyes to possibilities。</p>" +
+         "<p><b>陷阱</b>：N 段也谈“情绪/气候变化”，但落点是“不设车道显得鲁莽”，没有“危机倒逼改变”的语义；O 段后半的疫情户外座位只是例证，别被例子带偏。</p>"
+  },
+  {
+    n: 40,
+    stem: "According to one survey, city design with bike lanes and pedestrian space did not negatively impact local businesses.",
+    answer: "G",
+    para: "p-G",
+    why: "<p><b>定位</b>：G 段 — “a survey of research from 23 cities found that bike lanes and pedestrian-friendly design didn't hurt local retail and food stores.”</p>" +
+         "<p><b>同义替换</b>：one survey ↔ a survey of research from 23 cities；did not negatively impact ↔ didn't hurt；city design with bike lanes and pedestrian space ↔ bike lanes and pedestrian-friendly design。</p>" +
+         "<p><b>陷阱</b>：F 段是纽约<b>一个城市</b>的 7 段路，不是 23 城综述；E 段是“数据渐多”的总括。题干里的 one survey / 23 cities 是最硬的锚点。</p>"
+  },
+  {
+    n: 41,
+    stem: "Despite increased business activity on Skillman Ave, many store owners insisted the bike lanes were destroying their area.",
+    answer: "D",
+    para: "p-D",
+    why: "<p><b>定位</b>：D 段 — “Many still insisted the lanes were killing their part of the city.”</p>" +
+         "<p><b>同义替换</b>：despite increased business activity ↔ 与 C 段“sales rise by 12 percent、new businesses open”构成让步对照；destroying their area ↔ killing their part of the city。</p>" +
+         "<p><b>陷阱</b>：C 段是<b>客观数据</b>，D 段才是<b>商户态度</b>。题干 Despite 提示要找“事实向好、态度仍否定”的反差段；B 段只是记者求证的过程，没有态度。</p>"
+  },
+  {
+    n: 42,
+    stem: "In a war of culture, data does not help much in changing people's minds.",
+    answer: "L",
+    para: "p-L",
+    why: "<p><b>定位</b>：L 段 — “If we've learned anything about culture wars, it's that data isn't much good at changing minds.”</p>" +
+         "<p><b>同义替换</b>：in a war of culture ↔ culture wars；does not help much ↔ isn't much good；changing people's minds ↔ changing minds。</p>" +
+         "<p><b>陷阱</b>：K 段同样出现 cultural，但讲的是“抵触的<b>来源</b>”；L 段才落到“数据<b>改变不了</b>想法”。同词不同命题，必须看谓语落在哪。</p>"
+  },
+  {
+    n: 43,
+    stem: "A businesswoman said her business dropped sharply when parking space gave way to a bike lane, because most of her customers came by car.",
+    answer: "J",
+    para: "p-J",
+    why: "<p><b>定位</b>：J 段 — “She said business fell by at least 40 percent when the city removed nearby parking to put in a bike lane.” + “Look, 90 percent of my customers drive,” she told me.</p>" +
+         "<p><b>同义替换</b>：a businesswoman ↔ 理发师 Cindy Hughes；dropped sharply ↔ fell by at least 40 percent；parking space gave way to a bike lane ↔ removed nearby parking to put in a bike lane；most customers came by car ↔ 90 percent of my customers drive。</p>" +
+         "<p><b>陷阱</b>：K 段是“一般性归因”（小店主多为开车通勤者），既没有具体人物也没有百分比；题干 dropped sharply + because 要求“具体人物 + 因果数字”，只有 J 段。</p>"
+  },
+  {
+    n: 44,
+    stem: "Local business owners on Skillman Ave argued that their businesses would be ruined when parking spots were replaced by bike lanes.",
+    answer: "A",
+    para: "p-A",
+    why: "<p><b>定位</b>：A 段 — “Taking out those parking spots, as they argued at protests and in letters to the city council, would ruin stores and restaurants along Skillman.”</p>" +
+         "<p><b>同义替换</b>：argued ↔ as they argued at protests and in letters to the city council；parking spots were replaced by bike lanes ↔ taking out those parking spots（配合首句 putting bike lanes）；would be ruined ↔ would ruin stores and restaurants。</p>" +
+         "<p><b>陷阱</b>：D 段是车道建成<b>之后</b>的抱怨（were killing），A 段是建成<b>之前</b>的预言（would ruin）。题干 argued that … would be 是典型的事前判断，时态就是路标。</p>"
+  },
+  {
+    n: 45,
+    stem: "People may find it more pleasant to wander around streets redesigned for cycling and walking.",
+    answer: "H",
+    para: "p-H",
+    why: "<p><b>定位</b>：H 段 — “Plus, streets redesigned for bikes and pedestrians tend to become more pleasant places to hang around …”</p>" +
+         "<p><b>同义替换</b>：more pleasant to wander around ↔ more pleasant places to hang around；redesigned for cycling and walking ↔ redesigned for bikes and pedestrians。</p>" +
+         "<p><b>陷阱</b>：H 段前半的 “Cyclists and pedestrians are consumers too” 是<b>经济</b>论点，容易误配到第 40 题；本题落点在 Plus 之后那半句的“宜人、愿意逗留”。</p>"
+  }
+];
+
+const picked = {};
+const quizEl = document.getElementById("questions");
+let locked = false;
+
+function render(){
+  quizEl.innerHTML = QUESTIONS.map(q => `
+    <div class="q" data-n="${q.n}">
+      <div class="stem"><span class="num">${q.n}.</span>${q.stem}</div>
+      <div class="letters" data-n="${q.n}">
+        ${LETTERS.map(L => `<button type="button" data-l="${L}" data-n="${q.n}">${L}</button>`).join("")}
+      </div>
+      <div class="fb" id="fb-${q.n}"></div>
+    </div>
+  `).join("");
+}
+
+quizEl.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-l]");
+  if(!btn || locked || btn.disabled) return;
+  const n = btn.dataset.n, L = btn.dataset.l;
+  picked[n] = L;
+  quizEl.querySelectorAll(`.letters[data-n="${n}"] button`).forEach(b => b.classList.remove("sel"));
+  btn.classList.add("sel");
+  updateProgress();
+});
+
+function updateProgress(){
+  const answered = QUESTIONS.filter(q => picked[q.n]).length;
+  document.getElementById("barText").innerHTML = `已答 <b>${answered}</b> / ${QUESTIONS.length}`;
+  const fill = document.getElementById("fill");
+  fill.className = "fill";
+  fill.style.width = (answered / QUESTIONS.length * 100) + "%";
+}
+
+document.getElementById("submit").addEventListener("click", () => {
+  let correct = 0, firstWrong = null;
+  clearHighlights();
+  locked = true;
+
+  QUESTIONS.forEach(q => {
+    const area = quizEl.querySelector(`.letters[data-n="${q.n}"]`);
+    const fb = document.getElementById("fb-" + q.n);
+    const chosen = picked[q.n];
+    const isRight = chosen === q.answer;
+
+    area.querySelectorAll("button").forEach(b => {
+      b.disabled = true;
+      b.classList.remove("sel");
+      if(b.dataset.l === q.answer) b.classList.add("answer");
+      if(b.dataset.l === chosen && !isRight) b.classList.add("wrong");
+      if(b.dataset.l === q.answer && isRight) b.classList.add("right");
+    });
+
+    if(isRight){
+      correct++;
+      fb.className = "fb ok show";
+      fb.innerHTML = `<span class="badge">正确</span>答案 ${q.answer}` + q.why;
+    }else{
+      if(!firstWrong) firstWrong = q.para;
+      fb.className = "fb no show";
+      fb.innerHTML = `<span class="badge">${chosen ? "错误" : "未作答"}</span>正确答案 ${q.answer}` + q.why;
+    }
+    document.getElementById(q.para).classList.add("hit");
+  });
+
+  const s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = `本轮得分：<b>${correct} / ${QUESTIONS.length}</b>　` +
+    (correct === 10 ? "全对。定位 + 同义替换这套流程已经跑通，可以换篇提速了。" :
+     correct >= 8 ? "不错。重点回看错题的“时态/来源”类陷阱：事前 would、事后 were，以及 According to 的出处。" :
+     correct >= 6 ? "及格线附近。把错题按“定位句在哪段、换成什么词”各写一遍，比重复刷题有用。" :
+     "先别急。用右侧指纹表，按“先强锚点（数字/人名/专有名词）、后排除”的顺序重做一遍。");
+
+  const fill = document.getElementById("fill");
+  fill.className = "fill " + (correct >= 8 ? "ok" : correct >= 6 ? "warn" : "bad");
+  fill.style.width = (correct / QUESTIONS.length * 100) + "%";
+  document.getElementById("barText").innerHTML = `已答 <b>${Object.keys(picked).length}</b> / ${QUESTIONS.length}`;
+  document.getElementById("barScore").innerHTML = `得分 <b>${correct} / ${QUESTIONS.length}</b>`;
+
+  const target = firstWrong ? document.getElementById(firstWrong) : s;
+  target.scrollIntoView({behavior:"smooth", block:"center"});
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  Object.keys(picked).forEach(k => delete picked[k]);
+  locked = false;
+  clearHighlights();
+  render();
+  document.getElementById("score").className = "score";
+  document.getElementById("score").innerHTML = "";
+  document.getElementById("barScore").innerHTML = "得分 —";
+  updateProgress();
+  const fill = document.getElementById("fill");
+  fill.className = "fill";
+  sec = 0;
+  timerEl.textContent = "00:00";
+  timerEl.classList.remove("warn","over");
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+function clearHighlights(){
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+}
+
+/* ---------- 定位句显示开关 ---------- */
+document.getElementById("toggleMark").addEventListener("click", function(){
+  const hidden = document.body.classList.toggle("hide-marks");
+  this.textContent = hidden ? "显示定位句" : "隐藏定位句";
+});
+
+/* ---------- 计时器 ---------- */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+function tick(){
+  sec++;
+  const m = String(Math.floor(sec/60)).padStart(2,"0");
+  const s = String(sec%60).padStart(2,"0");
+  timerEl.textContent = `${m}:${s}`;
+  if(sec >= 900){
+    timerEl.classList.remove("warn");
+    timerEl.classList.add("over");
+  }else if(sec >= 720){
+    timerEl.classList.add("warn");
+  }
+}
+setInterval(tick, 1000);
+
+render();
+updateProgress();
+</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
