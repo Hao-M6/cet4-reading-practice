@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2025 年 6 月第一套 · Section C 仔细阅读｜四级阅读练习</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75;
+    padding-bottom:66px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+  }
+  .timer.warn{background:#3a1d1f; color:#ffb4ab}
+  .timer.over{animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .wrap{max-width:1020px; margin:0 auto; padding:20px}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+    margin-bottom:20px;
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{margin:0 0 14px; padding-left:34px; position:relative; transition:background .25s}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:var(--markline); color:#ffe9a8}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  .gloss{color:#c9973a; font-size:12px; line-height:1.6; white-space:normal}
+  .gloss::before{content:"（"; }
+  .gloss::after{content:"）"; }
+  /* ---------- 题目 ---------- */
+  .qblock{margin-top:8px; border-top:1px solid var(--line); padding-top:6px}
+  .qblock h3{font-size:14px; margin:14px 0 2px; color:#a9c1ff}
+  .q{padding:14px 0; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px; font-family:ui-monospace,Consolas,monospace}
+  .q .stem{font-size:14.5px; line-height:1.6; margin-bottom:8px}
+  .opts{display:grid; gap:6px}
+  .opts button{
+    display:flex; gap:9px; align-items:flex-start; text-align:left;
+    padding:8px 11px; border:1px solid var(--line); background:#141a21; border-radius:8px;
+    cursor:pointer; font-family:inherit; font-size:13.5px; line-height:1.55; color:#c3cad6;
+    transition:.12s;
+  }
+  .opts button b{color:#a9c1ff; font-family:ui-monospace,Consolas,monospace; font-size:13px; min-width:14px}
+  .opts button:hover{border-color:var(--accent); background:#1b2634; color:#e3e7ee}
+  .opts button.sel{border-color:var(--accent); background:#1b2634; color:#fff}
+  .opts button.right{background:#16301f; border-color:var(--ok); color:#e6ffee}
+  .opts button.right b{color:#7ee2a8}
+  .opts button.wrong{background:#3a1d1f; border-color:var(--bad); color:#ffe3e0}
+  .opts button.wrong b{color:#ffb4ab}
+  .opts button.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .fb .why b{color:#a9c1ff}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  /* ---------- 定位表 ---------- */
+  details.fp{margin-top:6px; border:1px solid var(--line); border-radius:10px; padding:12px 16px; background:#141a21}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left; vertical-align:top}
+  details.fp th{background:#1a1f27; font-weight:600}
+  /* ---------- 固定得分条 ---------- */
+  .bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:80;
+    background:rgba(18,22,28,.96); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line); padding:8px 18px;
+    display:flex; gap:16px; align-items:center; font-size:13.5px;
+  }
+  .bar b{color:#7cc4e8; font-variant-numeric:tabular-nums}
+  .bar .sp{flex:1}
+  .bar .btn{padding:6px 14px; font-size:13px}
+  /* ---------- 页脚 ---------- */
+  footer{max-width:1020px; margin:6px auto 26px; padding:0 20px; color:#7b8494; font-size:12px; line-height:1.9}
+  footer a{color:#8f9aab}
+  #blindBtn{bottom:80px!important}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 6 月 · 第一套 · Section C 仔细阅读
+    <small>Passage One（46–50）· Passage Two（51–55）· 建议 20 分钟</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="wrap">
+
+  <!-- ================= Passage One ================= -->
+  <section class="card passage" id="p1">
+    <h2>Passage One</h2>
+    <div class="meta">Questions 46 to 50 are based on the following passage. · 9 段 · 343 词 ｜ 出处标题：Why discomfort could save pandas from extinction（theweek.com, 2021-09-21）</div>
+
+    <p class="para" id="c1-p1"><span class="tag">P1</span>New research suggests that pandas may be at risk of dying out because they are too comfortable. Experts say too much happiness can stop the bears from searching for new mates.</p>
+
+    <p class="para" id="c1-p2"><span class="tag">P2</span>Environmentalists have long believed that building roads or homes near the bears may threaten their survival by "reducing or fragmenting their natural: habitats", The Times reported. But <mark>the new research suggests that a "modest degree of discomfort and fragmentation" may actually help preserve panda populations</mark>.<span class="gloss">第 47 题：新研究反拨「修路盖房必伤熊猫」的旧观点</span></p>
+
+    <p class="para" id="c1-p3"><span class="tag">P3</span>The research was conducted by scientists from Michigan State University. <mark>It concluded that pandas fail to wander off in search of new mates if they find their habitat too comfortable, resulting in a lack of vital genetic diversity</mark>.<span class="gloss">第 46、47 题：舒适 → 不外迁找配偶 → 遗传多样性不足</span></p>
+
+    <p class="para" id="c1-p4"><span class="tag">P4</span>For their study—outlined in a paper in the journal Conservation Biology—the team looked at genetic diversity and spread among a Chinese panda population. The ideal level of perfectly livable habitat was found to be only 80% of an area, with the remainder either too harsh or too affected by human activity.</p>
+
+    <p class="para" id="c1-p5"><span class="tag">P5</span><mark>The experts concluded that pandas should ideally "be happy enough to thrive, but not so content that they don't want to move around and find new mates"</mark>.<span class="gloss">第 48 题：专家结论 —— 舒适度与「外出找配偶」直接挂钩</span></p>
+
+    <p class="para" id="c1-p6"><span class="tag">P6</span><mark>Their conclusions about what The Guardian described as this "sweet spot" are in line with the so-called Goldilocks principle: that there can be just the right amount of something</mark>. The concept has been applied to a wide range of disciplines, from developmental psychology to economics and engineering.<span class="gloss">第 49 题：熊猫研究的「甜点位」与 Goldilocks 原则一致</span></p>
+
+    <p class="para" id="c1-p7"><span class="tag">P7</span>Claudio Sillero, a professor of conservation biology at Oxford University, told the newspaper that <mark>the new findings could have implications beyond panda conservation</mark>.<span class="gloss">第 50 题：意义超出熊猫保护本身</span></p>
+
+    <p class="para" id="c1-p8"><span class="tag">P8</span>"Most large animals that eat meat live in increasingly fragmented landscapes," said Sillero, who was not involved in the research. <mark>"It may well be that the messy nature of their relationship with human efforts induces more animals to scatter or travel further, and might result in greater genetic connectivity and enhanced population persistence."</mark><span class="gloss">第 50 题：大型食肉动物同样受益于这种「乱中有序」的关系</span></p>
+
+    <p class="para" id="c1-p9"><span class="tag">P9</span>The most recent count of pandas found that there were more than 1,800 left in the wild, putting them on the list of vulnerable, but not endangered, species.</p>
+
+    <div class="qblock">
+      <h3>题目 46–50</h3>
+      <div id="questions1"></div>
+    </div>
+  </section>
+
+  <!-- ================= Passage Two ================= -->
+  <section class="card passage" id="p2">
+    <h2>Passage Two</h2>
+    <div class="meta">Questions 51 to 55 are based on the following passage. · 5 段 · 345 词 ｜ 主题：Angela Duckworth《Grit》· 卷面未给标题</div>
+
+    <p class="para" id="c2-p1"><span class="tag">P1</span><mark>With those born with natural talents, it feels as if they excel without really trying</mark>. But what about those of us who don't have a natural talent? We've been told all our lives that if you work hard, you too can succeed. But with the release of Angela Duckworth's Grit, we are given a new key to success.<span class="gloss">第 51 题：有天赋的人「看上去」不费力就出众（it feels as if）</span></p>
+
+    <p class="para" id="c2-p2"><span class="tag">P2</span><mark>"As much as talent counts, effort counts twice," says Duckworth in Grit</mark>. She introduces a new concept that talent may be overrated, and if you want real success, what you need is grit, the perfect combination of passion and persistence. Even if you have natural talent, it's nothing without grit.<span class="gloss">第 52 题：才能重要，但努力的分量是它的两倍</span></p>
+
+    <p class="para" id="c2-p3"><span class="tag">P3</span>Duckworth says grit is the difference between success and failure. A person who has grit is more likely to succeed than a person who does not. <mark>When we think about attaining success—whether it's landing that job or learning that new skill—our thoughts are immediately burdened by all the things we must first learn</mark>. If you want that new job, you have to learn the job skills, then the interview skills, then the dress part—<mark>and you must be perfect at all of them</mark>. Grit is different because it tells us that perfection isn't the goal.<span class="gloss">第 53 题：想成功的人先被「样样要做到完美」压住</span></p>
+
+    <p class="para" id="c2-p4"><span class="tag">P4</span>Grit lifts the unreasonable expectations off our shoulders. Grit tells us that the door is open wider than we first thought possible. <mark>Grit allows us to redefine our goals</mark>. Think about it: what's something you've always wanted to do, but gave up because you "don't have the skills for it"? What's something you love but aren't good at?<span class="gloss">第 54 题：坚毅让人重新定义目标</span></p>
+
+    <p class="para" id="c2-p5"><span class="tag">P5</span><mark>The real workings of grit are to have sustainable passion and continue to try</mark>. Effort means more than your natural ability. Even if you haven't mastered a skill, grit tells you that you can still succeed if you can transform your passion into action. In a way, Duckworth is giving new hope to people who have shut the doors on their dreams. She is saying it is possible that you can accomplish anything. <mark>If at first you fail, then try one more time with grit</mark>.<span class="gloss">第 55 题：全书信息 —— 失败也要「带着坚毅再试一次」</span></p>
+
+    <div class="qblock">
+      <h3>题目 51–55</h3>
+      <div id="questions2"></div>
+    </div>
+  </section>
+
+  <details class="fp">
+    <summary>题目定位表（10 行）· 点开对照</summary>
+    <table>
+      <tr><th>题号</th><th>段落</th><th>定位关键词</th></tr>
+      <tr><td>46</td><td>P1</td><td>new research / at risk of dying out / too comfortable</td></tr>
+      <tr><td>47</td><td>P2 + P3</td><td>Environmentalists have long believed / modest degree of discomfort / Michigan State University</td></tr>
+      <tr><td>48</td><td>P5</td><td>The experts concluded / happy enough to thrive / find new mates</td></tr>
+      <tr><td>49</td><td>P6</td><td>sweet spot / in line with / Goldilocks principle</td></tr>
+      <tr><td>50</td><td>P7–P8</td><td>Sillero / implications beyond panda conservation / large animals that eat meat</td></tr>
+      <tr><td>51</td><td>P1</td><td>born with natural talents / it feels as if / excel without really trying</td></tr>
+      <tr><td>52</td><td>P2</td><td>effort counts twice / talent may be overrated</td></tr>
+      <tr><td>53</td><td>P3</td><td>attaining success / immediately burdened / perfect at all of them</td></tr>
+      <tr><td>54</td><td>P4</td><td>Grit allows us to redefine our goals</td></tr>
+      <tr><td>55</td><td>P5</td><td>If at first you fail / try one more time with grit</td></tr>
+    </table>
+  </details>
+
+  <div class="actions">
+    <button class="btn primary" id="submit">提交答案</button>
+    <button class="btn ghost" id="reset">重新开始</button>
+  </div>
+
+  <div class="score" id="score"></div>
+
+</div>
+
+<footer>
+  <p>
+    数据来源：<a href="https://english-exam.lazynote.cn/cet4/paper/2025-06-1/part3-section-c-1/" target="_blank" rel="noopener">懒笔记 · Section C (1) 试卷排版</a>
+    · <a href="https://english-exam.lazynote.cn/cet4/paper/2025-06-1/part3-section-c-2/" target="_blank" rel="noopener">Section C (2) 试卷排版</a>
+    ｜ 答案核对：<a href="https://mtoutiao.xdf.cn/cet4-6/202606/15227396.html" target="_blank" rel="noopener">新东方网 · 2025年6月四级阅读全题型答案</a>
+    · <a href="https://www.xdf.cn/512/202506/14533131.html" target="_blank" rel="noopener">新东方 · 阅读试题及答案（三套全）</a>
+  </p>
+  <p>存疑项：Passage One 第 2 段原文在懒笔记两个页面均作 "reducing or fragmenting their natural: habitats"（natural 与 habitats 之间多一个冒号），本页照录未改，疑为原站录入时的多出字符；其余正文、选项、题干两源一致（46–50 DACBC、51–55 ACBDB）。</p>
+</footer>
+
+<div class="bar">
+  <span>已答 <b id="done">0</b>/10</span>
+  <span>得分 <b id="sc">—</b></span>
+  <span class="sp"></span>
+  <span style="color:#8f9aab">目标 20 分钟</span>
+  <button class="btn ghost" id="reset2">重新开始</button>
+</div>
+
+<script>
+const L4 = ["A", "B", "C", "D"];
+
+const QUESTIONS = [
+  {
+    n: 46, para: "c1-p1",
+    stem: "What do we learn from new research about pandas?",
+    opts: {
+      A: "They are losing habitat due to the building of roads and houses.",
+      B: "They have stopped seeking new mates for reproduction.",
+      C: "They may not adapt to the fragmentation of their habitat.",
+      D: "They may cease to exist as a result of enjoying too good a life."
+    },
+    answer: "D",
+    why: {
+      loc: "P1 第 1 句：New research suggests that pandas may be at risk of dying out because they are too comfortable.",
+      syn: "may be at risk of dying out ≈ may cease to exist；because they are too comfortable ≈ as a result of enjoying too good a life。两层语义（太舒适 → 可能灭绝）都对位。",
+      trap: "A 张冠李戴：修路盖房是 P2 里环保人士「long believed」的旧观点；B 过度推断：原文有 if they find their habitat too comfortable 的条件，不能删条件说成全体熊猫已停止寻偶；C 与原文相反：新研究说适度破碎化反而 helps preserve。"
+    }
+  },
+  {
+    n: 47, para: "c1-p3",
+    stem: "What can we conclude from the new research by scientists at Michigan State University?",
+    opts: {
+      A: "Environmentalists' long-time belief regarding panda conservation may be misleading.",
+      B: "Housing development near pandas' homes may threaten their survival.",
+      C: "Pandas' natural habitats are becoming less suitable for reproduction.",
+      D: "The increased panda population is attributed to the fragmentation of their habitat."
+    },
+    answer: "A",
+    why: {
+      loc: "P2 第 2 句 But the new research suggests that a \"modest degree of discomfort and fragmentation\" may actually help preserve panda populations.；P3 第 1 句点明研究来自 Michigan State University。",
+      syn: "Environmentalists have long believed ... may threaten their survival ≈ Environmentalists' long-time belief；But ... may actually help preserve ≈ may be misleading。一「旧」一「新」的反向对照就是本题的推论。",
+      trap: "B 张冠李戴：几乎是 P2 旧观点原句的转述，不是新研究的结论；C 无中生有：原文只说舒适让熊猫不愿外出寻偶，没说栖息地「不适合繁殖」；D 与原文相反：碎片化有助于「保住」种群，不等于「使熊猫数量增加」，且因果倒置。"
+    }
+  },
+  {
+    n: 48, para: "c1-p5",
+    stem: "What is the experts' conclusion regarding pandas?",
+    opts: {
+      A: "It is urgent to provide an ideal habitat for them to thrive.",
+      B: "It is very important to preserve their genetic diversity.",
+      C: "Their chances of finding new mates have a lot to do with their habitat.",
+      D: "Their environment for survival has been continuously worsening."
+    },
+    answer: "C",
+    why: {
+      loc: "P5：The experts concluded that pandas should ideally \"be happy enough to thrive, but not so content that they don't want to move around and find new mates\".",
+      syn: "be happy enough ... but not so content that they don't want to move around and find new mates ≈ Their chances of finding new mates have a lot to do with their habitat（舒适度 = 栖息地状态）。",
+      trap: "A 无中生有：urgent 是原文没有的紧迫态度，ideal habitat 也把「恰到好处的舒适度」过度简化；B 张冠李戴：遗传多样性是 P3 的机制说明，不是 P5 的专家结论；D 无中生有：原文没有「持续恶化」的判断。"
+    }
+  },
+  {
+    n: 49, para: "c1-p6",
+    stem: "What can we infer from the passage about the Goldilocks principle?",
+    opts: {
+      A: "It needs to be confirmed by more studies on pandas.",
+      B: "It applies to the preservation of pandas too.",
+      C: "It has implications for future panda research.",
+      D: "It can be used to locate the right spot for pandas."
+    },
+    answer: "B",
+    why: {
+      loc: "P6 第 1 句：Their conclusions ... are in line with the so-called Goldilocks principle: that there can be just the right amount of something.；紧接一句 The concept has been applied to a wide range of disciplines ...。",
+      syn: "are in line with ≈ applies to；Their conclusions about ... this \"sweet spot\" ≈ the preservation of pandas。原则「同样适用于」熊猫保护，是 in line with 的一步推论。",
+      trap: "A 无中生有：原文说该原则已被广泛应用，不存在「还需证实」；C 与原文相反：是熊猫研究印证了原则，不是原则给熊猫研究「启示」，方向被写反；D 偷换概念：sweet spot 是「恰到好处的舒适度」，不是可以「定位」的地理位置。"
+    }
+  },
+  {
+    n: 50, para: "c1-p7",
+    stem: "What can the new findings do according to Professor Sillero?",
+    opts: {
+      A: "Help discover new ways for the conservation of pandas.",
+      B: "Help remove pandas from the list of endangered species.",
+      C: "Shed light on the conservation of most large meat-eating animals.",
+      D: "Show the complexity of interactions between humans and animals."
+    },
+    answer: "C",
+    why: {
+      loc: "P7：the new findings could have implications beyond panda conservation；P8：\"Most large animals that eat meat live in increasingly fragmented landscapes,\" said Sillero ...",
+      syn: "implications beyond panda conservation ≈ Shed light on the conservation of ... animals；Most large animals that eat meat ≈ most large meat-eating animals。",
+      trap: "A 以偏概全：Sillero 的话恰恰在说「超出熊猫保护」，选项又把范围拉回熊猫；B 张冠李戴：vulnerable, but not endangered 是 P9 的现状数据，不是新发现的功效；D 偷换概念：原文的 messy nature 是「促成扩散、增强遗传连通」的积极机制，不是中性「展示复杂性」。"
+    }
+  },
+  {
+    n: 51, para: "c2-p1",
+    stem: "What does the passage say about people born with natural talents?",
+    opts: {
+      A: "They seem to outdo others without hard work.",
+      B: "They appear to know all the secrets to success.",
+      C: "They feel it only too logical to succeed.",
+      D: "They are bound to excel effortlessly."
+    },
+    answer: "A",
+    why: {
+      loc: "P1 第 1 句：With those born with natural talents, it feels as if they excel without really trying.",
+      syn: "it feels as if ≈ They seem to；excel without really trying ≈ outdo others without hard work。「看似 + 不费力 + 胜过别人」三个语义点一一落位。",
+      trap: "B 无中生有：原文没有 know all the secrets；C 偷换概念：原文是旁观者眼中「显得轻松」，选项改成他们自己「觉得理所当然」；D 过度推断：原文用 it feels as if（似乎），选项用 are bound to（注定）把可能性写成必然。"
+    }
+  },
+  {
+    n: 52, para: "c2-p2",
+    stem: "What does Duckworth say about talent?",
+    opts: {
+      A: "It is a new concept much too overrated.",
+      B: "It proves necessary for big achievements.",
+      C: "It plays a lesser role in one's success.",
+      D: "It is a guarantee for real success in life."
+    },
+    answer: "C",
+    why: {
+      loc: "P2 第 1 句：\"As much as talent counts, effort counts twice,\" says Duckworth in Grit.；同段 talent may be overrated。",
+      syn: "effort counts twice + talent may be overrated ≈ It plays a lesser role in one's success（才能的分量小于努力）。",
+      trap: "A 张冠李戴：She introduces a new concept 指的是 grit，不是 talent；B 与原文相反：原文说 Even if you have natural talent, it's nothing without grit；D 与原文相反：真正的关键是 grit，talent 绝不是 guarantee。"
+    }
+  },
+  {
+    n: 53, para: "c2-p3",
+    stem: "What does the passage say about people thinking of attaining success?",
+    opts: {
+      A: "They are puzzled how to present their best to the employer.",
+      B: "They are burdened by their expectation of perfection.",
+      C: "They will try hard to land a job that fits their skills best.",
+      D: "They will find themselves lacking in all the skills they need."
+    },
+    answer: "B",
+    why: {
+      loc: "P3 第 3 句：our thoughts are immediately burdened by all the things we must first learn.；第 4 句末 and you must be perfect at all of them。",
+      syn: "are immediately burdened ≈ burdened；must first learn 一堆东西 + must be perfect at all of them ≈ expectation of perfection。",
+      trap: "A 以偏概全：把求职例子里的 interview / dress 细节放大成全部困扰，还把 burdened 换成 puzzled；C 与原文相反：原文是焦虑负担，选项写成积极行动；D 过度推断：all 是绝对化词，原文只说「要学的东西多」，没说「所有技能都缺」。"
+    }
+  },
+  {
+    n: 54, para: "c2-p4",
+    stem: "How does the author think grit can be helpful to us?",
+    opts: {
+      A: "It allows us to know what we are good at.",
+      B: "It opens our eyes to new opportunities.",
+      C: "It focuses our attention on what we do.",
+      D: "It lets us reconsider the goals to achieve."
+    },
+    answer: "D",
+    why: {
+      loc: "P4 第 3 句：Grit allows us to redefine our goals.（前两句是 lifts the unreasonable expectations / the door is open wider）",
+      syn: "allows us to redefine ≈ lets us reconsider；our goals ≈ the goals to achieve。三处一一对应。",
+      trap: "A 无中生有：原文没说 grit 让人「知道自己擅长什么」，反而举「因为没技能而放弃」的例子；B 过度推断：the door is open wider 是「可能性变大」，选项加上了「睁开眼看见新机会」这个额外动作；C 无中生有：lifts expectations off our shoulders 是卸担，不是聚焦注意力。"
+    }
+  },
+  {
+    n: 55, para: "c2-p5",
+    stem: "What message does Duckworth try to convey in her book Grit?",
+    opts: {
+      A: "We should perfect ourselves to ensure success.",
+      B: "We should stay persistent even in face of failures.",
+      C: "We can never master a skill without constant practice.",
+      D: "We can never expect to reach our goals without passion."
+    },
+    answer: "B",
+    why: {
+      loc: "P5 末句：If at first you fail, then try one more time with grit.；P5 首句：The real workings of grit are to have sustainable passion and continue to try.；P2：grit, the perfect combination of passion and persistence.",
+      syn: "If at first you fail, then try one more time ≈ stay persistent even in face of failures；sustainable passion / continue to try ≈ stay persistent。",
+      trap: "A 与原文相反：全篇反复说 perfection isn't the goal；C 以偏概全 + 绝对化：原文恰恰说 Even if you haven't mastered a skill ... you can still succeed，且 never 把话说死；D 以偏概全 + 绝对化：grit = passion + persistence，选项单独把 passion 抽出来当唯一条件。"
+    }
+  }
+];
+
+const picked = {};
+const DONE_IDS = [];
+
+function renderInto(containerId, list) {
+  const box = document.getElementById(containerId);
+  box.innerHTML = list.map(q => `
+    <div class="q" data-n="${q.n}">
+      <div class="stem"><span class="num">${q.n}.</span>${q.stem}</div>
+      <div class="opts" data-n="${q.n}">
+        ${L4.map(L => `<button type="button" data-l="${L}" data-n="${q.n}"><b>${L}</b><span>${q.opts[L]}</span></button>`).join("")}
+      </div>
+      <div class="fb" id="fb-${q.n}"></div>
+    </div>`).join("");
+}
+
+renderInto("questions1", QUESTIONS.filter(q => q.n < 51));
+renderInto("questions2", QUESTIONS.filter(q => q.n >= 51));
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".opts button[data-l]");
+  if (!btn || btn.disabled) return;
+  const n = btn.dataset.n, L = btn.dataset.l;
+  picked[n] = L;
+  const box = btn.closest(".opts");
+  box.querySelectorAll("button").forEach(b => b.classList.remove("sel"));
+  btn.classList.add("sel");
+  updateDone();
+});
+
+function updateDone() {
+  let d = 0;
+  QUESTIONS.forEach(q => { if (picked[q.n]) d++; });
+  document.getElementById("done").textContent = d;
+}
+
+document.getElementById("submit").addEventListener("click", () => {
+  let correct = 0;
+  const wrongParas = [];
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+
+  QUESTIONS.forEach(q => {
+    const box = document.querySelector('.opts[data-n="' + q.n + '"]');
+    const fb = document.getElementById("fb-" + q.n);
+    const chosen = picked[q.n];
+    const right = chosen === q.answer;
+    if (!right && wrongParas.indexOf(q.para) === -1) wrongParas.push(q.para);
+
+    box.querySelectorAll("button").forEach(b => {
+      b.disabled = true;
+      b.classList.remove("sel");
+      if (b.dataset.l === q.answer) b.classList.add("answer");
+      if (right && b.dataset.l === q.answer) b.classList.add("right");
+      if (!right && b.dataset.l === chosen) b.classList.add("wrong");
+    });
+
+    fb.className = "fb show " + (right ? "ok" : "no");
+    fb.innerHTML = '<span class="badge">' + (right ? "正确" : (chosen ? "错误" : "未作答")) + "</span>答案 " + q.answer +
+      '<div class="why">' +
+      "<p><b>① 定位</b>：" + q.why.loc + "</p>" +
+      "<p><b>② 同义替换</b>：" + q.why.syn + "</p>" +
+      "<p><b>③ 陷阱</b>：" + q.why.trap + "</p>" +
+      "</div>";
+    if (right) correct++;
+  });
+
+  const s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = "本轮得分：<b>" + correct + " / 10</b>　" +
+    (correct === 10 ? "全对！定位句 → 同义替换 → 排除陷阱，这套流程已经跑通。" :
+     correct >= 8 ? "8 题以上是考场目标。回看错题的「陷阱」一行，认出偷换概念 / 绝对化。" :
+     correct >= 5 ? "及格线上下。先把定位表用熟：题干关键词 → 段落，再读定位句。" :
+     "先别刷题量：按「题干圈词 → 定位段 → 只读定位句」重来一遍，一题 2 分钟。");
+  document.getElementById("sc").textContent = correct + "/10";
+
+  if (wrongParas.length) {
+    wrongParas.forEach(id => document.getElementById(id).classList.add("hit"));
+    const p = document.getElementById(wrongParas[0]);
+    setTimeout(() => p.scrollIntoView({behavior: "smooth", block: "center"}), 60);
+  } else {
+    s.scrollIntoView({behavior: "smooth", block: "center"});
+  }
+});
+
+function resetAll() {
+  Object.keys(picked).forEach(k => delete picked[k]);
+  document.querySelectorAll(".opts button").forEach(b => {
+    b.disabled = false;
+    b.classList.remove("sel", "right", "wrong", "answer");
+  });
+  document.querySelectorAll(".fb").forEach(f => { f.className = "fb"; f.innerHTML = ""; });
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+  document.getElementById("score").className = "score";
+  document.getElementById("sc").textContent = "—";
+  updateDone();
+}
+
+document.getElementById("reset").addEventListener("click", resetAll);
+document.getElementById("reset2").addEventListener("click", resetAll);
+
+/* ---------- 计时器：目标 20 分钟（1200s），18 分钟转红提示 ---------- */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  timerEl.textContent = m + ":" + s;
+  if (sec >= 1200) timerEl.classList.add("over");
+  else if (sec >= 1080) timerEl.classList.add("warn");
+}, 1000);
+
+updateDone();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important;padding:0!important}html.blind .gloss{display:none!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:18px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
