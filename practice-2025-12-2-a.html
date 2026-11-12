@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级选词填空 · Section A 练习｜2025年12月第二套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; padding-bottom:66px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+  }
+  .timer.warn{background:#3a2c14; color:#ffd28a}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 470px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{margin:0 0 14px; padding-left:34px; position:relative}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  /* ---------- 空格 ---------- */
+  .blank{display:inline-block; white-space:nowrap; margin:0 3px; vertical-align:baseline}
+  .blank .no{
+    display:inline-block; font-size:11px; font-weight:700; line-height:1.45;
+    color:#a9c1ff; background:#1c2740; border:1px solid #2f4570; border-radius:4px;
+    padding:0 3px; margin-right:4px; font-family:ui-monospace,Consolas,monospace;
+    vertical-align:2px;
+  }
+  .blank .ln{
+    display:inline-block; min-width:74px; text-align:center; vertical-align:-2px;
+    border-bottom:1.6px solid #5c6b83; color:#8f9aab; font-weight:700;
+    font-family:ui-monospace,Consolas,monospace; line-height:1.35;
+  }
+  .blank.filled .ln{color:var(--accent); border-bottom-color:var(--accent)}
+  .blank.right .ln{color:var(--ok); border-bottom-color:var(--ok)}
+  .blank.wrong .ln{color:var(--bad); border-bottom-color:var(--bad)}
+  .blank.focus .ln{border-bottom-color:var(--markline); box-shadow:0 2px 0 -1px var(--markline)}
+  /* ---------- 词库 ---------- */
+  .bank{display:flex; flex-wrap:wrap; gap:7px; margin:4px 0 6px}
+  .chip{
+    display:inline-flex; gap:6px; align-items:baseline;
+    background:#1a1f27; border:1px solid var(--line); border-radius:8px;
+    padding:3px 9px; font-size:13px;
+  }
+  .chip b{color:#a9c1ff; font-family:ui-monospace,Consolas,monospace; font-size:12px}
+  .chip em{font-style:normal; color:var(--muted); font-size:11.5px}
+  .chip.used{border-color:var(--accent); background:#1b2634}
+  .chip.used b{color:#fff}
+  .bank-hint{color:var(--muted); font-size:12px; margin:0 0 12px}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 96px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz h2.sub{margin-top:16px; padding-top:14px; border-top:1px solid var(--line)}
+  .qrow{padding:8px 0; border-top:1px solid var(--line)}
+  .qrow:first-of-type{border-top:none; padding-top:2px}
+  .qhead{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+  .qhead .num{font-weight:700; color:var(--accent); font-family:ui-monospace,Consolas,monospace}
+  select{
+    background:#171c23; color:var(--ink); border:1px solid var(--line);
+    border-radius:7px; padding:6px 9px; font-size:13.5px; font-family:inherit;
+    min-width:196px; cursor:pointer;
+  }
+  select:focus{outline:2px solid #2f4570; outline-offset:1px}
+  select:disabled{opacity:1; cursor:default}
+  option{background:#171c23; color:var(--ink)}
+  .qrow.ok select{border-color:#2f6b41; color:#7ee2a8}
+  .qrow.no select{border-color:#6b2f2f; color:#ffb4ab}
+  .key{
+    display:none; font-size:12px; color:#7ee2a8;
+    border:1px dashed #2f6b41; border-radius:6px; padding:0 7px; white-space:nowrap;
+  }
+  .qrow.no .key{display:inline-block}
+  .fb{margin-top:6px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .fb .why b{color:#a9c1ff}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:9px 17px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  /* ---------- 固定得分条 ---------- */
+  .bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(18,22,28,.96); border-top:1px solid var(--line);
+    padding:9px 18px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+    font-size:13.5px;
+  }
+  .bar .grow{flex:1}
+  .bar .stat{color:var(--muted)}
+  .bar .stat b{color:var(--ink); font-variant-numeric:tabular-nums}
+  .bar .stat b.big{font-size:19px; color:#7cc4e8}
+  /* ---------- 来源 ---------- */
+  .src{
+    max-width:1240px; margin:0 auto 24px; padding:14px 20px;
+    color:var(--muted); font-size:12.5px; line-height:1.9;
+  }
+  .src b{color:var(--ink)}
+  .src a{color:var(--accent); text-decoration:none}
+  .src a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 12 月 · 第二套 · Section A 选词填空
+    <small>Some music inspires you to move your feet… · 26–35 题 · 5 段 244 词 · 目标 8 分钟</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：原文 ================= -->
+  <section class="card passage" id="passage">
+    <h2>Part Ⅲ Section A · 选词填空（26–35）</h2>
+    <div class="meta">
+      Directions: In this section, there is a passage with ten blanks. You are required to select one word for each blank from a list of choices given in a word bank following the passage. Read the passage through carefully before making your choices. Each choice in the bank is identified by a letter. Please mark the corresponding letter for each item on <b>Answer Sheet 2</b> with a single line through the centre. You may not use any of the words in the bank more than once.
+    </div>
+
+    <p class="para" id="p1"><span class="tag">1</span>Some music inspires you to move your feet, some inspires you to get out there and change the world. In any case, it's <span class="blank" id="b26"><span class="no">26</span><span class="ln" id="ln26"></span></span> to say that music moves people in special ways.</p>
+
+    <p class="para" id="p2"><span class="tag">2</span>If you're especially into a piece of music, your brain does something called Autonomous Sensory Meridian Response (ASMR), which <span class="blank" id="b27"><span class="no">27</span><span class="ln" id="ln27"></span></span> to you like a sting in your brain.</p>
+
+    <p class="para" id="p3"><span class="tag">3</span>It turns out that ASMR is pretty special. According to a <span class="blank" id="b28"><span class="no">28</span><span class="ln" id="ln28"></span></span> published study in The Journal of Prevention of Alzheimer's Disease, the part of your brain responsible for ASMR doesn't get lost to Alzheimer's. Alzheimer's <span class="blank" id="b29"><span class="no">29</span><span class="ln" id="ln29"></span></span> to put people into layers of confusion, and the study confirms that music can sometimes <span class="blank" id="b30"><span class="no">30</span><span class="ln" id="ln30"></span></span> lift people out of the Alzheimer's haze and bring them back to (at least a likeness of) normality … if only for a short while. ASMR is powerful stuff!</p>
+
+    <p class="para" id="p4"><span class="tag">4</span>This phenomenon has been <span class="blank" id="b31"><span class="no">31</span><span class="ln" id="ln31"></span></span> several times but rarely studied properly. One of the most famous examples of this is the story of 92-year-old Henry Dryer, who comes out of dementia(痴呆) while listening to songs from his youth.</p>
+
+    <p class="para" id="p5"><span class="tag">5</span>Jeff Anderson, associate professor in Radiology at the University of Utah and <span class="blank" id="b32"><span class="no">32</span><span class="ln" id="ln32"></span></span> author on the study, says "In our society, the diagnoses of dementia are <span class="blank" id="b33"><span class="no">33</span><span class="ln" id="ln33"></span></span> resources to the maximum. No one says playing music will be a cure for Alzheimer's disease, but it might make the symptoms more <span class="blank" id="b34"><span class="no">34</span><span class="ln" id="ln34"></span></span> , decrease the cost of care and improve a patient's <span class="blank" id="b35"><span class="no">35</span><span class="ln" id="ln35"></span></span> of life."</p>
+  </section>
+
+  <!-- ================= 右：词库 + 作答 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>词库 A–O（15 选 10，每个词最多用一次）</h2>
+    <div class="bank" id="bank">
+      <span class="chip" data-l="A"><b>A</b> actually <em>adv. 实际上、真的</em></span>
+      <span class="chip" data-l="B"><b>B</b> consequently <em>adv. 因此、结果</em></span>
+      <span class="chip" data-l="C"><b>C</b> contributing <em>v.-ing/adj. 做贡献的；共同署名的</em></span>
+      <span class="chip" data-l="D"><b>D</b> fair <em>adj. 公平的；合情合理的</em></span>
+      <span class="chip" data-l="E"><b>E</b> feels <em>v. 感觉、给人……的感觉</em></span>
+      <span class="chip" data-l="F"><b>F</b> manageable <em>adj. 可控制的、易处理的</em></span>
+      <span class="chip" data-l="G"><b>G</b> mends <em>v. 修补、修复</em></span>
+      <span class="chip" data-l="H"><b>H</b> observed <em>v. 观察到（过去式/过去分词）</em></span>
+      <span class="chip" data-l="I"><b>I</b> phase <em>n. 阶段、时期</em></span>
+      <span class="chip" data-l="J"><b>J</b> plotting <em>v.-ing 密谋；绘制</em></span>
+      <span class="chip" data-l="K"><b>K</b> quality <em>n. 质量、品质</em></span>
+      <span class="chip" data-l="L"><b>L</b> recently <em>adv. 最近、近来</em></span>
+      <span class="chip" data-l="M"><b>M</b> taxing <em>v. 使……负担沉重；adj. 繁重的</em></span>
+      <span class="chip" data-l="N"><b>N</b> tends <em>v. 倾向于、往往（接 to do）</em></span>
+      <span class="chip" data-l="O"><b>O</b> yielded <em>v. 产生、屈服</em></span>
+    </div>
+    <div class="bank-hint">释义为辅助记忆，与懒笔记逐空解析一致；空格填字母，不需要变形。</div>
+
+    <h2 class="sub">作答区（26–35）</h2>
+
+    <div class="qrow" id="row-26">
+      <div class="qhead">
+        <span class="num">26.</span>
+        <select id="s26" data-n="26" aria-label="第 26 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-26"></span>
+      </div>
+      <div class="fb" id="fb-26"></div>
+    </div>
+
+    <div class="qrow" id="row-27">
+      <div class="qhead">
+        <span class="num">27.</span>
+        <select id="s27" data-n="27" aria-label="第 27 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-27"></span>
+      </div>
+      <div class="fb" id="fb-27"></div>
+    </div>
+
+    <div class="qrow" id="row-28">
+      <div class="qhead">
+        <span class="num">28.</span>
+        <select id="s28" data-n="28" aria-label="第 28 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-28"></span>
+      </div>
+      <div class="fb" id="fb-28"></div>
+    </div>
+
+    <div class="qrow" id="row-29">
+      <div class="qhead">
+        <span class="num">29.</span>
+        <select id="s29" data-n="29" aria-label="第 29 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-29"></span>
+      </div>
+      <div class="fb" id="fb-29"></div>
+    </div>
+
+    <div class="qrow" id="row-30">
+      <div class="qhead">
+        <span class="num">30.</span>
+        <select id="s30" data-n="30" aria-label="第 30 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-30"></span>
+      </div>
+      <div class="fb" id="fb-30"></div>
+    </div>
+
+    <div class="qrow" id="row-31">
+      <div class="qhead">
+        <span class="num">31.</span>
+        <select id="s31" data-n="31" aria-label="第 31 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-31"></span>
+      </div>
+      <div class="fb" id="fb-31"></div>
+    </div>
+
+    <div class="qrow" id="row-32">
+      <div class="qhead">
+        <span class="num">32.</span>
+        <select id="s32" data-n="32" aria-label="第 32 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-32"></span>
+      </div>
+      <div class="fb" id="fb-32"></div>
+    </div>
+
+    <div class="qrow" id="row-33">
+      <div class="qhead">
+        <span class="num">33.</span>
+        <select id="s33" data-n="33" aria-label="第 33 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-33"></span>
+      </div>
+      <div class="fb" id="fb-33"></div>
+    </div>
+
+    <div class="qrow" id="row-34">
+      <div class="qhead">
+        <span class="num">34.</span>
+        <select id="s34" data-n="34" aria-label="第 34 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-34"></span>
+      </div>
+      <div class="fb" id="fb-34"></div>
+    </div>
+
+    <div class="qrow" id="row-35">
+      <div class="qhead">
+        <span class="num">35.</span>
+        <select id="s35" data-n="35" aria-label="第 35 题">
+          <option value="A">A. actually</option>
+          <option value="B">B. consequently</option>
+          <option value="C">C. contributing</option>
+          <option value="D">D. fair</option>
+          <option value="E">E. feels</option>
+          <option value="F">F. manageable</option>
+          <option value="G">G. mends</option>
+          <option value="H">H. observed</option>
+          <option value="I">I. phase</option>
+          <option value="J">J. plotting</option>
+          <option value="K">K. quality</option>
+          <option value="L">L. recently</option>
+          <option value="M">M. taxing</option>
+          <option value="N">N. tends</option>
+          <option value="O">O. yielded</option>
+        </select>
+        <span class="key" id="key-35"></span>
+      </div>
+      <div class="fb" id="fb-35"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit" type="button">提交答案</button>
+    </div>
+  </section>
+
+</div>
+
+<footer class="src">
+  <b>来源与答案核对</b>（26–35 答案串：<b>D E L N A H C M F K</b>）<br>
+  · 真题原文（懒笔记 · 试卷排版）：<a href="https://english-exam.lazynote.cn/cet4/paper/2025-12-2/part3-section-a/" target="_blank" rel="noopener">english-exam.lazynote.cn/cet4/paper/2025-12-2/part3-section-a/</a><br>
+  · 逐空解析与词库词性释义（懒笔记 · 题目解析）：<a href="https://english-exam.lazynote.cn/cet4/sections/2025-12-2/part3-section-a/" target="_blank" rel="noopener">english-exam.lazynote.cn/cet4/sections/2025-12-2/part3-section-a/</a><br>
+  · 新东方四六级（第二套阅读答案）：<a href="https://cet4-6.xdf.cn/202512/15047564.html" target="_blank" rel="noopener">cet4-6.xdf.cn/202512/15047564.html</a><br>
+  · 新东方四六级（天津版，答案相同）：<a href="https://mtoutiao.xdf.cn/www/94/202602/15098312.html" target="_blank" rel="noopener">mtoutiao.xdf.cn/www/94/202602/15098312.html</a><br>
+  · 说明：懒笔记与新东方两处 26–35 答案逐空一致（26 D / 27 E / 28 L / 29 N / 30 A / 31 H / 32 C / 33 M / 34 F / 35 K），无存疑项。原文按懒笔记「试卷排版」页逐字录入，5 段、244 词，未改写、未补句。
+</footer>
+
+<div class="bar" id="bar">
+  <span class="stat">已答 <b id="answered">0</b>/10</span>
+  <span class="stat">得分 <b class="big" id="scoreNum">0</b>/10</span>
+  <span class="grow"></span>
+  <span class="stat" id="tip">目标 8 分钟 · 超时变红</span>
+  <button class="btn ghost" id="reset" type="button">重新开始</button>
+</div>
+
+<script>
+/* ============ 数据 ============ */
+const BANK = [
+  {L:"A", w:"actually",    pos:"adv.",      cn:"实际上、真的"},
+  {L:"B", w:"consequently",pos:"adv.",      cn:"因此、结果"},
+  {L:"C", w:"contributing",pos:"v.-ing/adj.",cn:"做贡献的；共同署名的"},
+  {L:"D", w:"fair",        pos:"adj.",      cn:"公平的；合情合理的"},
+  {L:"E", w:"feels",       pos:"v.",        cn:"感觉、给人……的感觉"},
+  {L:"F", w:"manageable",  pos:"adj.",      cn:"可控制的、易处理的"},
+  {L:"G", w:"mends",       pos:"v.",        cn:"修补、修复"},
+  {L:"H", w:"observed",    pos:"v.",        cn:"观察到（过去式/过去分词）"},
+  {L:"I", w:"phase",       pos:"n.",        cn:"阶段、时期"},
+  {L:"J", w:"plotting",    pos:"v.-ing",    cn:"密谋；绘制"},
+  {L:"K", w:"quality",     pos:"n.",        cn:"质量、品质"},
+  {L:"L", w:"recently",    pos:"adv.",      cn:"最近、近来"},
+  {L:"M", w:"taxing",      pos:"v./adj.",   cn:"使……负担沉重；繁重的"},
+  {L:"N", w:"tends",       pos:"v.",        cn:"倾向于、往往（接 to do）"},
+  {L:"O", w:"yielded",     pos:"v.",        cn:"产生、屈服"}
+];
+
+/* 26–35 答案（A–O 字母） */
+const ans = ["D","E","L","N","A","H","C","M","F","K"];
+
+const WORD = {};
+BANK.forEach(b => { WORD[b.L] = b.w; });
+
+const WHY = {
+  26: "<p><b>① 词性/形式</b>：it's ___ to say that… 是「形式主语 it + be + 形容词 + to do」结构，空处需形容词作表语，且要能修饰 to say 这件事。</p>" +
+      "<p><b>② 语义与搭配</b>：It's fair to say (that)… 是高频习语，意为「可以说、……的说法不为过」，正好承接前文「有些音乐让你想跳舞、有些激励你改变世界」的铺陈，作总结。</p>" +
+      "<p><b>③ 干扰项</b>：manageable 修饰任务、症状（make symptoms more manageable），说「一句话可控」语义荒谬；taxing 意为「费神的」，多修饰工作，且开篇即泼冷水与全文语气相反。</p>",
+  27: "<p><b>① 词性/形式</b>：which 引导非限制性定语从句，从句缺谓语；先行词 ASMR 为单数概念，需第三人称单数动词。</p>" +
+      "<p><b>② 语义与搭配</b>：feel (to sb.) like… 表示「（对某人来说）感觉像……」，后接 like a sting in your brain，搭配完全吻合。</p>" +
+      "<p><b>③ 干扰项</b>：mends 意为「修补」，不能接 like a sting；tends 后面要接 to do，而这里接的是介词 to you + like，结构对不上。</p>",
+  28: "<p><b>① 词性/形式</b>：a ___ published study 中，冠词与过去分词之间只能填副词，用来修饰 published。</p>" +
+      "<p><b>② 语义与搭配</b>：a recently published study「最近发表的一项研究」是学术引用的固定说法，与 According to 引出文献的语境一致。</p>" +
+      "<p><b>③ 干扰项</b>：actually 表「实际上」，英语里没有「实际上发表的研究」这种搭配；consequently 表因果，本句只是引出依据，前文并无因果链。</p>",
+  29: "<p><b>① 词性/形式</b>：主语 Alzheimer's 后缺谓语，需第三人称单数动词，且后面跟着 to put，必须是能接 to do 的动词。</p>" +
+      "<p><b>② 语义与搭配</b>：tend to do 表示「往往、倾向于」，符合「该病往往使人陷入层层困惑」的医学陈述口吻。</p>" +
+      "<p><b>③ 干扰项</b>：mends 不接 to do，且语义相反（修补 vs 让人困惑）；yielded 是过去式，与全段一般现在时的时态不符，语义也接不上。</p>",
+  30: "<p><b>① 词性/形式</b>：can sometimes ___ lift 是「情态动词 + 副词 + 实义动词」，空处填副词。</p>" +
+      "<p><b>② 语义与搭配</b>：actually「确实、真的」呼应前半句 the study confirms，强调音乐有时<b>真的</b>能把人从混沌中拉出来。</p>" +
+      "<p><b>③ 干扰项</b>：consequently 需要明确的因果链，本句是「证实某结果」，不是「因此导致」；recently 表时间，与 confirms 的语气无关。</p>",
+  31: "<p><b>① 词性/形式</b>：has been ___ several times 是现在完成时的被动语态，空处填过去分词。</p>" +
+      "<p><b>② 语义与搭配</b>：observe「观察到」，与 but rarely studied properly 构成「被观察到多次、却很少被认真研究」的并列转折，两个动作同属科研行为。</p>" +
+      "<p><b>③ 干扰项</b>：yielded 作「产生」时用法是 A yielded B，说「现象被产生」逻辑荒诞；plotting 是 -ing 形式，不能用于 has been 之后表被动。</p>",
+  32: "<p><b>① 词性/形式</b>：and ___ author on the study 中，空处在名词 author 前作定语，需形容词或分词。</p>" +
+      "<p><b>② 语义与搭配</b>：contributing author 是学术署名的固定说法「参与撰写的作者」，与前面的 associate professor 并列，介绍此人的双重身份。</p>" +
+      "<p><b>③ 干扰项</b>：plotting 意为「密谋/绘图」，修饰 author 语义荒诞；taxing 意为「繁重的」，只能修饰任务，不能形容人的身份。</p>",
+  33: "<p><b>① 词性/形式</b>：the diagnoses … are ___ resources to the maximum，are 后需能带宾语 resources 的 -ing 形式，构成进行体「正在……资源」。</p>" +
+      "<p><b>② 语义与搭配</b>：tax 作动词意为「使负担沉重、消耗」，tax resources to the maximum 即「把资源消耗到极限」，是医疗/财政语境的标准表达。</p>" +
+      "<p><b>③ 干扰项</b>：plotting 不能与 resources 搭配（plot 是「策划/绘制」），且与 to the maximum 的「榨干」意味完全不合。</p>",
+  34: "<p><b>① 词性/形式</b>：make the symptoms more ___ 是「make + 宾语 + 形容词（比较级）」，空处填形容词。</p>" +
+      "<p><b>② 语义与搭配</b>：manageable「可控制的」，make symptoms more manageable「让症状更可控」是医学语境标配，与后面 decrease the cost、improve the quality 三件好事并列。</p>" +
+      "<p><b>③ 干扰项</b>：fair 表「公平」，症状谈不上公平；taxing 修饰症状会变成「症状令人疲惫」，与并列的三项好处逻辑相反。</p>",
+  35: "<p><b>① 词性/形式</b>：a patient's ___ of life 是「所有格 + 名词 + of 短语」，空处填名词。</p>" +
+      "<p><b>② 语义与搭配</b>：quality of life「生活质量」是固定搭配，improve a patient's quality of life 与 decrease the cost of care 并列。</p>" +
+      "<p><b>③ 干扰项</b>：phase of life 指「人生的某个阶段」，阶段可以「进入」，却不能被 improve；这里要的是可被提升的「品质」。</p>"
+};
+
+/* ============ 状态 ============ */
+const picks = {};          // 26..35 -> "A".."O"
+let graded = false;
+
+/* ============ 渲染辅助 ============ */
+function paintBlank(n){
+  const L = picks[n] || "";
+  const ln = document.getElementById("ln" + n);
+  const box = document.getElementById("b" + n);
+  if(ln) ln.textContent = L;
+  if(box){
+    box.classList.toggle("filled", !!L);
+    if(!graded){ box.classList.remove("right","wrong"); }
+  }
+}
+
+function refreshChips(){
+  const used = {};
+  Object.keys(picks).forEach(k => { if(picks[k]) used[picks[k]] = true; });
+  const chips = document.querySelectorAll(".chip");
+  for(let i = 0; i < chips.length; i++){
+    const L = chips[i].getAttribute("data-l");
+    if(used[L]) chips[i].classList.add("used");
+    else chips[i].classList.remove("used");
+  }
+}
+
+function answeredCount(){
+  let c = 0;
+  for(let n = 26; n <= 35; n++){ if(picks[n]) c++; }
+  return c;
+}
+
+function refreshBar(){
+  const a = document.getElementById("answered");
+  if(a) a.textContent = String(answeredCount());
+}
+
+/* ============ 交互 ============ */
+function pick(n, L){
+  if(graded) return;
+  if(L) picks[n] = L; else delete picks[n];
+  paintBlank(n);
+  refreshChips();
+  refreshBar();
+}
+
+function grade(){
+  let correct = 0;
+  for(let n = 26; n <= 35; n++){
+    const right = ans[n - 26];
+    const chosen = picks[n] || "";
+    const ok = chosen === right;
+    if(ok) correct++;
+
+    const row = document.getElementById("row-" + n);
+    const fb  = document.getElementById("fb-" + n);
+    const key = document.getElementById("key-" + n);
+    const box = document.getElementById("b" + n);
+
+    if(row){ row.classList.remove("ok","no"); row.classList.add(ok ? "ok" : "no"); }
+    if(key){ key.textContent = "正确答案 " + right + ") " + WORD[right]; }
+
+    if(box){
+      box.classList.remove("filled","right","wrong");
+      if(ok) box.classList.add("filled","right");
+      else if(chosen) box.classList.add("filled","wrong");
+    }
+
+    if(fb){
+      fb.className = "fb show " + (ok ? "ok" : "no");
+      const badge = ok ? "正确" : (chosen ? "错误" : "未作答");
+      fb.innerHTML = '<span class="badge">' + badge + '</span>答案 ' + right + ') ' + WORD[right] +
+                     '<div class="why">' + WHY[n] + '</div>';
+    }
+
+    const sel = document.getElementById("s" + n);
+    if(sel) sel.disabled = true;
+  }
+
+  graded = true;
+
+  const sc = document.getElementById("scoreNum");
+  if(sc) sc.textContent = String(correct);
+  refreshBar();
+
+  const tip = document.getElementById("tip");
+  if(tip){
+    tip.textContent = correct === 10 ? "全对！选词填空满分。" :
+                      correct >= 8 ? "稳定发挥，考场目标就是 8 分以上。" :
+                      correct >= 6 ? "及格线附近，重点回看错空的词性槽。" :
+                      "先把 15 个词按词性分组，再逐空代入。";
+  }
+
+  // 滚动到第一个做错/未答的空
+  let firstBad = null;
+  for(let n = 26; n <= 35; n++){ if(picks[n] !== ans[n-26]){ firstBad = n; break; } }
+  const target = firstBad ? document.getElementById("row-" + firstBad) : document.getElementById("quiz");
+  if(target && target.scrollIntoView) target.scrollIntoView({behavior:"smooth", block:"center"});
+
+  return correct;
+}
+
+function reset(){
+  graded = false;
+  for(let n = 26; n <= 35; n++){
+    delete picks[n];
+    const s = document.getElementById("s" + n);
+    if(s){ s.disabled = false; s.value = ""; s.selectedIndex = -1; }
+    const row = document.getElementById("row-" + n);
+    if(row) row.classList.remove("ok","no");
+    const key = document.getElementById("key-" + n);
+    if(key) key.textContent = "";
+    const fb = document.getElementById("fb-" + n);
+    if(fb){ fb.className = "fb"; fb.innerHTML = ""; }
+    const box = document.getElementById("b" + n);
+    if(box) box.classList.remove("filled","right","wrong");
+    const ln = document.getElementById("ln" + n);
+    if(ln) ln.textContent = "";
+  }
+  refreshChips();
+  refreshBar();
+  const sc = document.getElementById("scoreNum");
+  if(sc) sc.textContent = "0";
+  const tip = document.getElementById("tip");
+  if(tip) tip.textContent = "目标 8 分钟 · 超时变红";
+  sec = 0;
+  if(timerEl){ timerEl.textContent = "00:00"; timerEl.className = "timer"; }
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+/* ============ 绑定 ============ */
+for(let n = 26; n <= 35; n++){
+  const s = document.getElementById("s" + n);
+  if(s){
+    s.value = "";
+    s.selectedIndex = -1;
+    s.addEventListener("change", function(){ pick(n, this.value); });
+  }
+}
+document.getElementById("submit").addEventListener("click", grade);
+document.getElementById("reset").addEventListener("click", reset);
+
+/* ============ 计时器：6 分钟转黄，8 分钟变红 ============ */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(function(){
+  sec++;
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  timerEl.textContent = m + ":" + s;
+  if(sec >= 480) timerEl.className = "timer over";
+  else if(sec >= 360) timerEl.className = "timer warn";
+}, 1000);
+
+refreshBar();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .blank .ln{border-bottom-color:#5c6b83!important;color:#8f9aab!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:66px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏已填字母</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示已填字母':'🙈 隐藏已填字母';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+.bar{background:#12161c}
+</style>
+</body>
+</html>
