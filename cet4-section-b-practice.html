@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级长篇阅读 · 信息匹配练习｜2025年6月第三套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+  }
+  .timer.warn{background:#3a1d1f; color:#ffb4ab}
+  .timer.over{animation:pulse 1s infinite}
+  .back{
+    text-decoration:none; font-size:13px; font-weight:600; color:var(--accent);
+    padding:5px 10px; border-radius:7px; background:#1c2740; white-space:nowrap;
+  }
+  .back:hover{background:#25324d}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 460px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{margin:0 0 14px; padding-left:34px; position:relative; transition:background .25s}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{display:block; color:var(--muted); font-size:12.5px; margin-top:4px}
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:var(--markline); color:#ffe9a8}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 90px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .q{padding:14px 0; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none; padding-top:4px}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px}
+  .q .stem{font-size:14px; line-height:1.6}
+  .letters{display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-top:9px}
+  .letters button{
+    height:32px; border:1px solid var(--line); background:#171c23; border-radius:7px;
+    cursor:pointer; font-weight:600; font-size:13px; font-family:ui-monospace,Consolas,monospace;
+    color:#c3cad6; transition:.12s;
+  }
+  .letters button:hover{border-color:var(--accent); color:var(--accent); background:#1b2634}
+  .letters button.sel{background:var(--accent); border-color:var(--accent); color:#fff}
+  .letters button.right{background:var(--ok); border-color:var(--ok); color:#fff}
+  .letters button.wrong{background:var(--bad); border-color:var(--bad); color:#fff}
+  .letters button.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  /* ---------- 指纹表 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    2025 年 6 月 · 第三套 · 长篇阅读（信息匹配）
+    <small>Phantom Traffic Jams（14 段 A–N）· 36–45 题</small>
+  </h1>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：文章 ================= -->
+  <section class="card passage" id="passage">
+    <h2>"Phantom" Traffic Jams Are Real—And Scientists Know How to Stop Them</h2>
+    <div class="meta">
+      Directions: Each statement contains information given in one of the paragraphs.
+      Identify the paragraph from which the information is derived. 段落字母标在每段左侧。
+    </div>
+
+    <p class="para" id="p-A"><span class="tag">A</span>Traffic jams are a common problem of most big cities, either in developed or in developing countries, but one kind of traffic jams in particular can be especially frustrating. These are generally known as "phantom" traffic jams, in which dense traffic crawls to a halt for no apparent reason at all.<span class="cn">幽灵堵车：密集车流毫无明显原因地慢下来直至停止。</span></p>
+
+    <p class="para" id="p-B"><span class="tag">B</span>"When caught in such a traffic jam, it is common for drivers to <mark>assume that there must be an accident, or construction or something</mark>," said Massachusetts Institute of Technology (MIT) computer science professor Berthold Horn. "And then you drive and drive and drive… and there isn't anything there."<span class="cn">司机普遍以为前方出了事故或在施工，结果什么都没有。</span></p>
+
+    <p class="para" id="p-C"><span class="tag">C</span>The exact cause of these phantom traffic jams has long remained <mark>a mystery. But now, new research has found the cause</mark> and researchers may have come up with a solution for this frustrating traffic pattern: maintaining equal spacing between cars on the road, rather than driving so closely behind another vehicle that a collision is likely if that vehicle brakes suddenly.<span class="cn">成因长期是谜，新研究找到了原因，并给出解法：保持等距。</span></p>
+
+    <p class="para" id="p-D"><span class="tag">D</span>Horn said phantom traffic jams are an emergent property of the flow of vehicles down a highway. A phantom jam begins when a car in dense traffic slows down even slightly, which causes the car behind that vehicle to slow even more—and the <mark>slowing action spreads backward through the lane of traffic like a wave</mark>, getting worse the farther it spreads. Eventually, the cars far behind are forced to stop completely or risk hitting the slower vehicles ahead—and so the traffic grinds to a halt over nothing, Horn said.<span class="cn">一辆车轻微减速，减速像波一样向后传递，越传越糟。</span></p>
+
+    <p class="para" id="p-E"><span class="tag">E</span>Horn has been working on the problem of phantom traffic jams for years, and he has come up with a solution: By splitting the difference between the cars in front and the cars behind, the spacing of cars in a stream of traffic can act as a damper on phantom traffic jams. That is, it can prevent the slow-down effect from being amplified by the cars that follow behind, he said. In essence, <mark>each driver would constantly make adjustments to keep their car roughly halfway between the car in front and the car behind</mark>.<span class="cn">解法：司机不断调整，让车大致保持在前后车正中间。</span></p>
+
+    <p class="para" id="p-F"><span class="tag">F</span>Horn calls this method of vehicle spacing bilateral control, and he said <mark>it could be achieved with relatively simple modifications to the adaptive cruise control that many new cars already have</mark>. Adaptive cruise control is a driver assistance technology that sets a maximum speed for vehicles and automatically slows the speed of the car when traffic is sensed in front of the vehicle. The technology is also known as autonomous cruise control. Such modifications, Horn said, could help fight phantom jams within a few years, maybe decades before an alternative solution, such as networked self-driving cars, becomes a reality on the roads.<span class="cn">命名为"双边控制"；对新车已有的自适应巡航做简单改装即可实现。</span></p>
+
+    <p class="para" id="p-G"><span class="tag">G</span>Traffic jams are caused by a number of factors, such as roads that are poorly designed or over-capacity, localized factors like city traffic-lighting patterns, and events like accidents and construction. But phantom traffic jams can make all those problems worse, Horn said. And the researchers in the new study have calculated that <mark>solving phantom jams could save at least some of the estimated $121 billion per year</mark> that traffic jams are estimated to cost the U.S. economy, Horn told Live Science.<span class="cn">堵车每年给美国经济造成约 1210 亿美元损失，解决幽灵堵车可省下其中一部分。</span></p>
+
+    <p class="para" id="p-H"><span class="tag">H</span>New research by Horn and MIT postdoctoral associate Liang Wang, published in the journal IEEE Transactions on Intelligent Transportation Systems, shows how bilateral control can fight the problem. The researchers made computer models of real-world traffic conditions, showing how a typical U.S. freeway could benefit from cars using bilateral control. That would be in place when human drivers fail to slow down, thus avoiding tailgating the car in front, Horn said. "Under reasonable conditions today, you might get 1,800 cars per lane per hour throughput," he added. "<mark>But with bilateral control, you could almost double that.</mark>"<span class="cn">计算机模型显示：每车道每小时约 1800 辆，用双边控制几乎翻倍。</span></p>
+
+    <p class="para" id="p-I"><span class="tag">I</span>The main alternative to increasing traffic throughput per lane has been to build more lanes and more highways, and putting in new roads is very expensive, he said. "If we can increase the throughput on major highways, even if it's only by 50 percent, that would be a big deal," Horn said.<span class="cn">替代方案是修路，但很贵；即使只提升 50% 也是大事。</span></p>
+
+    <p class="para" id="p-J"><span class="tag">J</span>With the help of engineering students at high schools in Maine, Horn and Wang have also built a robot simulation that shows how bilateral control can suppress phantom traffic jams. Increasing the spacing of vehicles dampens the effect of slowdowns by cars in front of a given car, so that the slowing is not worsened until it becomes a phantom jam, the researchers said.<span class="cn">用机器人模拟演示双边控制如何抑制幽灵堵车。</span></p>
+
+    <p class="para" id="p-K"><span class="tag">K</span>A video from the project shows a train of autonomous robots running along a track without bilateral control; they eventually back up in phantom jams. But when the robots are switched over to bilateral control (by flashing the lights in the room), each autonomous robot tries to keep itself halfway between the robot in front and the one behind; the phantom jams disappear as a result, Horn said.<span class="cn">视频对比：关闭双边控制会堵，开启后堵车消失。</span></p>
+
+    <p class="para" id="p-L"><span class="tag">L</span>Since starting his research on phantom traffic jams, Horn has learned that <mark>schools of fish and flocks of birds and bats use similar spacing strategies</mark> to avoid hitting each other while swimming or flying in densely packed groups. In particular, studies of millions of bats emerging at dusk from caves in Southeast Asia showed that each bat used a form of bilateral control to reduce the likelihood of collisions with other bats in the densely packed swarm, Horn said.<span class="cn">鱼群、鸟群、蝙蝠群用类似的间距策略避免碰撞。</span></p>
+
+    <p class="para" id="p-M"><span class="tag">M</span>Unlike bats, birds and fish, however, humans have difficulty judging distances behind them. To address that weakness, Horn is now working with the car company Toyota to enable a form of bilateral control via modifications to existing adaptive cruise control systems, which use forward-facing sensors to judge the distance to the vehicle ahead. <mark>The bilateral control approach would include adding rear-facing sensors to determine the distance to the vehicle following a car.</mark><span class="cn">人类难判断后方距离，所以要在原有前向传感器之外，加装后向传感器。</span></p>
+
+    <p class="para" id="p-N"><span class="tag">N</span>But until those systems become standard, <mark>human drivers can help reduce phantom traffic jams simply by not following the car in front so closely</mark>. As Horn argues, "There's absolutely no advantage of tailgating the car in front of you."<span class="cn">系统普及前，司机只要不紧跟前车就能减少幽灵堵车。</span></p>
+  </section>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>10 道真题（36–45）</h2>
+    <div class="hint">点字母选择答案 → 点"提交答案"。答完会自动判分、展开解析并高亮原文定位句。</div>
+
+    <div id="questions"></div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+      <button class="btn ghost" id="reset">重新开始</button>
+    </div>
+
+    <div class="score" id="score"></div>
+
+    <details class="fp">
+      <summary>卡住了？点开看"段落指纹表"（做题时的核心工具）</summary>
+      <table>
+        <tr><th>段</th><th>指纹</th><th>段</th><th>指纹</th></tr>
+        <tr><td>A</td><td>幽灵堵车定义</td><td>H</td><td>通行量翻倍</td></tr>
+        <tr><td>B</td><td>司机瞎猜事故</td><td>I</td><td>修路太贵</td></tr>
+        <tr><td>C</td><td>谜题已解</td><td>J</td><td>机器人模拟</td></tr>
+        <tr><td>D</td><td>波浪式蔓延</td><td>K</td><td>视频演示</td></tr>
+        <tr><td>E</td><td>居中·不断调整</td><td>L</td><td>鱼鸟蝙蝠</td></tr>
+        <tr><td>F</td><td>命名·简单改装</td><td>M</td><td>前后传感器</td></tr>
+        <tr><td>G</td><td>1210 亿美元</td><td>N</td><td>别紧跟车</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<script>
+const LETTERS = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N"];
+
+const QUESTIONS = [
+  {
+    n: 36,
+    stem: "The age-long mystery has now been resolved as to how phantom traffic jams are caused.",
+    answer: "C",
+    para: "p-C",
+    why: "<p><b>定位</b>：C 段 — \"The exact cause ... has long remained a mystery. But now, new research has found the cause\"</p>" +
+         "<p><b>同义替换</b>：age-long ≈ long remained；resolved ≈ found the cause</p>" +
+         "<p><b>要点</b>：题干几乎全是抽象词，别死抠字面，靠“谜题已解”这个<b>语义</b>去找段落。</p>"
+  },
+  {
+    n: 37,
+    stem: "It is possible to nearly double the hourly throughput per lane by adopting bilateral control.",
+    answer: "H",
+    para: "p-H",
+    why: "<p><b>定位</b>：H 段 — \"1,800 cars per lane per hour throughput ... with bilateral control, you could almost double that\"</p>" +
+         "<p><b>同义替换</b>：nearly ≈ almost</p>" +
+         "<p><b>陷阱</b>：I 段也有 throughput（\"even if it's only by 50 percent\"），但 50% ≠ 翻倍，且 I 段讲的是<b>修路</b>不是双边控制。看到原词必须核对程度和主体。</p>"
+  },
+  {
+    n: 40,
+    stem: "Horn said with some simple modifications to the existing equipment in new vehicles, their spacing bilateral control could be accomplished.",
+    answer: "F",
+    para: "p-F",
+    why: "<p><b>定位</b>：F 段 — \"it could be achieved with relatively simple modifications to the adaptive cruise control that many new cars already have\"</p>" +
+         "<p><b>同义替换</b>：the existing equipment in new vehicles ≈ the adaptive cruise control that many new cars already have（上位概括）</p>" +
+         "<p><b>陷阱</b>：M 段也有 modifications，但 M 段落点是“<b>加装后向传感器</b>”（那是第 42 题），本题落点是“简单改装<b>即可实现</b>”。</p>"
+  },
+  {
+    n: 42,
+    stem: "Two sets of sensors would be used to help drivers determine the distances between cars.",
+    answer: "M",
+    para: "p-M",
+    why: "<p><b>定位</b>：M 段 — \"forward-facing sensors to judge the distance to the vehicle ahead ... adding rear-facing sensors to determine the distance to the vehicle following a car\"</p>" +
+         "<p><b>同义替换</b>：two sets = 前向（已有）+ 后向（新增）；judge ≈ determine</p>" +
+         "<p><b>要点</b>：sensor 在全文中只出现在 M 段，属于 A 级锚点，20 秒可解。</p>"
+  },
+  {
+    n: 44,
+    stem: "In a phantom traffic jam, the cars in the same lane slow down one after another, creating a wave-like effect.",
+    answer: "D",
+    para: "p-D",
+    why: "<p><b>定位</b>：D 段 — \"the slowing action spreads backward through the lane of traffic like a wave, getting worse the farther it spreads\"</p>" +
+         "<p><b>同义替换</b>：one after another ≈ spreads backward；wave-like ≈ like a wave</p>" +
+         "<p><b>要点</b>：比喻性表达（wave）改写空间小，是很好用的锚点。</p>"
+  },
+  {
+    n: 38,
+    stem: "According to Horn, drivers making constant adjustments for equal spacing between cars in a flow of traffic can help reduce phantom traffic jams.",
+    answer: "E",
+    para: "p-E",
+    why: "<p><b>定位</b>：E 段 — \"each driver would constantly make adjustments to keep their car roughly halfway between the car in front and the car behind\"</p>" +
+         "<p><b>同义替换</b>：making constant adjustments ≈ constantly make adjustments；equal spacing ≈ halfway between the car in front and behind</p>" +
+         "<p><b>陷阱</b>：C 段只说 \"maintaining equal spacing\"（概括的解法），E 段才是具体动作。题干越具体，越要选具体描述的段落。</p>"
+  },
+  {
+    n: 39,
+    stem: "Before systems for bilateral control are installed, drivers should not follow the car in front too closely so as to reduce phantom traffic jams.",
+    answer: "N",
+    para: "p-N",
+    why: "<p><b>定位</b>：N 段 — \"But until those systems become standard, human drivers can help reduce phantom traffic jams simply by not following the car in front so closely\"</p>" +
+         "<p><b>同义替换</b>：Before ... are installed ≈ until ... become standard；should not follow too closely ≈ not following so closely</p>" +
+         "<p><b>陷阱</b>：F 段讲的是技术“怎么实现”，不是给司机的行为建议。</p>"
+  },
+  {
+    n: 41,
+    stem: "Drivers caught up in phantom traffic jams are likely to think an accident has happened or some construction is going on.",
+    answer: "B",
+    para: "p-B",
+    why: "<p><b>定位</b>：B 段 — \"it is common for drivers to assume that there must be an accident, or construction or something\"</p>" +
+         "<p><b>同义替换</b>：likely ≈ common；think ≈ assume</p>" +
+         "<p><b>要点</b>：accident / construction 是两个具体名词，属于 A 级锚点，直接扫词即可。</p>"
+  },
+  {
+    n: 43,
+    stem: "Solving the problem of phantom jams could save America billions of dollars every year.",
+    answer: "G",
+    para: "p-G",
+    why: "<p><b>定位</b>：G 段 — \"solving phantom jams could save at least some of the estimated $121 billion per year that traffic jams are estimated to cost the U.S. economy\"</p>" +
+         "<p><b>同义替换</b>：$121 billion ≈ billions of dollars；America ≈ the U.S.</p>" +
+         "<p><b>陷阱</b>：注意程度词 \"at least some of\"——本题成立，但若题干写成 save all of the $121 billion 就是错的。</p>"
+  },
+  {
+    n: 45,
+    stem: "Horn has found that certain creatures use strategies similar to bilateral control to avoid hitting each other while moving in dense crowds.",
+    answer: "L",
+    para: "p-L",
+    why: "<p><b>定位</b>：L 段 — \"schools of fish and flocks of birds and bats use similar spacing strategies to avoid hitting each other while ... in densely packed groups\"</p>" +
+         "<p><b>同义替换</b>：certain creatures = fish / birds / bats；dense crowds ≈ densely packed groups</p>" +
+         "<p><b>陷阱</b>：M 段开头也有 \"Unlike bats, birds and fish\"，但 M 段落点是“人类难判断后方距离”，不是“动物用类似策略”。</p>"
+  }
+];
+
+const picked = {};
+const quizEl = document.getElementById("questions");
+
+function render(){
+  quizEl.innerHTML = QUESTIONS.slice().sort((a,b)=>a.n-b.n).map(q => `
+    <div class="q" data-n="${q.n}">
+      <div class="stem"><span class="num">${q.n}.</span>${q.stem}</div>
+      <div class="letters" data-n="${q.n}">
+        ${LETTERS.map(L => `<button type="button" data-l="${L}" data-n="${q.n}">${L}</button>`).join("")}
+      </div>
+      <div class="fb" id="fb-${q.n}"></div>
+    </div>
+  `).join("");
+}
+
+quizEl.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-l]");
+  if(!btn) return;
+  if(btn.disabled) return;
+  const n = btn.dataset.n, L = btn.dataset.l;
+  picked[n] = L;
+  quizEl.querySelectorAll(`.letters[data-n="${n}"] button`).forEach(b => b.classList.remove("sel"));
+  btn.classList.add("sel");
+});
+
+document.getElementById("submit").addEventListener("click", () => {
+  let correct = 0;
+  clearHighlights();
+
+  QUESTIONS.forEach(q => {
+    const area = quizEl.querySelector(`.letters[data-n="${q.n}"]`);
+    const fb = document.getElementById("fb-" + q.n);
+    const chosen = picked[q.n];
+    const isRight = chosen === q.answer;
+
+    area.querySelectorAll("button").forEach(b => {
+      b.disabled = true;
+      b.classList.remove("sel");
+      if(b.dataset.l === q.answer) b.classList.add("answer");
+      if(b.dataset.l === chosen && !isRight) b.classList.add("wrong");
+      if(b.dataset.l === q.answer && isRight) b.classList.add("right");
+    });
+
+    if(isRight){
+      correct++;
+      fb.className = "fb ok show";
+      fb.innerHTML = `<span class="badge">正确</span>答案 ${q.answer}` + q.why;
+      document.getElementById(q.para).classList.add("hit");
+      document.getElementById(q.para).scrollIntoView({behavior:"smooth", block:"center"});
+    }else{
+      fb.className = "fb no show";
+      fb.innerHTML = `<span class="badge">${chosen ? "错误" : "未作答"}</span>正确答案 ${q.answer}` + q.why;
+      document.getElementById(q.para).classList.add("hit");
+    }
+  });
+
+  const s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = `本轮得分：<b>${correct} / ${QUESTIONS.length}</b>　` +
+    (correct === QUESTIONS.length ? "全对！这套的检索节奏已经完全对了。" :
+     correct >= 7 ? "稳定发挥，8 题以上就是考场目标。重点回看错题的“定位句”。" :
+     correct >= 5 ? "及格水平，把右侧指纹表用起来，先做数字专名题、后做抽象题。" :
+     "先别急，按六步法重来一遍：圈锚点 → 做指纹表 → 强锚点先做 → 排除法收尾。");
+  document.getElementById("score").scrollIntoView({behavior:"smooth", block:"center"});
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  Object.keys(picked).forEach(k => delete picked[k]);
+  clearHighlights();
+  render();
+  document.getElementById("score").className = "score";
+});
+
+function clearHighlights(){
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+}
+
+/* ---------- 计时器 ---------- */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec/60)).padStart(2,"0");
+  const s = String(sec%60).padStart(2,"0");
+  timerEl.textContent = `${m}:${s}`;
+  if(sec >= 900) timerEl.classList.add("over");
+  else if(sec >= 720) timerEl.classList.add("warn");
+}, 1000);
+
+render();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:18px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
