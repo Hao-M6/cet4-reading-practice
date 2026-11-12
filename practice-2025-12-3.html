@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级长篇阅读 · 信息匹配练习｜2025年12月第三套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75;
+    padding-bottom:74px;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  header .back{
+    font-size:12.5px; color:var(--accent); text-decoration:none; white-space:nowrap;
+    border:1px solid #33507e; background:#1b2634; border-radius:7px; padding:3px 10px;
+  }
+  header .back:hover{background:#25324d}
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+    transition:background .3s,color .3s;
+  }
+  .timer.warn{background:#3a2f14; color:#d29922}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 460px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{margin:0 0 14px; padding-left:34px; position:relative; transition:background .25s}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{display:block; color:var(--muted); font-size:12.5px; margin-top:4px}
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:var(--markline); color:#ffe9a8}
+  .para.flash{animation:flash 1.4s ease-out}
+  @keyframes flash{0%{background:#5a4715}100%{background:transparent}}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 90px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .q{padding:14px 0; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none; padding-top:4px}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px}
+  .q .stem{font-size:14px; line-height:1.6}
+  .letters{display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-top:9px}
+  .letters button{
+    height:32px; border:1px solid var(--line); background:#171c23; border-radius:7px;
+    cursor:pointer; font-weight:600; font-size:13px; font-family:ui-monospace,Consolas,monospace;
+    color:#c3cad6; transition:.12s;
+  }
+  .letters button:hover{border-color:var(--accent); color:var(--accent); background:#1b2634}
+  .letters button.sel{background:var(--accent); border-color:var(--accent); color:#fff}
+  .letters button.right{background:var(--ok); border-color:var(--ok); color:#fff}
+  .letters button.wrong{background:var(--bad); border-color:var(--bad); color:#fff}
+  .letters button.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7}
+  .fb .why p{margin:3px 0}
+  .jump{
+    display:inline-block; margin-top:4px; font-size:12.5px; color:var(--accent);
+    text-decoration:none; border-bottom:1px dashed #9dc0f7;
+  }
+  .jump:hover{color:#4a8bff}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .btn.sm{padding:6px 14px; font-size:13px; border-radius:8px}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  /* ---------- 指纹表 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+  details.fp td:first-child,details.fp td:nth-child(3){
+    font-family:ui-monospace,Consolas,monospace; font-weight:700; color:#a9c1ff; width:26px; text-align:center;
+  }
+  /* ---------- 底部得分条 ---------- */
+  .bottombar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:rgba(255,255,255,.96); backdrop-filter:blur(8px);
+    border-top:1px solid var(--line); box-shadow:0 -2px 10px rgba(0,0,0,.05);
+  }
+  .bb-inner{
+    max-width:1240px; margin:0 auto; padding:9px 20px;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .bb-inner .label{font-size:12.5px; color:var(--muted); white-space:nowrap}
+  .bb-inner .val{font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap}
+  .bb-track{flex:1; min-width:120px; height:8px; background:#262d38; border-radius:99px; overflow:hidden}
+  .bb-track i{display:block; height:100%; width:0; background:var(--accent); border-radius:99px; transition:width .3s,background .3s}
+  .bb-score{font-size:13px; font-weight:700; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .bb-score.good{color:var(--ok)}
+  .bb-score.bad{color:var(--bad)}
+  /* ---------- 来源 ---------- */
+  .sources{margin:22px auto 0; max-width:1240px; padding:0 20px 10px}
+  .sources .box{
+    background:#171c23; border:1px solid var(--line); border-radius:12px; padding:14px 18px;
+    font-size:12.5px; color:#aab4c4;
+  }
+  .sources .box b{color:#e3e7ee}
+  .sources ul{margin:6px 0 0; padding-left:18px}
+  .sources li{margin:2px 0}
+  .sources a{color:var(--accent); text-decoration:none; word-break:break-all}
+  .sources a:hover{text-decoration:underline}
+  @media (max-width:700px){
+    .bb-inner{gap:8px; padding:8px 14px}
+    .bb-inner .label{display:none}
+    .sources{padding:0 12px 8px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    四级 Part III Section B · 信息匹配
+    <small>2025 年 12 月 · 第三套 · Looking for a job after 45（13 段 A–M · 36–45 题）</small>
+  </h1>
+  <div class="timer" id="timer" title="建议 12 分钟内完成，15 分钟封顶">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：文章 ================= -->
+  <section class="card passage" id="passage">
+    <h2>Looking for a job after 45</h2>
+    <div class="meta">
+      Directions: In this section, you are going to read a passage with ten statements attached to it.
+      Each statement contains information given in one of the paragraphs. Identify the paragraph from which
+      the information is derived. You may choose a paragraph more than once. 段落字母标在每段左侧，黄色高亮为每题定位句。
+    </div>
+
+    <p class="para" id="p-A"><span class="tag">A</span>Ageism and long-term unemployment are most damaging for those in the second half of their careers. <mark>Changing careers is hard. Getting back into work after you've been laid off is even harder.</mark> Those over 45 make up the bulk of the long-term unemployed, in America and elsewhere. Hiring managers admit they are reluctant to hire those over 40 or 45, arguing they probably won't be a good "fit," their experience won't be relevant to the workplace, and they'll be unable or unwilling to learn new skills.<span class="cn">年龄歧视对职业后半段的人杀伤最大：转行难，被裁后再就业更难。</span></p>
+
+    <p class="para" id="p-B"><span class="tag">B</span><mark>But the one thing that can really make a difference? More education and training. These are the results from a new study by Generation</mark>, a nonprofit founded by former McKinsey consultants. They've just published a global survey on midcareer employment, based on surveys of over 5,000 workers and managers in seven countries.<span class="cn">真正管用的一件事：更多教育与培训——出自 Generation 的新研究。</span></p>
+
+    <p class="para" id="p-C"><span class="tag">C</span>"Older midcareer workers … make up the bulk of the long-term unemployed in many countries," Generation's analysts write in their report. Those over 45 comprise over 40% of the long-term unemployed, for example. <mark>And if you're out of work past the age of 45, there's nearly a two in three chance you'll be out of work for over a year, they find.</mark> "Midcareer individuals are finding it harder to get jobs," they write. "People age 45+ face persistent and rising pressure in the global job market. They are unemployed for much longer than the average, and their age is indeed one of the greatest barriers to their finding a job."<span class="cn">45 岁以上占长期失业者四成以上；45 岁后失业有近三分之二概率超过一年。</span></p>
+
+    <p class="para" id="p-D"><span class="tag">D</span>A substantial part of this, they report, is "widespread ageism" on the part of hiring managers. Although such managers admit that post-45 hires turn out on average to be just as good as or better than younger workers, they still don't want to hire them. <mark>"Hiring managers have a strong perception bias against 45+ job candidates — they believe that members of this age group have poor skills and low adaptability," Generation's analysts report.</mark><span class="cn">很大一部分原因是招聘经理"普遍存在的年龄歧视"与认知偏见。</span></p>
+
+    <p class="para" id="p-E"><span class="tag">E</span>The survey results are remarkable. Hiring managers are three times as likely to rate job applicants age 35 – 44 as a better "fit" than those over 45. They rate the post-45 job seekers lower on average on all three measures — even experience — than those ages 18 to 34. This is true even though nearly nine managers in 10 also said their post-45 workers were as good as or better than younger employees in the same jobs.<span class="cn">调查结果惊人：35–44 岁被认为"更合适"的可能性是 45+ 的三倍。</span></p>
+
+    <p class="para" id="p-F"><span class="tag">F</span>Their biggest fears about hiring those over 45? Managers said they worry that older hires will be reluctant to try new technologies, and will be unable to learn new skills. <mark>Besides, the majority of hiring managers are under 45 — and seem reluctant to hire people older than themselves.</mark><span class="cn">经理担心年长者不愿碰新技术、学不会新技能；且多数经理自身不到 45 岁。</span></p>
+
+    <p class="para" id="p-G"><span class="tag">G</span>But here's the good news. <mark>Older workers who've actively engaged in more education and training relevant to their jobs turn this pretty much on its head.</mark> <mark>Three-quarters of hiring managers said they'd be more likely to hire an over-45 who had relevant education, training or credentials(文凭).</mark> Among those over 45 who'd successfully switched careers, 74% said training helped them get their new job.<span class="cn">好消息：积极参加相关教育培训的年长员工几乎完全扭转劣势。</span></p>
+
+    <p class="para" id="p-H"><span class="tag">H</span>"Midcareer switchers overwhelmingly say that training enabled them to shift to a new career path," the analysts write. And when they asked over-45 candidates about their attitudes, they found that <mark>"those who are excited by training are unemployed for less time, receive more job offers, and are more satisfied by the job offers they receive."</mark><span class="cn">对培训感到兴奋的人失业更短、offer 更多、对 offer 更满意。</span></p>
+
+    <p class="para" id="p-I"><span class="tag">I</span>Hiring managers said training was three times more likely to get them to hire applicants over age 45 than, say, government subsidies(补贴). What training are we talking about? Obviously it depends on the job. And, yes, managers are most likely to be impressed by industry qualifications you get in school. These things cost money, and time. But these aren't the only things helpful. <mark>Those who had successfully changed careers after 45 told Generation that education and training had been a big help</mark> — and that included in-person, on-the-job training, "informal learning," and online courses — with or without certification.<span class="cn">培训比政府补贴更能打动雇主；形式包括在职、非正式学习与网课。</span></p>
+
+    <p class="para" id="p-J"><span class="tag">J</span>If they think we're too old to learn new skills after we're 45, just learning some new skills may have an effect on its own. There's a downside to this. <mark>The people least interested in retraining are more likely to come from historically disadvantaged communities, more likely to have low incomes, and are more likely to have the least schooling after getting their high-school diploma or earlier.</mark> On average, post-45 job switchers with higher incomes participate in 2.5 training programs each. Those with lower incomes: 0.9 programs on average.<span class="cn">最不愿再培训的人多来自弱势社区、低收入、受教育年限更短。</span></p>
+
+    <p class="para" id="p-K"><span class="tag">K</span>Many years ago, I wrote about a study which found that employers are much more likely to hire a college graduate who has some work experience in the industry than a college graduate who took the "right" degree. A bank is more likely to hire a literature graduate who spent their summers working in their local bank than a finance or economics graduate who spent their summers surfing or traveling around Italy. They've learned through long experience. The person who worked in the bank is more likely ready, willing and able to be part of the team and do the job from day 1.<span class="cn">多年前的研究：有行业实习经历比"专业对口"更受雇主青睐。</span></p>
+
+    <p class="para" id="p-L"><span class="tag">L</span>We can rail against "ageism" all we like. It gets us nowhere. And it's easy to forget that employers, like everyone else, are under time pressure and are just trying to solve problems. Any and all "training," including inexpensive and informal training, is going to help resolve their worries about hiring someone over 45. <mark>And it has never been easier or cheaper to gain instruction in new skills, thanks to the internet.</mark> Online schools like Udemy and Lynda.com offer sweet deals at sign-up. And courses on YouTube are free.<span class="cn">与其痛骂年龄歧视，不如用互联网：学新技能从未如此便宜容易。</span></p>
+
+    <p class="para" id="p-M"><span class="tag">M</span>Bottom line? Yes, it really can be difficult getting a new job after age 45, let alone changing careers. One of the best things we can do to help ourselves is to go online and learn new, relevant skills. Sadly, the people who most need the help are least likely to take it — which raises a challenge for society as a whole. Not only do we not want to see lives go to waste, but we all benefit if more people are working and fewer are unemployed.<span class="cn">结语：上网学新技能是最佳自救；最需要帮助的人却最不愿行动。</span></p>
+  </section>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>10 道真题 · 36–45</h2>
+    <div class="hint">点字母选择答案 → 点"提交答案"。答完自动标绿标红、展开解析并高亮原文段落。</div>
+
+    <div id="questions"></div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+      <button class="btn ghost" id="reset">重新开始</button>
+    </div>
+
+    <div class="score" id="score"></div>
+
+    <details class="fp">
+      <summary>卡住了？点开看"段落指纹表"（做题时的核心工具）</summary>
+      <table>
+        <tr><th>段</th><th>指纹</th><th>段</th><th>指纹</th></tr>
+        <tr><td>A</td><td>换行难 · 被裁更难</td><td>H</td><td>失业短 · offer 多</td></tr>
+        <tr><td>B</td><td>新研究 · 教育培训</td><td>I</td><td>告诉 Generation</td></tr>
+        <tr><td>C</td><td>三分之二 · 超一年</td><td>J</td><td>弱势社区 · 最不愿培训</td></tr>
+        <tr><td>D</td><td>技能差 + 适应力低</td><td>K</td><td>银行招有实习者</td></tr>
+        <tr><td>E</td><td>三倍"合适"</td><td>L</td><td>互联网 · 更便宜容易</td></tr>
+        <tr><td>F</td><td>经理不到 45 · 不招年长</td><td>M</td><td>上网学技能 · 社会挑战</td></tr>
+        <tr><td>G</td><td>四分之三愿录用</td><td colspan="2" style="text-align:left;color:#8f9aab;font-weight:400;font-family:inherit">E / K / M 为干扰段，本题未用</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<div class="bottombar">
+  <div class="bb-inner">
+    <span class="label">已答</span>
+    <span class="val" id="bbCount">0 / 10</span>
+    <div class="bb-track"><i id="bbFill"></i></div>
+    <span class="bb-score" id="bbScore">未提交</span>
+    <button class="btn primary sm" id="submit2">提交答案</button>
+    <button class="btn ghost sm" id="reset2">重新开始</button>
+  </div>
+</div>
+
+<div class="sources">
+  <div class="box">
+    <b>真题来源（原文与题干逐字取自以下页面，答案经两个来源交叉核对）</b>
+    <ul>
+      <li>懒笔记 · 2025年12月第3套 长篇阅读解析页（原文 + 逐题解析）：<a href="https://english-exam.lazynote.cn/cet4/sections/2025-12-3/part3-section-b/" target="_blank" rel="noopener">english-exam.lazynote.cn/cet4/sections/2025-12-3/part3-section-b/</a></li>
+      <li>懒笔记 · 同篇精读页（13 段原文全文）：<a href="https://english-exam.lazynote.cn/cet4/articles/2025-12-3/part3-section-b/" target="_blank" rel="noopener">english-exam.lazynote.cn/cet4/articles/2025-12-3/part3-section-b/</a></li>
+      <li>新东方在线 · 2025年12月英语四级真题及答案完整版（第三套），答案速查 36–40 DAJFC / 41–45 IGBLH：<a href="https://m.koolearn.com/cet4/20251213/930096.html" target="_blank" rel="noopener">m.koolearn.com/cet4/20251213/930096.html</a></li>
+      <li>新东方网 · 四级长篇阅读试题及答案（仅收录第一、二套，无第三套，作为体例参照）：<a href="https://cet4-6.xdf.cn/202512/15047572.html" target="_blank" rel="noopener">cet4-6.xdf.cn/202512/15047572.html</a></li>
+    </ul>
+    说明：两个来源的 10 题答案完全一致，无冲突。第 40 题题干中各版本标点略有差异（"age 45+ jobless workers"），此处以懒笔记卷面排版与新东方在线定位句共同确认的表述为准。
+  </div>
+</div>
+
+<script>
+const PARAS = ["A","B","C","D","E","F","G","H","I","J","K","L","M"];
+
+const QUESTIONS = [
+  {
+    n: 36,
+    stem: "Hiring managers believe unemployed workers over 45 lack good skills and are less adaptable.",
+    answer: "D",
+    para: "p-D",
+    why: `<p><b>定位</b>：D 段 — "Hiring managers have a strong perception bias against 45+ job candidates — they believe that members of this age group have poor skills and low adaptability"</p>
+          <p><b>同义替换</b>：lack good skills ≈ have poor skills；less adaptable ≈ low adaptability（比较级 ↔ 抽象名词）</p>
+          <p><b>陷阱</b>：F 段只说 "will be unable to learn new skills"，只覆盖"技能"一面，没有"适应力低"；而且 F 段是经理的<b>担忧</b>，不是对 45+ 的总体评价。</p>`
+  },
+  {
+    n: 37,
+    stem: "Switching to a new career is difficult and getting reemployed after a layoff is even tougher.",
+    answer: "A",
+    para: "p-A",
+    why: `<p><b>定位</b>：A 段 — "Changing careers is hard. Getting back into work after you've been laid off is even harder."</p>
+          <p><b>同义替换</b>：Switching to a new career ≈ Changing careers；getting reemployed after a layoff ≈ Getting back into work after you've been laid off；tougher ≈ harder</p>
+          <p><b>陷阱</b>：M 段 "it really can be difficult getting a new job after age 45" 也讲难，但没有"<b>被裁后再就业更难</b>"这层递进对比。首段最容易被跳读，别忽略。</p>`
+  },
+  {
+    n: 38,
+    stem: "People from poor neighborhoods tend to have the least interest in retraining.",
+    answer: "J",
+    para: "p-J",
+    why: `<p><b>定位</b>：J 段 — "The people least interested in retraining are more likely to come from historically disadvantaged communities, more likely to have low incomes, and are more likely to have the least schooling…"</p>
+          <p><b>同义替换</b>：poor neighborhoods ≈ historically disadvantaged communities；tend to ≈ are more likely to；least interest ≈ least interested</p>
+          <p><b>陷阱</b>：原文是"<b>更可能</b>"不是"一定"；本段另有 2.5 vs 0.9 个培训项目的数据，是干扰信息，与"兴趣最低"无关。</p>`
+  },
+  {
+    n: 39,
+    stem: "Hiring managers who are not yet 45 years old seem unwilling to hire people their senior.",
+    answer: "F",
+    para: "p-F",
+    why: `<p><b>定位</b>：F 段 — "Besides, the majority of hiring managers are under 45 — and seem reluctant to hire people older than themselves."</p>
+          <p><b>同义替换</b>：not yet 45 years old ≈ under 45；people their senior ≈ people older than themselves；seem unwilling ≈ seem reluctant</p>
+          <p><b>陷阱</b>：D 段 "they still don't want to hire them" 讲的是对 45+ 的偏见，<b>没提到经理自己的年龄</b>；题干的关键限定是"经理本人不到 45 岁"。</p>`
+  },
+  {
+    n: 40,
+    stem: "Some analysts find age 45+ jobless workers are most likely to be unemployed for more than a year.",
+    answer: "C",
+    para: "p-C",
+    why: `<p><b>定位</b>：C 段 — "And if you're out of work past the age of 45, there's nearly a two in three chance you'll be out of work for over a year, they find."</p>
+          <p><b>同义替换</b>：age 45+ jobless workers ≈ if you're out of work past the age of 45；most likely ≈ nearly a two in three chance；more than a year ≈ over a year；Some analysts find ≈ they find（they 指 Generation's analysts）</p>
+          <p><b>陷阱</b>：同段 "over 40% of the long-term unemployed" 讲的是<b>占比</b>不是<b>时长</b>；E 段的三倍讲的是"合适度"评价，也不是失业时长。</p>`
+  },
+  {
+    n: 41,
+    stem: "People who had succeeded in career change after 45 told a nonprofit organization they owed a great deal to the education and training they had received.",
+    answer: "I",
+    para: "p-I",
+    why: `<p><b>定位</b>：I 段 — "Those who had successfully changed careers after 45 told Generation that education and training had been a big help"</p>
+          <p><b>同义替换</b>：owed a great deal to ≈ had been a big help；a nonprofit organization ≈ Generation（B 段已交代 Generation 是 nonprofit）</p>
+          <p><b>陷阱</b>：G 段 "74% said training helped them get their new job" 只给比例，<b>没有"告诉某个组织"</b>这一动作；H 段是作者对结论的概括转述，缺 told 的动作链。</p>`
+  },
+  {
+    n: 42,
+    stem: "Older workers who actively pursue more education and training have a good chance of being hired.",
+    answer: "G",
+    para: "p-G",
+    why: `<p><b>定位</b>：G 段 — "Older workers who've actively engaged in more education and training relevant to their jobs turn this pretty much on its head."＋"Three-quarters of hiring managers said they'd be more likely to hire an over-45 who had relevant education, training or credentials"</p>
+          <p><b>同义替换</b>：actively pursue ≈ actively engaged in；have a good chance of being hired ≈ Three-quarters … more likely to hire</p>
+          <p><b>陷阱</b>：B 段也讲"教育培训有用"，但那是研究结论的<b>提出</b>，没有雇主录用意愿的比例证据；题干要的是"<b>更可能被录用</b>"。</p>`
+  },
+  {
+    n: 43,
+    stem: "A new study finds that more education and training helps midcareer individuals find a new job.",
+    answer: "B",
+    para: "p-B",
+    why: `<p><b>定位</b>：B 段 — "But the one thing that can really make a difference? More education and training. These are the results from a new study by Generation"</p>
+          <p><b>同义替换</b>：A new study finds ≈ These are the results from a new study；helps midcareer individuals find a new job ≈ 针对 midcareer employment 的"make a difference"</p>
+          <p><b>陷阱</b>：G、H、I 都是 B 段这项研究的<b>后续细节</b>；题干问的是"新研究的总体结论"，落点在 B 段。第二段也常被"只读开头段"的读法漏掉。</p>`
+  },
+  {
+    n: 44,
+    stem: "Owing to the internet, it is now more convenient than ever to receive training in new skills.",
+    answer: "L",
+    para: "p-L",
+    why: `<p><b>定位</b>：L 段 — "And it has never been easier or cheaper to gain instruction in new skills, thanks to the internet."</p>
+          <p><b>同义替换</b>：Owing to ≈ thanks to；more convenient than ever ≈ never been easier；receive training ≈ gain instruction</p>
+          <p><b>陷阱</b>：I 段也列了 "online courses"，但那是<b>培训形式清单</b>，不是"更方便更便宜"；L 段后面 Udemy / Lynda / YouTube 是同一论点的例证。</p>`
+  },
+  {
+    n: 45,
+    stem: "People over 45 stimulated by training suffer shorter periods of unemployment, get more job offers and have greater satisfaction in them.",
+    answer: "H",
+    para: "p-H",
+    why: `<p><b>定位</b>：H 段 — "those who are excited by training are unemployed for less time, receive more job offers, and are more satisfied by the job offers they receive."</p>
+          <p><b>同义替换</b>：stimulated by training ≈ excited by training；suffer shorter periods of unemployment ≈ unemployed for less time；greater satisfaction in them ≈ more satisfied by the job offers</p>
+          <p><b>陷阱</b>：<b>三项并列必须全中</b>。G 段只有"74% 说培训帮他们拿到新工作"，缺"失业更短 / 更多 offer / 更满意"三项，是最强干扰。</p>`
+  }
+];
+
+const picked = {};
+const quizEl = document.getElementById("questions");
+
+function render(){
+  quizEl.innerHTML = QUESTIONS.map(q => `
+    <div class="q" data-n="${q.n}">
+      <div class="stem"><span class="num">${q.n}.</span>${q.stem}</div>
+      <div class="letters" data-n="${q.n}">
+        ${PARAS.map(L => `<button type="button" data-l="${L}" data-n="${q.n}">${L}</button>`).join("")}
+      </div>
+      <div class="fb" id="fb-${q.n}"></div>
+    </div>
+  `).join("");
+  updateBar();
+}
+
+quizEl.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-l]");
+  if(!btn || btn.disabled) return;
+  const n = btn.dataset.n, L = btn.dataset.l;
+  picked[n] = L;
+  quizEl.querySelectorAll(`.letters[data-n="${n}"] button`).forEach(b => b.classList.remove("sel"));
+  btn.classList.add("sel");
+  updateBar();
+});
+
+/* 点击"查看原文"跳转并闪烁 */
+document.addEventListener("click", e => {
+  const a = e.target.closest(".jump");
+  if(!a) return;
+  e.preventDefault();
+  const p = document.getElementById(a.dataset.para);
+  if(!p) return;
+  p.classList.add("hit");
+  p.scrollIntoView({behavior:"smooth", block:"center"});
+  p.classList.remove("flash");
+  void p.offsetWidth;
+  p.classList.add("flash");
+});
+
+function submit(){
+  let correct = 0;
+  let firstWrong = null;
+  clearHighlights();
+
+  QUESTIONS.forEach(q => {
+    const area = quizEl.querySelector(`.letters[data-n="${q.n}"]`);
+    const fb = document.getElementById("fb-" + q.n);
+    const chosen = picked[q.n];
+    const isRight = chosen === q.answer;
+
+    area.querySelectorAll("button").forEach(b => {
+      b.disabled = true;
+      b.classList.remove("sel");
+      if(b.dataset.l === q.answer) b.classList.add("answer");
+      if(b.dataset.l === chosen && !isRight) b.classList.add("wrong");
+      if(b.dataset.l === q.answer && isRight) b.classList.add("right");
+    });
+
+    const paraEl = document.getElementById(q.para);
+    paraEl.classList.add("hit");
+
+    if(isRight){
+      correct++;
+      fb.className = "fb ok show";
+      fb.innerHTML = `<span class="badge">正确</span>答案 ${q.answer}` + q.why +
+        `<a class="jump" href="#${q.para}" data-para="${q.para}">→ 跳到第 ${q.answer} 段原文</a>`;
+    }else{
+      if(!firstWrong) firstWrong = q;
+      fb.className = "fb no show";
+      fb.innerHTML = `<span class="badge">${chosen ? "错误" : "未作答"}</span>正确答案 ${q.answer}` + q.why +
+        `<a class="jump" href="#${q.para}" data-para="${q.para}">→ 跳到第 ${q.answer} 段原文</a>`;
+    }
+  });
+
+  const total = QUESTIONS.length;
+  const s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = `本轮得分：<b>${correct} / ${total}</b>　` +
+    (correct === total ? "全对，13 段里 10 个落点你都抓准了。" :
+     correct >= 7 ? "不错。回看错题的“定位句 + 同义替换”，重点补 E / K / M 这几个干扰段为什么不选。" :
+     correct >= 5 ? "及格水平。建议按“先强锚点、再排除”重做：数字（45、40%、三分之二、三倍）、专名（Generation）、引号句最好用。" :
+     "先别急。打开右侧指纹表，把 13 段各写一个中文词，再逐题找同义替换，别按题号顺序硬找。");
+
+  const bar = document.getElementById("bbScore");
+  bar.className = "bb-score " + (correct >= 7 ? "good" : "bad");
+  bar.textContent = `得分 ${correct} / ${total}`;
+  updateBar(correct, total);
+
+  const target = firstWrong || QUESTIONS[0];
+  const el = document.getElementById(target.para);
+  if(el){
+    el.classList.remove("flash");
+    void el.offsetWidth;
+    el.classList.add("flash");
+    el.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+}
+
+function updateBar(correct, total){
+  total = total || QUESTIONS.length;
+  const done = QUESTIONS.filter(q => picked[q.n]).length;
+  document.getElementById("bbCount").textContent = `${done} / ${total}`;
+  document.getElementById("bbFill").style.width = (done / total * 100) + "%";
+  document.getElementById("bbFill").style.background = done === total ? "var(--ok)" : "var(--accent)";
+  if(correct === undefined){
+    document.getElementById("bbScore").textContent = done === total ? "可提交" : "未提交";
+    document.getElementById("bbScore").className = "bb-score";
+  }
+}
+
+function reset(){
+  Object.keys(picked).forEach(k => delete picked[k]);
+  clearHighlights();
+  render();
+  document.getElementById("score").className = "score";
+  document.getElementById("score").innerHTML = "";
+  document.getElementById("bbScore").textContent = "未提交";
+  document.getElementById("bbScore").className = "bb-score";
+  document.getElementById("bbFill").style.background = "var(--accent)";
+  document.querySelector(".passage").scrollIntoView({behavior:"smooth", block:"start"});
+  sec = 0;
+  document.getElementById("timer").textContent = "00:00";
+  document.getElementById("timer").className = "timer";
+}
+
+function clearHighlights(){
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+  document.querySelectorAll(".para.flash").forEach(p => p.classList.remove("flash"));
+}
+
+document.getElementById("submit").addEventListener("click", submit);
+document.getElementById("submit2").addEventListener("click", submit);
+document.getElementById("reset").addEventListener("click", reset);
+document.getElementById("reset2").addEventListener("click", reset);
+
+/* ---------- 计时器：12 分钟变黄，15 分钟变红 ---------- */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec/60)).padStart(2,"0");
+  const s = String(sec%60).padStart(2,"0");
+  timerEl.textContent = `${m}:${s}`;
+  if(sec >= 900) timerEl.className = "timer over";
+  else if(sec >= 720) timerEl.className = "timer warn";
+}, 1000);
+
+render();
+</script>
+<style id="blind-css">html.blind mark{background:transparent!important;border-bottom:none!important;color:inherit!important}html.blind .para.hit{background:transparent!important;box-shadow:none!important}</style>
+<button id="blindBtn" type="button" style="position:fixed;right:18px;bottom:18px;z-index:999;border:none;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;background:#5b9dff;color:#fff;box-shadow:0 4px 14px rgba(31,111,235,.35);font-family:inherit">🙈 隐藏定位句</button>
+<script>(function(){var b=document.getElementById('blindBtn');if(!b)return;b.onclick=function(){var on=document.documentElement.classList.toggle('blind');b.textContent=on?'👁 显示定位句':'🙈 隐藏定位句';};})();</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
