@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四级长篇阅读 · 信息匹配练习｜2025年12月第二套</title>
+<style>
+  :root{
+    --bg:#0f1216; --card:#171c23; --ink:#e3e7ee; --muted:#8f9aab;
+    --line:#2b3240; --accent:#5b9dff; --ok:#3fb950; --bad:#f85149;
+    --mark:#3d3115; --markline:#c9973a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75;
+  }
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(18,22,28,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 20px; display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+  }
+  header h1{font-size:15px; margin:0; font-weight:600; flex:1; min-width:200px}
+  header h1 small{display:block; font-weight:400; color:var(--muted); font-size:12px}
+  header a.back{
+    color:var(--accent); text-decoration:none; font-size:13px; font-weight:600;
+    white-space:nowrap; padding:4px 8px; border-radius:7px; background:#1b2740;
+  }
+  header a.back:hover{background:#25324d}
+  .timer{
+    font-variant-numeric:tabular-nums; font-weight:700; font-size:18px;
+    padding:2px 10px; border-radius:8px; background:#1c2740; color:#a9c1ff;
+    border:1px solid transparent; transition:.3s;
+  }
+  .timer.warn{background:#3a2f14; color:#e8b44f; border-color:#8a6d22}
+  .timer.over{background:#3a1d1f; color:#ffb4ab; border-color:#fca5a5; animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.45}}
+  /* ---------- 布局 ---------- */
+  .layout{
+    max-width:1240px; margin:0 auto; padding:20px;
+    display:grid; grid-template-columns:minmax(0,1fr) 460px; gap:22px;
+    align-items:start;
+  }
+  @media (max-width:1020px){
+    .layout{grid-template-columns:1fr}
+    .quiz{position:static!important; max-height:none!important}
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px; box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+  /* ---------- 文章 ---------- */
+  .passage h2{font-size:17px; margin:0 0 4px; line-height:1.5}
+  .passage .meta{color:var(--muted); font-size:12.5px; margin-bottom:16px}
+  .para{margin:0 0 14px; padding-left:34px; position:relative; transition:background .25s}
+  .para .tag{
+    position:absolute; left:0; top:2px; width:24px; height:24px; border-radius:6px;
+    background:#1c2740; color:#a9c1ff; font-weight:700; font-size:12.5px;
+    display:grid; place-items:center; font-family:ui-monospace,Consolas,monospace;
+  }
+  .para .cn{display:block; color:var(--muted); font-size:12.5px; margin-top:4px}
+  .para.hit{background:#2e2610; box-shadow:inset 3px 0 0 var(--markline); border-radius:6px}
+  .para.hit .tag{background:var(--markline); color:#ffe9a8}
+  mark{background:var(--mark); padding:0 2px; border-radius:3px; border-bottom:2px solid var(--markline)}
+  .para.hit mark{background:#5a4715}
+  body.hide-marks mark{background:transparent; border-bottom:none; padding:0}
+  /* ---------- 题目 ---------- */
+  .quiz{position:sticky; top:70px; max-height:calc(100vh - 90px); overflow-y:auto}
+  .quiz h2{font-size:16px; margin:0 0 4px}
+  .quiz .hint{color:var(--muted); font-size:12.5px; margin-bottom:14px}
+  .q{padding:14px 0; border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:none; padding-top:4px}
+  .q .num{font-weight:700; color:var(--accent); margin-right:6px}
+  .q .stem{font-size:14px; line-height:1.6}
+  .letters{display:grid; grid-template-columns:repeat(6,1fr); gap:5px; margin-top:9px}
+  .letters button{
+    height:32px; border:1px solid var(--line); background:#171c23; border-radius:7px;
+    cursor:pointer; font-weight:600; font-size:13px; font-family:ui-monospace,Consolas,monospace;
+    color:#c3cad6; transition:.12s;
+  }
+  .letters button:hover{border-color:var(--accent); color:var(--accent); background:#1b2634}
+  .letters button.sel{background:var(--accent); border-color:var(--accent); color:#fff}
+  .letters button.right{background:var(--ok); border-color:var(--ok); color:#fff}
+  .letters button.wrong{background:var(--bad); border-color:var(--bad); color:#fff}
+  .letters button.answer{outline:2px dashed var(--ok); outline-offset:1px}
+  .letters button:disabled{cursor:default}
+  .fb{margin-top:8px; font-size:13px; display:none}
+  .fb.show{display:block}
+  .fb .badge{
+    display:inline-block; padding:1px 8px; border-radius:999px; font-size:12px;
+    font-weight:700; margin-right:6px;
+  }
+  .fb.ok .badge{background:#16301f; color:#7ee2a8}
+  .fb.no .badge{background:#3a1d1f; color:#ffb4ab}
+  .fb .why{margin-top:6px; color:#c3cad6; line-height:1.7; border-left:2px solid var(--line); padding-left:10px}
+  .fb .why p{margin:3px 0}
+  .fb .why b{color:#e3e7ee}
+  .fb .jump{font-size:12px; color:var(--accent); text-decoration:none; margin-left:4px; white-space:nowrap}
+  .fb .jump:hover{text-decoration:underline}
+  /* ---------- 底部操作 ---------- */
+  .actions{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap}
+  .btn{
+    border:none; border-radius:9px; padding:10px 18px; font-size:14px; font-weight:600;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn.primary{background:var(--accent); color:#fff}
+  .btn.primary:hover{background:#4a8bff}
+  .btn.ghost{background:#232a35; color:#c3cad6}
+  .btn.ghost:hover{background:#2b3240}
+  .btn.small{padding:6px 12px; font-size:12.5px; border-radius:8px}
+  .score{
+    margin-top:14px; padding:12px 14px; border-radius:10px; display:none;
+    background:#14232e; border:1px solid #2b4a5e; font-size:14px;
+  }
+  .score.show{display:block}
+  .score b{font-size:20px; color:#7cc4e8}
+  .score .bar{height:8px; border-radius:99px; background:#1c2b36; margin-top:10px; overflow:hidden}
+  .score .bar i{display:block; height:100%; width:0; background:linear-gradient(90deg,#38bdf8,#0284c7); transition:width .6s}
+  /* ---------- 指纹表 ---------- */
+  details.fp{margin-top:14px; border-top:1px solid var(--line); padding-top:12px}
+  details.fp summary{cursor:pointer; font-size:13px; font-weight:600; color:var(--accent)}
+  details.fp table{width:100%; border-collapse:collapse; margin-top:10px; font-size:12px}
+  details.fp td,details.fp th{border:1px solid var(--line); padding:4px 6px; text-align:left}
+  details.fp th{background:#1a1f27; font-weight:600}
+  details.fp td:first-child,details.fp td:nth-child(3){font-weight:700; color:#a9c1ff; text-align:center}
+  /* ---------- 来源 ---------- */
+  .src{max-width:1240px; margin:0 auto 46px; padding:0 20px}
+  .src .card{font-size:12.5px; color:var(--muted); line-height:1.9}
+  .src a{color:var(--accent); text-decoration:none; word-break:break-all}
+  .src a:hover{text-decoration:underline}
+  .src b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="cet4-2025-sectionb.html">← 返回目录</a>
+  <h1>
+    四级 Part III Section B · 信息匹配
+    <small>2025 年 12 月 · 第二套 · Can playing video games help you get a better job?（12 段 A–L，1022 词）</small>
+  </h1>
+  <button class="btn ghost small" id="toggleMarks">隐藏定位句</button>
+  <div class="timer" id="timer">00:00</div>
+</header>
+
+<div class="layout">
+
+  <!-- ================= 左：文章 ================= -->
+  <section class="card passage" id="passage">
+    <h2>Can playing video games help you get a better job?</h2>
+    <div class="meta">
+      Directions: In this section, you are going to read a passage with ten statements attached to it.
+      Each statement contains information given in one of the paragraphs. Identify the paragraph from
+      which the information is derived. You may choose a paragraph more than once.
+      段落字母标在每段左侧，黄色高亮为各题定位句（可点右上角隐藏）。
+    </div>
+
+    <p class="para" id="p-A"><span class="tag">A</span>The gaming industry is larger than films and music combined, yet few of us are likely to list our achievements in playing computer games as work experience in our résumé. But why not? <mark data-q="39">Businesses are waking up to the skills gamers can bring to the workplace.</mark><span class="cn">产业体量超过电影＋音乐；企业开始觉醒，看重玩家能带进职场的技能。</span></p>
+
+    <p class="para" id="p-B"><span class="tag">B</span>One start-up is convinced that the skills learned by playing games — hard-won through years of training and battle — can be applied to real-life work situations. And Game Academy reckons its belief is backed up by hard data. Do you enjoy unusual puzzle games like Portal, or tower defence games like Defense Grid? The team has found that IT workers play those more than average. <mark data-q="42">But if you prefer Civilization, Total War, or X-Com, where strategy and resource management are key, then you might have more in common with managers.</mark><span class="cn">玩解谜／塔防的多是 IT 人；爱玩策略经营类的人，更像管理者。</span></p>
+
+    <p class="para" id="p-C"><span class="tag">C</span>Game Academy's idea is simple: analyse gamers' habits from their online gaming profile, and offer courses in valuable skills that reflect their aptitudes — skills they can practise and refine in-game. And there is already a growing acceptance that gaming skills are transferable.<span class="cn">运作方式：分析游戏档案 → 开设对应技能课程；社会接受度正在提升。</span></p>
+
+    <p class="para" id="p-D"><span class="tag">D</span><mark data-q="36">Even the military is hiring gamers.</mark> "The ability to absorb information, react swiftly and coordinate actions whilst remaining calm under pressure are often attributes of people that are good at gaming," according to a Royal Air Force spokesperson. Those skills are part of what the Royal Air Force is looking for "in a variety of roles". "Skills acquired through gaming can be very relevant to certain areas."<span class="cn">英国皇家空军公开招玩家：吸收信息、快速反应、压力下协同，正是其岗位所需。</span></p>
+
+    <p class="para" id="p-E"><span class="tag">E</span>"There are plenty of soft skills that gamers can utilise in a professional setting, such as teamwork, problem solving and strategic planning," says Ryan Gardner, a regional director with Hays recruitment. But does that really mean your top 100 ranking in Overwatch should go down in your résumé? "It's about how you either make it relevant to the job you are applying for, or <mark data-q="44">how it makes you more interesting as a potential employee</mark>," Mr Gardner says.<span class="cn">招聘总监：软技能确实有用；要不要写进简历，取决于能否让你对雇主更有吸引力。</span></p>
+
+    <p class="para" id="p-F"><span class="tag">F</span>Two years ago, a Glasgow University study made headlines for suggesting gaming could make students more successful. But "the research hasn't really changed minds, at least not yet," says one of the authors of the study, Dr Matthew Barr. He's now writing a book on the topic. "For now, I think <mark data-q="38">the negative reputation around games means that telling someone you're a determined gamer is more likely to harm your chances of getting a job</mark>. But if someone can explain how they've led a team in an online game, for example, they may be able to persuade an employer that this is useful," says Dr Barr.<span class="cn">研究者 Barr：游戏的坏名声，反而更可能拖累你的求职机会。</span></p>
+
+    <p class="para" id="p-G"><span class="tag">G</span>Playing games casually is unlikely to help your career prospects. But <mark data-q="41">part of Game Academy's suggestion is to transform casual gamers into "conscious" ones, applying critical thinking to developing their skills</mark>. "We see gameplay as a resource of talent," says co-founder David Barrie. "Why can't we put in our résumé our gaming victories and achievements?" he asks. "If they say they want leadership — why can't I point to my years of leading World of Warcraft raids?"<span class="cn">把休闲玩家变成“有意识”玩家，用批判性思维经营自己的技能。</span></p>
+
+    <p class="para" id="p-H"><span class="tag">H</span><mark data-q="45">There are already plenty of gamers out there who know that their hobby has made them who they are.</mark> Earlier this year, Matthew Ricci told gaming site Kotaku: "If you're playing EVE Online you basically already have an MBA." Often made fun of in gaming circles as a "spreadsheet simulator", the economy of the fictional EVE universe is driven by real market principles. If you want to build a new spaceship, the raw material has to be mined by another player. Manufacturing costs come into effect, and commodities fluctuate in price based on demand and the distance to haul the commodity.<span class="cn">很多玩家清楚：游戏爱好塑造了今天的自己；EVE 的经济系统近乎一门 MBA。</span></p>
+
+    <p class="para" id="p-I"><span class="tag">I</span>Mr Ricci, who had always dreamed of being the boss of his own company, ran an in-game corporation comprising hundreds of players. Eventually, <mark data-q="37">he realised he could transfer his skills to real-life business — instead of doing it for free</mark>. He restructured Zentech, once a taxation vehicle for his father's business, and it is now in its fourth year helping international brands enter the Canadian market. EVE teaches skills like creativity, leadership, organisation, and conflict resolution, he maintains. <mark data-q="37">He credits his success to his family, his strong desire to run his own business — and "a damn good company in Iceland that made a damn good game".</mark><span class="cn">Ricci 把游戏里的管理经验搬到真实生意，成功部分归功于冰岛那家游戏公司。</span></p>
+
+    <p class="para" id="p-J"><span class="tag">J</span>Digital entrepreneur and business consultant Mia Bennett says: "<mark data-q="43">In more traditional settings, gaming is still imagined to be the pursuit of teenage boys — a waste of time.</mark>" But there are some links to skills like "decision-making, the ability to anticipate and future planning," she says. "It also helps with meta-skills — learning how to learn, experimentation, and creative thinking."<span class="cn">传统观念里，游戏仍是“十几岁男孩浪费时间”的消遣——但她说也有技能关联。</span></p>
+
+    <p class="para" id="p-K"><span class="tag">K</span>Twelve years into his career, Mark Long, a radiotherapy physicist with the NHS in Surrey, doesn't get as much gaming time as he used to. "I would love to say that my gaming skills allow me to destroy cancer using linear accelerators like photon blasters, but that's not quite the reality." Instead, he credits old-school games like Palace of Magic with exposing him to computers. <mark data-q="40">Every new gaming upgrade improved his knowledge of how they worked.</mark> Gaming also encouraged a competitive spirit — and that, he believes, translates. "When creating treatment plans, the aim is to optimise the radiation dose to the tumour and restrict it as much as possible to healthy surrounding tissues and organs," he says. It's about "repeating the process, but each time doing something slightly different to improve the result". Not unlike achieving a high score or a perfect run. "Most videogames are essentially puzzles to solve," he says. <mark data-q="40">"And problem-solving is a big part of my job."</mark><span class="cn">放疗物理师 Long：老游戏把他带进电脑世界，解题思维直接用在工作里。</span></p>
+
+    <p class="para" id="p-L"><span class="tag">L</span>Over at Game Academy, Mr Barrie is aware they still have a mountain to climb. "The employer community will need the science," he says, but confesses he only became a true believer when he started asking players about their biggest in-game achievements. "The scale and scope of their answers were amazing," he says. "But ask them the same about their work, and they don't know." "The engagement and powerful skills that people get playing a game — why can't work be like that?" he asks.<span class="cn">Game Academy 仍有一座山要爬：雇主群体要的是科学证据。</span></p>
+  </section>
+
+  <!-- ================= 右：题目 ================= -->
+  <section class="card quiz" id="quiz">
+    <h2>10 道真题（36–45）</h2>
+    <div class="hint">点字母选择答案 → 点“提交答案”。每题只有一个段落，段落可重复选用。</div>
+
+    <div id="questions"></div>
+
+    <div class="actions">
+      <button class="btn primary" id="submit">提交答案</button>
+      <button class="btn ghost" id="reset">重新开始</button>
+    </div>
+
+    <div class="score" id="score"></div>
+
+    <details class="fp">
+      <summary>卡住了？点开看“段落指纹表”（做题时的核心工具）</summary>
+      <table>
+        <tr><th>段</th><th>指纹</th><th>段</th><th>指纹</th></tr>
+        <tr><td>A</td><td>产业体量＋企业觉醒</td><td>G</td><td>批判性思维改造玩家</td></tr>
+        <tr><td>B</td><td>玩什么游戏像什么职业</td><td>H</td><td>爱好塑造自我＋EVE</td></tr>
+        <tr><td>C</td><td>分析档案→开课</td><td>I</td><td>Ricci 落地真实生意</td></tr>
+        <tr><td>D</td><td>皇家空军招玩家</td><td>J</td><td>传统观念＝浪费时间</td></tr>
+        <tr><td>E</td><td>简历该不该写战绩</td><td>K</td><td>放疗物理师＋解题</td></tr>
+        <tr><td>F</td><td>坏名声拖累求职</td><td>L</td><td>雇主需科学证据</td></tr>
+      </table>
+    </details>
+  </section>
+
+</div>
+
+<div class="src">
+  <div class="card">
+    <b>来源与答案核对</b>（答案串 36–45：<b>D I F A K G B J E H</b>）<br>
+    · 真题原文与逐题解析（懒笔记）：<a href="https://english-exam.lazynote.cn/cet4/sections/2025-12-2/part3-section-b/" target="_blank" rel="noopener">english-exam.lazynote.cn/cet4/sections/2025-12-2/part3-section-b/</a><br>
+    · 新东方四六级（阅读答案第二套）：<a href="https://cet4-6.xdf.cn/202512/15047564.html" target="_blank" rel="noopener">cet4-6.xdf.cn/202512/15047564.html</a><br>
+    · 新东方四六级（长篇阅读专页，同答案）：<a href="https://mtoutiao.xdf.cn/www/94/202512/15066003.html" target="_blank" rel="noopener">mtoutiao.xdf.cn/www/94/202512/15066003.html</a><br>
+    · 说明：以上两个来源的 36–45 答案完全一致，无冲突。原文按抓取页面逐字录入，未改写、未缩写；12 段为实际段数。
+  </div>
+</div>
+
+<script>
+const LETTERS = ["A","B","C","D","E","F","G","H","I","J","K","L"];
+
+const QUESTIONS = [
+  {
+    n: 36,
+    stem: `Certain gaming skills meet the requirements of the armed forces in Britain.`,
+    answer: "D",
+    para: "p-D",
+    why: `<p><b>定位</b>：D 段首句 “Even the military is hiring gamers.” 以及 “Those skills are part of what the Royal Air Force is looking for ‘in a variety of roles’.”</p>
+         <p><b>同义替换</b>：the armed forces in Britain ≈ the military / the Royal Air Force（上位 → 下位具体军种）；certain gaming skills meet the requirements ≈ skills acquired through gaming can be very relevant to certain areas</p>
+         <p><b>陷阱</b>：全文只有 D 段出现 military / Royal Air Force，是最高级锚点。B 段 “applied to real-life work situations”、C 段 “transferable” 都是泛论，不含军队主体。</p>`
+  },
+  {
+    n: 37,
+    stem: `One veteran player has applied his gaming skills to his real-world business and owes his success partly to a game company.`,
+    answer: "I",
+    para: "p-I",
+    why: `<p><b>定位</b>：I 段 “he realised he could transfer his skills to real-life business — instead of doing it for free” 与 “He credits his success to his family, his strong desire to run his own business — and ‘a damn good company in Iceland that made a damn good game’.”</p>
+         <p><b>同义替换</b>：has applied ... to ≈ could transfer ... to；owes his success partly to ≈ credits his success to（partly 对应“并列归因”）；a game company ≈ a company in Iceland that made a good game</p>
+         <p><b>陷阱</b>：H 段同样出现 Ricci 和 EVE，但 H 段落点是“爱好塑造自我”（第 45 题），没有 transfer / credits success 这两层。两段都读，看谁同时满足题干的两个条件。</p>`
+  },
+  {
+    n: 38,
+    stem: `According to a researcher, bad reputation about games will probably limit a gamer's chances of landing a job.`,
+    answer: "F",
+    para: "p-F",
+    why: `<p><b>定位</b>：F 段 “the negative reputation around games means that telling someone you're a determined gamer is more likely to harm your chances of getting a job”（说话人是研究作者 Dr Matthew Barr）</p>
+         <p><b>同义替换</b>：bad reputation ≈ negative reputation；limit ≈ harm；landing a job ≈ getting a job</p>
+         <p><b>陷阱</b>：J 段 “a waste of time” 也是负面评价，但说话人是商业顾问 Mia Bennett，不是 researcher，也没提“损害求职机会”；G 段首句 “unlikely to help your career prospects” 说的是“随便玩没用”，不是“坏名声限制机会”。</p>`
+  },
+  {
+    n: 39,
+    stem: `Businesses are beginning to realise gaming skills are applicable to their employees' work.`,
+    answer: "A",
+    para: "p-A",
+    why: `<p><b>定位</b>：A 段末句 “Businesses are waking up to the skills gamers can bring to the workplace.”</p>
+         <p><b>同义替换</b>：are beginning to realise ≈ are waking up to；applicable to their employees' work ≈ can bring to the workplace</p>
+         <p><b>陷阱</b>：C 段 “there is already a growing acceptance that gaming skills are transferable” 主语是社会整体接受度，不是 Businesses，也没有“开始意识到”的转折意味。</p>`
+  },
+  {
+    n: 40,
+    stem: `A physicist admits gaming has contributed to his computer knowledge and skills of solving problems.`,
+    answer: "K",
+    para: "p-K",
+    why: `<p><b>定位</b>：K 段 “he credits old-school games like Palace of Magic with exposing him to computers. Every new gaming upgrade improved his knowledge of how they worked.” 与 “And problem-solving is a big part of my job.”</p>
+         <p><b>同义替换</b>：a physicist ≈ a radiotherapy physicist；contributed to his computer knowledge ≈ improved his knowledge of how they worked；skills of solving problems ≈ problem-solving</p>
+         <p><b>陷阱</b>：K 段很长，开头 “I would love to say ... destroy cancer ... but that's not quite the reality” 是自嘲式否定，不是依据；落点在 exposing him to computers 和 problem-solving。E 段也出现 problem solving，但那是招聘总监对“玩家群体”的泛论。</p>`
+  },
+  {
+    n: 41,
+    stem: `Game Academy proposes to help gamers develop their skills using critical thinking.`,
+    answer: "G",
+    para: "p-G",
+    why: `<p><b>定位</b>：G 段 “part of Game Academy's suggestion is to transform casual gamers into ‘conscious’ ones, applying critical thinking to developing their skills”</p>
+         <p><b>同义替换</b>：proposes ≈ suggestion；using critical thinking ≈ applying critical thinking；develop their skills ≈ developing their skills</p>
+         <p><b>陷阱</b>：C 段同样是 Game Academy 的做法（analyse habits / offer courses），专名重复但没有 critical thinking；B 段 Game Academy 只是 “reckons its belief is backed up by hard data”。专名相同不等于答案相同。</p>`
+  },
+  {
+    n: 42,
+    stem: `One who enjoys playing games that require management skills to win might possess more qualities of a manager.`,
+    answer: "B",
+    para: "p-B",
+    why: `<p><b>定位</b>：B 段 “if you prefer Civilization, Total War, or X-Com, where strategy and resource management are key, then you might have more in common with managers.”</p>
+         <p><b>同义替换</b>：require management skills to win ≈ where strategy and resource management are key；possess more qualities of a manager ≈ have more in common with managers</p>
+         <p><b>陷阱</b>：E 段有 “strategic planning”，但那是招聘总监列的软技能清单，不是“爱玩某类游戏 → 像管理者”的推论；C 段讲分析档案，也不涉及 management。</p>`
+  },
+  {
+    n: 43,
+    stem: `In more conventional views, gaming is a time-wasting activity pursued by young boys.`,
+    answer: "J",
+    para: "p-J",
+    why: `<p><b>定位</b>：J 段 “In more traditional settings, gaming is still imagined to be the pursuit of teenage boys — a waste of time.”</p>
+         <p><b>同义替换</b>：conventional ≈ traditional；time-wasting activity ≈ a waste of time；pursued by young boys ≈ the pursuit of teenage boys</p>
+         <p><b>陷阱</b>：G 段 “Playing games casually is unlikely to help your career prospects” 也含“浪费时间”的意味，但缺“传统观念”和“十几岁男孩”两个限定词，题干三个要素必须同时对上。</p>`
+  },
+  {
+    n: 44,
+    stem: `It is suggested that gaming skills be included in a résumé if they enhance a job applicant's appeal.`,
+    answer: "E",
+    para: "p-E",
+    why: `<p><b>定位</b>：E 段 “But does that really mean your top 100 ranking in Overwatch should go down in your résumé?” 与 “how it makes you more interesting as a potential employee”</p>
+         <p><b>同义替换</b>：be included in a résumé ≈ go down in your résumé；enhance a job applicant's appeal ≈ make you more interesting as a potential employee</p>
+         <p><b>陷阱</b>：G 段 Barrie 也喊 “Why can't we put in our résumé our gaming victories”，但那是无条件主张，落点是 leadership；E 段才是“能加分才写”的条件句（if they enhance ...）。两句都提 résumé，看条件。</p>`
+  },
+  {
+    n: 45,
+    stem: `Many gamers know their passion for playing games has shaped their identity.`,
+    answer: "H",
+    para: "p-H",
+    why: `<p><b>定位</b>：H 段首句 “There are already plenty of gamers out there who know that their hobby has made them who they are.”</p>
+         <p><b>同义替换</b>：many gamers ≈ plenty of gamers；their passion for playing games ≈ their hobby；has shaped their identity ≈ has made them who they are</p>
+         <p><b>陷阱</b>：I 段紧接着继续讲 Ricci，但主题是“把技能变现／创业成功”，不是身份认同。H 段后半 EVE 经济系统的细节是干扰信息，别被 “MBA” 带走。</p>`
+  }
+];
+
+const picked = {};
+const quizEl = document.getElementById("questions");
+const bodyEl = document.body;
+
+function render(){
+  quizEl.innerHTML = QUESTIONS.map(q => `
+    <div class="q" data-n="${q.n}">
+      <div class="stem"><span class="num">${q.n}.</span>${q.stem}</div>
+      <div class="letters" data-n="${q.n}">
+        ${LETTERS.map(L => `<button type="button" data-l="${L}" data-n="${q.n}">${L}</button>`).join("")}
+      </div>
+      <div class="fb" id="fb-${q.n}"></div>
+    </div>
+  `).join("");
+}
+
+quizEl.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-l]");
+  if(!btn) return;
+  if(btn.disabled) return;
+  const n = btn.dataset.n, L = btn.dataset.l;
+  picked[n] = L;
+  quizEl.querySelectorAll(`.letters[data-n="${n}"] button`).forEach(b => b.classList.remove("sel"));
+  btn.classList.add("sel");
+});
+
+document.getElementById("submit").addEventListener("click", () => {
+  let correct = 0;
+  let unanswered = 0;
+  clearHighlights();
+  const wrongParas = [];
+
+  QUESTIONS.forEach(q => {
+    const area = quizEl.querySelector(`.letters[data-n="${q.n}"]`);
+    const fb = document.getElementById("fb-" + q.n);
+    const chosen = picked[q.n];
+    const isRight = chosen === q.answer;
+    if(!chosen) unanswered++;
+
+    area.querySelectorAll("button").forEach(b => {
+      b.disabled = true;
+      b.classList.remove("sel");
+      if(b.dataset.l === q.answer) b.classList.add("answer");
+      if(b.dataset.l === chosen && !isRight) b.classList.add("wrong");
+      if(b.dataset.l === q.answer && isRight) b.classList.add("right");
+    });
+
+    const jump = `<a class="jump" href="#${q.para}">回看 ${q.answer} 段 ↓</a>`;
+    if(isRight){
+      correct++;
+      fb.className = "fb ok show";
+      fb.innerHTML = `<span class="badge">正确</span>答案 ${q.answer}${jump}` + q.why;
+    }else{
+      fb.className = "fb no show";
+      fb.innerHTML = `<span class="badge">${chosen ? "错误" : "未作答"}</span>正确答案 ${q.answer}${jump}` + q.why;
+      wrongParas.push(q.para);
+    }
+    document.getElementById(q.para).classList.add("hit");
+  });
+
+  const total = QUESTIONS.length;
+  const pct = Math.round(correct / total * 100);
+  const s = document.getElementById("score");
+  s.className = "score show";
+  s.innerHTML = `本轮得分：<b>${correct} / ${total}</b>　（${pct}%）` +
+    (unanswered ? `　未作答 ${unanswered} 题` : "") +
+    `<div class="bar"><i style="width:${pct}%"></i></div>` +
+    `<div style="margin-top:8px">` +
+    (correct === total ? "全对。这套“先强锚点、后排除”的流程你已经通了。" :
+     correct >= 8 ? "很好。回看错题的“定位句”和“同义替换”，重点在条件词（if / when）和主体（who says it）。" :
+     correct >= 6 ? "及格水平。把右侧指纹表用起来，先扫专有名词和数字类锚点。" :
+     "先别急。把这 12 段的“指纹”过一遍，再按“专名 > 数字 > 比喻 > 抽象同义”的顺序重做。") +
+    `</div>`;
+  s.scrollIntoView({behavior:"smooth", block:"center"});
+
+  const target = wrongParas.length ? wrongParas[0] : QUESTIONS[0].para;
+  setTimeout(() => {
+    document.getElementById(target).scrollIntoView({behavior:"smooth", block:"center"});
+  }, 260);
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  Object.keys(picked).forEach(k => delete picked[k]);
+  clearHighlights();
+  render();
+  document.getElementById("score").className = "score";
+  document.getElementById("score").innerHTML = "";
+  sec = 0;
+  timerEl.textContent = "00:00";
+  timerEl.className = "timer";
+  document.getElementById("passage").scrollIntoView({behavior:"smooth", block:"start"});
+});
+
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.jump");
+  if(!a) return;
+  const id = a.getAttribute("href").slice(1);
+  const p = document.getElementById(id);
+  if(!p) return;
+  p.classList.add("hit");
+});
+
+function clearHighlights(){
+  document.querySelectorAll(".para.hit").forEach(p => p.classList.remove("hit"));
+}
+
+/* ---------- 定位句显隐 ---------- */
+const toggleBtn = document.getElementById("toggleMarks");
+toggleBtn.addEventListener("click", () => {
+  bodyEl.classList.toggle("hide-marks");
+  toggleBtn.textContent = bodyEl.classList.contains("hide-marks") ? "显示定位句" : "隐藏定位句";
+});
+
+/* ---------- 计时器：12 分钟转黄，15 分钟转红 ---------- */
+let sec = 0;
+const timerEl = document.getElementById("timer");
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec/60)).padStart(2,"0");
+  const s = String(sec%60).padStart(2,"0");
+  timerEl.textContent = `${m}:${s}`;
+  if(sec >= 900) timerEl.className = "timer over";
+  else if(sec >= 720) timerEl.className = "timer warn";
+}, 1000);
+
+render();
+</script>
+<style id="dark-guard">
+html{color-scheme:dark}
+body{background:#0f1216;color:#e3e7ee}
+mark{color:#ece2c4}
+.letters button.sel,.letters button.right,.btn.primary{color:#08101c}
+.para.hit .tag{color:#241a00}
+</style>
+</body>
+</html>
