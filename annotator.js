@@ -1,6 +1,8 @@
-/* 原文标注笔 —— 划词高亮 · 本地持久化 · 桌面/移动端通用
- * 适合 cet4 系列练习页（段落选择器 p.para / p.txt）
- * 用法：选中原文中的任意一句 → 点浮动色板 → 高亮记下答案出处
+/* 原文标注笔 v2 —— 自由画笔 + 划词高亮 + 橡皮 + 撤销
+ * 画笔：在原文上按住拖动随手画（画圈、划线、打钩都行），松手自动保存
+ * 高亮：选中一句话 → 点色板 → 整句涂色（适合标答案出处）
+ * 橡皮：点一下就擦掉——画过的笔迹、涂过的高亮都能擦
+ * 数据存在本机浏览器 localStorage，刷新/重开都还在
  */
 (function () {
   'use strict';
@@ -8,48 +10,40 @@
   window.__umInit = true;
 
   var PARA_SEL = 'p.para, p.txt';
-  var COLORS = {
-    y: { bg: '#f6e27a', ink: '#4a3a00' },
-    g: { bg: '#9ee493', ink: '#123d12' },
-    b: { bg: '#9ec8f7', ink: '#0b2b55' },
-    p: { bg: '#f7a8c8', ink: '#4d0f28' }
-  };
+  var HL = { y: ['#f6e27a', '#4a3a00'], g: ['#9ee493', '#123d12'], b: ['#9ec8f7', '#0b2b55'], p: ['#f7a8c8', '#4d0f28'] };
+  var PEN = { y: '#ffd84d', g: '#6ee7a8', b: '#7cc4ff' };
   var KEY = 'cet4-marks::' + location.pathname;
-  var marks = [];   // [{p:段落序号, s:起始字符, e:结束字符, c:颜色}]
-  var pal = null;
-  var bar = null;
+  var PKEY = 'cet4-pen::' + location.pathname;
 
-  function paras() {
-    return Array.prototype.slice.call(document.querySelectorAll(PARA_SEL));
+  var mode = 'select';   // select | pen | erase
+  var color = 'y';
+  var marks = [];        // [{p,s,e,c}]
+  var strokes = [];      // [{p,c,w,pts:[[x,y]]}]
+  var secs = [];         // [{el, cv, ctx, idx}]
+  var pal = null, bar = null;
+  var cur = null;        // 正在画的笔画
+  var saveTimer = null;
+  var armed = false, armTimer = null;
+
+  /* ---------- 基础工具 ---------- */
+  function paras() { return Array.prototype.slice.call(document.querySelectorAll(PARA_SEL)); }
+  function uid(k) { return k === 'pen' ? PKEY : KEY; }
+  function readJSON(k) {
+    try { var raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
   }
-
-  function loadMarks() {
-    var raw = null;
-    try { raw = localStorage.getItem(KEY); } catch (e) {}
-    var arr = [];
-    try { arr = raw ? JSON.parse(raw) : []; } catch (e) { arr = []; }
-    if (!Array.isArray(arr)) arr = [];
-    marks = arr.filter(function (m) {
-      return m && typeof m.p === 'number' && typeof m.s === 'number' &&
-             typeof m.e === 'number' && m.e > m.s;
-    });
+  function writeJSON(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
   }
+  function saveMarks() { writeJSON(KEY, marks); }
+  function saveStrokes() { clearTimeout(saveTimer); saveTimer = setTimeout(function () { writeJSON(PKEY, strokes); }, 250); }
 
-  function saveMarks() {
-    try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch (e) {}
-  }
-
-  /* 把范围节点位置换算成「段落纯文本中的字符序号」 */
+  /* ---------- 高亮：字符偏移 ---------- */
   function offsetIn(root, node, offset) {
     var r = document.createRange();
-    try {
-      r.selectNodeContents(root);
-      r.setEnd(node, offset);
-      return r.toString().length;
-    } catch (e) { return -1; }
+    try { r.selectNodeContents(root); r.setEnd(node, offset); return r.toString().length; }
+    catch (e) { return -1; }
   }
 
-  /* 在段落的纯文本坐标 [start,end) 上包一层高亮 span */
   function wrapRange(root, start, end, cid) {
     if (!(end > start)) return null;
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
@@ -64,23 +58,17 @@
     if (so < 0) so = 0;
     if (eo > endNode.data.length) eo = endNode.data.length;
     var range = document.createRange();
-    try {
-      range.setStart(startNode, so);
-      range.setEnd(endNode, eo);
-    } catch (e) { return null; }
+    try { range.setStart(startNode, so); range.setEnd(endNode, eo); } catch (e) { return null; }
     var span = document.createElement('span');
     span.className = 'um';
     span.setAttribute('data-c', cid);
-    var c = COLORS[cid] || COLORS.y;
-    span.style.backgroundColor = c.bg;
-    span.style.color = c.ink;
-    try {
-      range.surroundContents(span);
-    } catch (e1) {
-      try {
-        span.appendChild(range.extractContents());
-        range.insertNode(span);
-      } catch (e2) { return null; }
+    var col = HL[cid] || HL.y;
+    span.style.backgroundColor = col[0];
+    span.style.color = col[1];
+    try { range.surroundContents(span); }
+    catch (e1) {
+      try { span.appendChild(range.extractContents()); range.insertNode(span); }
+      catch (e2) { return null; }
     }
     return span;
   }
@@ -89,12 +77,10 @@
     var el = node && node.nodeType === 1 ? node : (node ? node.parentElement : null);
     return el && el.closest ? el.closest(PARA_SEL) : null;
   }
-
   function nearestUm(node) {
     var el = node && node.nodeType === 1 ? node : (node ? node.parentElement : null);
     return el && el.closest ? el.closest('.um') : null;
   }
-
   function unwrap(el) {
     var parent = el.parentNode;
     if (!parent) return;
@@ -103,7 +89,6 @@
     if (parent.normalize) parent.normalize();
   }
 
-  /* 从 DOM 反推 marks（删除某处标记后重新保存） */
   function reserialize() {
     var arr = paras(), out = [];
     arr.forEach(function (p, pi) {
@@ -112,14 +97,7 @@
         var text = sp.textContent;
         if (!text) return;
         var start = offsetIn(p, sp, 0);
-        if (start < 0) {
-          var r = document.createRange();
-          try {
-            r.selectNodeContents(p);
-            r.setStartBefore(sp);
-            start = r.toString().length;
-          } catch (e) { return; }
-        }
+        if (start < 0) { start = 0; }
         out.push({ p: pi, s: start, e: start + text.length, c: sp.getAttribute('data-c') || 'y' });
       });
     });
@@ -127,16 +105,158 @@
     saveMarks();
   }
 
-  function restore() {
+  function restoreMarks() {
     if (!marks.length) return;
     var arr = paras();
-    marks.slice().sort(function (a, b) { return (a.p - b.p) || (a.s - b.s); })
-      .forEach(function (m) {
-        var p = arr[m.p];
-        if (p && p.textContent.length >= m.e) wrapRange(p, m.s, m.e, m.c);
-      });
+    marks.slice().sort(function (a, b) { return (a.p - b.p) || (a.s - b.s); }).forEach(function (m) {
+      var p = arr[m.p];
+      if (!p) return;
+      var len = p.textContent.length;
+      if (m.e > len || m.s >= len) return;
+      wrapRange(p, m.s, Math.min(m.e, len), m.c);
+    });
   }
 
+  /* ---------- 画笔：每段一个画布 ---------- */
+  function buildCanvases() {
+    var map = new Map();
+    paras().forEach(function (p) {
+      var sec = p.parentElement;
+      if (!sec || sec === document.body) return;
+      if (!map.has(sec)) map.set(sec, map.size);
+    });
+    map.forEach(function (idx, sec) {
+      if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative';
+      sec.classList.add('um-sec');
+      var cv = document.createElement('canvas');
+      cv.className = 'um-canvas';
+      cv.setAttribute('data-i', idx);
+      sec.appendChild(cv);
+      var rec = { el: sec, cv: cv, ctx: cv.getContext('2d'), idx: idx };
+      secs.push(rec);
+      bindPen(rec);
+      fit(rec);
+    });
+  }
+
+  function fit(rec) {
+    var r = rec.el.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    rec.cv.width = Math.max(1, Math.round(r.width * dpr));
+    rec.cv.height = Math.max(1, Math.round(r.height * dpr));
+    rec.cv.style.width = Math.round(r.width) + 'px';
+    rec.cv.style.height = Math.round(r.height) + 'px';
+    rec.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    rec.ctx.lineCap = 'round';
+    rec.ctx.lineJoin = 'round';
+    drawSection(rec);
+  }
+
+  function fitAll() { secs.forEach(fit); }
+
+  function ptsOf(s) { return s.pts || s.p || []; }
+
+  function drawSection(rec) {
+    var ctx = rec.ctx;
+    ctx.clearRect(0, 0, rec.cv.width, rec.cv.height);
+    strokes.forEach(function (s) {
+      if (s.p !== rec.idx) return;
+      var pts = s.pts;
+      if (!pts || !pts.length) return;
+      ctx.beginPath();
+      ctx.lineWidth = s.w || 3;
+      ctx.strokeStyle = PEN[s.c] || PEN.y;
+      if (pts.length === 1) {
+        ctx.arc(pts[0][0], pts[0][1], (s.w || 3) / 2, 0, Math.PI * 2);
+        ctx.fillStyle = PEN[s.c] || PEN.y;
+        ctx.fill();
+        return;
+      }
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+      ctx.stroke();
+    });
+    if (cur && cur.p === rec.idx && cur.pts.length) {
+      ctx.beginPath();
+      ctx.lineWidth = cur.w;
+      ctx.strokeStyle = PEN[cur.c] || PEN.y;
+      ctx.moveTo(cur.pts[0][0], cur.pts[0][1]);
+      for (var j = 1; j < cur.pts.length; j++) ctx.lineTo(cur.pts[j][0], cur.pts[j][1]);
+      ctx.stroke();
+    }
+  }
+
+  function toLocal(rec, e) {
+    var r = rec.cv.getBoundingClientRect();
+    return [Math.round((e.clientX - r.left) * 10) / 10, Math.round((e.clientY - r.top) * 10) / 10];
+  }
+
+  function bindPen(rec) {
+    rec.cv.addEventListener('pointerdown', function (e) {
+      if (mode !== 'pen') return;
+      e.preventDefault();
+      e.stopPropagation();
+      try { rec.cv.setPointerCapture(e.pointerId); } catch (err) {}
+      cur = { p: rec.idx, c: color, w: 3, pts: [toLocal(rec, e)] };
+      drawSection(rec);
+    });
+    rec.cv.addEventListener('pointermove', function (e) {
+      if (!cur || mode !== 'pen') return;
+      e.preventDefault();
+      e.stopPropagation();
+      var p = toLocal(rec, e);
+      var last = cur.pts[cur.pts.length - 1];
+      if (Math.abs(p[0] - last[0]) + Math.abs(p[1] - last[1]) < 1.2) return;
+      cur.pts.push(p);
+      drawSection(rec);
+    });
+    function finish(e) {
+      if (!cur || mode !== 'pen') return;
+      if (e) { try { rec.cv.releasePointerCapture(e.pointerId); } catch (err) {} }
+      if (cur.pts.length) { strokes.push(cur); writeJSON(PKEY, strokes); }
+      cur = null;
+      drawSection(rec);
+    }
+    rec.cv.addEventListener('pointerup', finish);
+    rec.cv.addEventListener('pointercancel', finish);
+    rec.cv.addEventListener('pointerleave', function (e) { if (cur && e.buttons === 0) finish(e); });
+  }
+
+  /* ---------- 橡皮 ---------- */
+  function distToSeg(px, py, a, b) {
+    var vx = b[0] - a[0], vy = b[1] - a[1];
+    var wx = px - a[0], wy = py - a[1];
+    var len2 = vx * vx + vy * vy;
+    var t = len2 ? (wx * vx + wy * vy) / len2 : 0;
+    t = Math.max(0, Math.min(1, t));
+    var dx = px - (a[0] + t * vx), dy = py - (a[1] + t * vy);
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function eraseAt(rec, pt) {
+    for (var i = strokes.length - 1; i >= 0; i--) {
+      var s = strokes[i];
+      if (s.p !== rec.idx) continue;
+      var pts = s.pts, hit = false;
+      var tol = Math.max(9, (s.w || 3) + 6);
+      if (pts.length === 1) {
+        hit = Math.hypot(pt[0] - pts[0][0], pt[1] - pts[0][1]) < tol;
+      } else {
+        for (var k = 1; k < pts.length; k++) {
+          if (distToSeg(pt[0], pt[1], pts[k - 1], pts[k]) < tol) { hit = true; break; }
+        }
+      }
+      if (hit) {
+        strokes.splice(i, 1);
+        writeJSON(PKEY, strokes);
+        drawSection(rec);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /* ---------- 划词高亮 ---------- */
   function selectionInfo() {
     var sel = window.getSelection();
     if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return null;
@@ -147,20 +267,17 @@
     if (!p) return null;
     try {
       var frag = range.cloneContents();
-      if (frag.querySelector && frag.querySelector('select, input, button')) return null;
+      if (frag.querySelector && frag.querySelector('select, input, button, canvas')) return null;
     } catch (e) {}
     return { sel: sel, range: range, text: text, p: p };
   }
 
-  function hidePalette() {
-    if (pal) pal.style.display = 'none';
-  }
+  function hidePalette() { if (pal) pal.style.display = 'none'; }
 
   function placePalette(rect) {
     if (!pal) return;
     pal.style.display = 'flex';
-    var pw = pal.offsetWidth || 200;
-    var ph = pal.offsetHeight || 44;
+    var pw = pal.offsetWidth || 170, ph = pal.offsetHeight || 44;
     var top = rect.top - ph - 10;
     if (top < 8) top = rect.bottom + 10;
     if (top + ph > window.innerHeight - 8) top = window.innerHeight - ph - 8;
@@ -173,14 +290,14 @@
   function applyColor(cid) {
     var info = selectionInfo();
     if (!info) { hidePalette(); return; }
-    var arr = paras();
-    var pi = arr.indexOf(info.p);
-    if (pi < 0) return;
+    var arr = paras(), pi = arr.indexOf(info.p);
+    if (pi < 0) { hidePalette(); return; }
     var start = offsetIn(info.p, info.range.startContainer, info.range.startOffset);
     var end = offsetIn(info.p, info.range.endContainer, info.range.endOffset);
-    if (start < 0) return;
+    if (start < 0) { hidePalette(); return; }
     if (!(end > start)) end = start + info.text.length;
-    if (end > info.p.textContent.length) end = info.p.textContent.length;
+    var len = info.p.textContent.length;
+    if (end > len) end = len;
     if (!(end > start)) { hidePalette(); return; }
     if (wrapRange(info.p, start, end, cid)) {
       marks.push({ p: pi, s: start, e: end, c: cid });
@@ -190,43 +307,62 @@
     hidePalette();
   }
 
-  function removeMark() {
-    var info = selectionInfo();
-    if (!info) { hidePalette(); return; }
-    var um = nearestUm(info.range.startContainer) || nearestUm(info.range.endContainer);
-    if (um) { unwrap(um); reserialize(); }
-    info.sel.removeAllRanges();
-    hidePalette();
-  }
-
+  /* ---------- 清空 / 撤销 ---------- */
   function clearAll() {
     var spans = Array.prototype.slice.call(document.querySelectorAll('.um'));
     spans.forEach(function (sp) { if (sp.parentNode) unwrap(sp); });
     marks = [];
-    saveMarks();
+    writeJSON(KEY, marks);
+    strokes = [];
+    writeJSON(PKEY, strokes);
+    secs.forEach(drawSection);
+    cur = null;
   }
 
+  function undo() {
+    if (cur) return;
+    if (!strokes.length) return;
+    var last = strokes.pop();
+    writeJSON(PKEY, strokes);
+    var rec = secs[last.p];
+    if (rec) drawSection(rec);
+  }
+
+  /* ---------- UI ---------- */
   function buildUI() {
     var style = document.createElement('style');
     style.id = 'um-style';
     style.textContent = [
       '.um{border-radius:2px;padding:0 1px;-webkit-box-decoration-break:clone;box-decoration-break:clone}',
+      '.um-canvas{position:absolute;left:0;top:0;pointer-events:none;z-index:3;touch-action:none}',
+      'html.um-pen .um-canvas{pointer-events:auto;cursor:crosshair}',
+      'html.um-erase .um-canvas{pointer-events:none}',
+      'html.um-erase .um-sec{cursor:cell}',
       'html.um-off .um{background:transparent!important;color:inherit!important}',
-      '#umBar{position:fixed;top:12px;right:12px;z-index:9998;display:flex;gap:6px;font-family:inherit}',
-      '#umBar button{font:600 12px/1 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;color:#e3e7ee;background:#1b2130;border:1px solid #313a4d;border-radius:999px;padding:7px 11px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35)}',
+      'html.um-off .um-canvas{display:none}',
+      '#umBar{position:fixed;top:10px;right:10px;z-index:9998;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px;max-width:260px;font-family:inherit}',
+      '#umBar button{font:600 12px/1 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;color:#e3e7ee;background:#1b2130;border:1px solid #313a4d;border-radius:999px;min-width:32px;height:32px;padding:0 9px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35)}',
       '#umBar button.on{background:#2b3a55;border-color:#5b9dff;color:#cfe3ff}',
-      '#umBar button:active{transform:translateY(1px)}',
+      '#umBar button.arm{background:#7d2b2b;border-color:#f85149;color:#ffd7d3}',
+      '#umBar button.um-dot{min-width:22px;width:22px;height:22px;border-radius:50%;border:2px solid #0f1216;padding:0;margin-top:5px}',
+      '#umBar button.um-dot.on{outline:2px solid #cfe3ff;outline-offset:1px}',
       '#umPal{position:fixed;z-index:9999;display:none;align-items:center;gap:8px;background:#1b2130;border:1px solid #313a4d;border-radius:999px;padding:7px 10px;box-shadow:0 10px 28px rgba(0,0,0,.55)}',
-      '#umPal button{width:26px;height:26px;border-radius:50%;border:2px solid #0f1216;cursor:pointer;padding:0;line-height:0}',
-      '#umPal button[data-act="del"]{width:28px;height:28px;background:#2a3244;color:#e3e7ee;font-size:13px;font-weight:700;border:2px solid #3a4560}',
-      '@media (max-width:640px){#umBar{top:8px;right:8px}#umBar button{padding:8px 10px}#umPal button{width:32px;height:32px}#umPal button[data-act="del"]{width:34px;height:34px}}'
+      '#umPal button{width:26px;height:26px;border-radius:50%;border:2px solid #0f1216;cursor:pointer;padding:0}',
+      '@media (max-width:640px){#umBar{max-width:200px}#umBar button{height:30px;min-width:30px}}'
     ].join('\n');
     (document.head || document.documentElement).appendChild(style);
 
     bar = document.createElement('div');
     bar.id = 'umBar';
-    bar.innerHTML = '<button type="button" id="umToggle" title="显示 / 隐藏我的标记">👁 标记</button>' +
-                    '<button type="button" id="umClear" title="清除本页所有标记">🗑 清空</button>';
+    bar.innerHTML =
+      '<button type="button" data-act="pen" title="画笔：按住拖动随手画">✏️</button>' +
+      '<button type="button" data-act="erase" title="橡皮：点一下擦掉笔迹或高亮">🧽</button>' +
+      '<button type="button" class="um-dot" data-color="y" title="黄色" style="background:' + PEN.y + '"></button>' +
+      '<button type="button" class="um-dot" data-color="g" title="绿色" style="background:' + PEN.g + '"></button>' +
+      '<button type="button" class="um-dot" data-color="b" title="蓝色" style="background:' + PEN.b + '"></button>' +
+      '<button type="button" data-act="undo" title="撤销上一笔">↶</button>' +
+      '<button type="button" data-act="clear" title="清空本页全部标记">🗑</button>' +
+      '<button type="button" data-act="hide" title="显示/隐藏全部标记">👁</button>';
     (document.body || document.documentElement).appendChild(bar);
 
     bar.addEventListener('click', function (e) {
@@ -234,15 +370,30 @@
       if (!t || t.tagName !== 'BUTTON') return;
       e.preventDefault();
       e.stopPropagation();
-      if (t.id === 'umToggle') {
+      var act = t.getAttribute('data-act');
+      var c = t.getAttribute('data-color');
+
+      if (c) {
+        color = c;
+        Array.prototype.forEach.call(bar.querySelectorAll('.um-dot'), function (d) {
+          d.classList.toggle('on', d.getAttribute('data-color') === c);
+        });
+        if (mode === 'erase') setMode('pen');
+        return;
+      }
+      if (act === 'pen') setMode(mode === 'pen' ? 'select' : 'pen');
+      else if (act === 'erase') setMode(mode === 'erase' ? 'select' : 'erase');
+      else if (act === 'undo') undo();
+      else if (act === 'clear') armClear(t);
+      else if (act === 'hide') {
         var off = document.documentElement.classList.toggle('um-off');
         t.classList.toggle('on', off);
-        t.textContent = off ? '🚫 标记' : '👁 标记';
-      } else if (t.id === 'umClear') {
-        var n = document.querySelectorAll('.um').length;
-        if (n && window.confirm('清除本页全部 ' + n + ' 处标记？此操作不可撤销。')) clearAll();
+        t.textContent = off ? '🚫' : '👁';
       }
     });
+
+    var dots = bar.querySelectorAll('.um-dot');
+    Array.prototype.forEach.call(dots, function (d) { d.classList.toggle('on', d.getAttribute('data-color') === color); });
 
     pal = document.createElement('div');
     pal.id = 'umPal';
@@ -250,16 +401,10 @@
       var b = document.createElement('button');
       b.type = 'button';
       b.setAttribute('data-c', cid);
-      b.style.background = COLORS[cid].bg;
-      b.title = '标记这句话';
+      b.style.background = HL[cid][0];
+      b.title = '把这句话涂色';
       pal.appendChild(b);
     });
-    var del = document.createElement('button');
-    del.type = 'button';
-    del.setAttribute('data-act', 'del');
-    del.textContent = '✕';
-    del.title = '取消这处标记';
-    pal.appendChild(del);
     (document.body || document.documentElement).appendChild(pal);
 
     pal.addEventListener('mousedown', function (e) { e.preventDefault(); e.stopPropagation(); });
@@ -268,9 +413,7 @@
       e.preventDefault();
       e.stopPropagation();
       var t = e.target;
-      if (!t || t.tagName !== 'BUTTON') return;
-      if (t.getAttribute('data-act') === 'del') removeMark();
-      else if (t.getAttribute('data-c')) applyColor(t.getAttribute('data-c'));
+      if (t && t.getAttribute && t.getAttribute('data-c')) applyColor(t.getAttribute('data-c'));
     });
 
     var timer = null, lastTouch = 0;
@@ -280,17 +423,18 @@
     function schedule() {
       clearTimeout(timer);
       timer = setTimeout(function () {
+        if (mode !== 'select') { hidePalette(); return; }
         var info = selectionInfo();
         if (!info) { hidePalette(); return; }
         placePalette(info.range.getBoundingClientRect());
-      }, 150);
+      }, 160);
     }
 
     document.addEventListener('selectionchange', schedule);
     document.addEventListener('mouseup', schedule);
     document.addEventListener('touchend', function () { setTimeout(schedule, 80); }, { passive: true });
     window.addEventListener('scroll', hidePalette, { passive: true });
-    window.addEventListener('resize', hidePalette);
+    window.addEventListener('resize', function () { hidePalette(); clearTimeout(window.__umFit); window.__umFit = setTimeout(fitAll, 200); });
     document.addEventListener('mousedown', function (e) {
       if (pal.contains(e.target) || bar.contains(e.target)) return;
       if (Date.now() - lastTouch < 700) return;
@@ -298,17 +442,92 @@
       if (sel && !sel.isCollapsed) return;
       hidePalette();
     });
+
+    /* 橡皮：点高亮直接去掉，点笔迹按坐标命中 */
+    document.addEventListener('pointerdown', function (e) {
+      if (mode !== 'erase') return;
+      var t = e.target;
+      if (!t || !t.closest) return;
+      if (bar.contains(t) || pal.contains(t)) return;
+      var um = t.closest('.um');
+      if (um) {
+        e.preventDefault();
+        e.stopPropagation();
+        unwrap(um);
+        reserialize();
+        return;
+      }
+      var sec = t.closest('.um-sec');
+      if (!sec) return;
+      var rec = null;
+      for (var i = 0; i < secs.length; i++) if (secs[i].el === sec) { rec = secs[i]; break; }
+      if (!rec) return;
+      var r = rec.cv.getBoundingClientRect();
+      if (eraseAt(rec, [e.clientX - r.left, e.clientY - r.top])) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
   }
 
+  function setMode(m) {
+    mode = m;
+    document.documentElement.classList.toggle('um-pen', m === 'pen');
+    document.documentElement.classList.toggle('um-erase', m === 'erase');
+    if (bar) {
+      bar.querySelector('[data-act="pen"]').classList.toggle('on', m === 'pen');
+      bar.querySelector('[data-act="erase"]').classList.toggle('on', m === 'erase');
+    }
+    if (m !== 'select') {
+      hidePalette();
+      var sel = window.getSelection();
+      if (sel) sel.removeAllRanges();
+    }
+    if (m !== 'pen' && cur) { cur = null; secs.forEach(drawSection); }
+  }
+
+  function armClear(btn) {
+    if (!armed) {
+      armed = true;
+      btn.classList.add('arm');
+      btn.textContent = '确认?';
+      clearTimeout(armTimer);
+      armTimer = setTimeout(function () {
+        armed = false;
+        btn.classList.remove('arm');
+        btn.textContent = '🗑';
+      }, 2600);
+      return;
+    }
+    armed = false;
+    clearTimeout(armTimer);
+    btn.classList.remove('arm');
+    btn.textContent = '🗑';
+    clearAll();
+  }
+
+  /* ---------- 启动 ---------- */
   function init() {
-    loadMarks();
-    buildUI();
-    restore();
+    var m = readJSON(KEY);
+    marks = Array.isArray(m) ? m.filter(function (x) {
+      return x && typeof x.p === 'number' && typeof x.s === 'number' && typeof x.e === 'number' && x.e > x.s;
+    }) : [];
+    var s = readJSON(PKEY);
+    strokes = Array.isArray(s) ? s.filter(function (x) {
+      return x && typeof x.p === 'number' && Array.isArray(x.pts) && x.pts.length;
+    }) : [];
+
+    buildCanvases();
+    restoreMarks();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
+  function boot() {
     init();
+    buildUI();
   }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+
+  window.addEventListener('load', function () { setTimeout(fitAll, 120); });
 })();
